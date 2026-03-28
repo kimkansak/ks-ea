@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KS ULTIMATE DATA EA — ทดลองใช้ฟรี 5 วัน</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #D4AF37;
+  --gold2: #FFD700;
+  --gold3: #B8860B;
+  --cyan: #00D4FF;
+  --green: #00FF88;
+  --red: #FF4757;
+  --purple: #8B5CF6;
+  --bg: #03050A;
+  --bg2: #080D17;
+  --text: #E8F0FF;
+  --dim: #6B7A99;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Sarabun', sans-serif;
+  overflow-x: hidden;
+  line-height: 1.8;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px);
+  background-size: 55px 55px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wrap { max-width: 760px; margin: 0 auto; padding: 0 20px 80px; position: relative; z-index: 1; }
+
+/* ═══ HERO ═══ */
+.hero {
+  text-align: center;
+  padding: 70px 20px 50px;
+  position: relative;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  width: 500px; height: 350px;
+  background: radial-gradient(ellipse, rgba(212,175,55,0.08), transparent 70%);
+  top: 0; left: 50%; transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.free-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(0,212,255,0.08));
+  border: 1px solid rgba(212,175,55,0.4);
+  padding: 8px 22px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  margin-bottom: 28px;
+  animation: pulse-border 2s ease infinite;
+}
+
+@keyframes pulse-border {
+  0%,100% { border-color: rgba(212,175,55,0.4); }
+  50%      { border-color: rgba(212,175,55,0.9); box-shadow: 0 0 20px rgba(212,175,55,0.15); }
+}
+
+.star { font-size: 14px; }
+
+.hero h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(32px, 7vw, 72px);
+  font-weight: 900;
+  letter-spacing: 3px;
+  line-height: 1.05;
+  margin-bottom: 16px;
+}
+
+.hero h1 .line1 { color: var(--text); display: block; }
+.hero h1 .line2 {
+  background: linear-gradient(90deg, var(--gold3), var(--gold), var(--gold2), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block;
+}
+
+.hero-tagline {
+  font-size: 16px;
+  color: var(--dim);
+  margin-bottom: 12px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-tagline strong { color: var(--text); }
+
+.demo-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,255,136,0.08);
+  border: 1px solid rgba(0,255,136,0.25);
+  padding: 6px 18px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--green);
+  margin-top: 12px;
+}
+
+.blink { animation: blink 1.5s ease infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+.dot-live { width:7px;height:7px;border-radius:50%;background:var(--green); }
+
+/* ═══ SEPARATOR ═══ */
+.sep { width:100%; height:1px; background: linear-gradient(90deg, transparent, rgba(212,175,55,0.2), transparent); margin: 40px 0; }
+
+/* ═══ WHAT IS DEMO ═══ */
+.intro-box {
+  background: var(--bg2);
+  border: 1px solid rgba(212,175,55,0.2);
+  padding: 30px 32px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.intro-box::before {
+  content: 'FREE TRIAL';
+  position: absolute;
+  right: -20px; top: 20px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 60px;
+  font-weight: 900;
+  color: rgba(212,175,55,0.04);
+  letter-spacing: 4px;
+  pointer-events: none;
+}
+
+.intro-box h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 18px;
+  letter-spacing: 2px;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+
+.intro-box p { font-size: 14px; color: #B0BDD0; line-height: 1.9; }
+.intro-box p strong { color: var(--text); }
+.intro-box p .hl { color: var(--gold); }
+.intro-box p .hlc { color: var(--cyan); }
+.intro-box p .hlg { color: var(--green); }
+
+/* ═══ 5 DAY PLAN ═══ */
+.plan-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.plan-title span {
+  background: linear-gradient(90deg, var(--gold), var(--gold2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.plan-sub {
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--dim);
+  margin-bottom: 28px;
+}
+
+.day-cards { display: flex; flex-direction: column; gap: 3px; margin-bottom: 32px; }
+
+.day-card {
+  background: var(--bg2);
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 22px 24px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+
+.day-card:hover { border-color: rgba(212,175,55,0.2); }
+
+.day-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+}
+
+.day-card.d1::before { background: var(--cyan); }
+.day-card.d2::before { background: #A78BFA; }
+.day-card.d3::before { background: var(--gold); }
+.day-card.d4::before { background: var(--green); }
+.day-card.d5::before { background: #F97316; }
+
+.day-num-wrap { text-align: center; flex-shrink: 0; }
+
+.day-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--dim);
+  margin-bottom: 2px;
+}
+
+.day-num {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.d1 .day-num { color: var(--cyan); }
+.d2 .day-num { color: #A78BFA; }
+.d3 .day-num { color: var(--gold); }
+.d4 .day-num { color: var(--green); }
+.d5 .day-num { color: #F97316; }
+
+.day-body { flex: 1; }
+
+.day-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.day-desc { font-size: 13px; color: #B0BDD0; line-height: 1.8; margin-bottom: 10px; }
+.day-desc strong { color: var(--text); }
+
+.day-tasks { list-style: none; }
+.day-tasks li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 12px;
+  color: var(--dim);
+  padding: 3px 0;
+}
+.day-tasks li::before { content: '▸'; font-size: 9px; margin-top: 4px; flex-shrink: 0; }
+.d1 .day-tasks li::before { color: var(--cyan); }
+.d2 .day-tasks li::before { color: #A78BFA; }
+.d3 .day-tasks li::before { color: var(--gold); }
+.d4 .day-tasks li::before { color: var(--green); }
+.d5 .day-tasks li::before { color: #F97316; }
+.day-tasks li strong { color: var(--text); }
+
+.day-result {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  padding: 4px 12px;
+  border: 1px solid;
+  letter-spacing: 1px;
+}
+
+.d1 .day-result { border-color: rgba(0,212,255,0.3); color: var(--cyan); }
+.d2 .day-result { border-color: rgba(167,139,250,0.3); color: #A78BFA; }
+.d3 .day-result { border-color: rgba(212,175,55,0.3); color: var(--gold); }
+.d4 .day-result { border-color: rgba(0,255,136,0.3); color: var(--green); }
+.d5 .day-result { border-color: rgba(249,115,22,0.3); color: #F97316; }
+
+/* ═══ WHAT YOU GET ═══ */
+.get-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  margin-bottom: 28px;
+}
+@media(max-width:560px){ .get-grid { grid-template-columns: 1fr; } }
+
+.get-card {
+  background: var(--bg2);
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 20px;
+  position: relative;
+}
+
+.get-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+}
+
+.gc1::after { background: var(--cyan); }
+.gc2::after { background: var(--gold); }
+.gc3::after { background: var(--green); }
+.gc4::after { background: #A78BFA; }
+
+.get-icon { font-size: 22px; margin-bottom: 8px; }
+.get-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--dim);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.get-val { font-size: 14px; color: var(--text); font-weight: 600; margin-bottom: 4px; }
+.get-desc { font-size: 12px; color: var(--dim); }
+
+/* ═══ CONDITION ═══ */
+.cond-box {
+  background: var(--bg2);
+  border: 1px solid rgba(0,212,255,0.15);
+  padding: 24px 28px;
+  margin-bottom: 24px;
+}
+
+.cond-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: var(--cyan);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cond-list { list-style: none; }
+.cond-list li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 13px;
+  color: #B0BDD0;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  line-height: 1.7;
+}
+.cond-list li:last-child { border-bottom: none; }
+.cond-list li::before { content: '✓'; color: var(--green); font-size: 11px; margin-top: 3px; flex-shrink: 0; }
+.cond-list li strong { color: var(--text); }
+
+/* ═══ WARN ═══ */
+.warn-box {
+  border: 1px solid rgba(255,107,53,0.3);
+  background: rgba(255,107,53,0.04);
+  padding: 16px 20px 16px 52px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #B0BDD0;
+  line-height: 1.8;
+  position: relative;
+}
+.warn-box::before {
+  content: '!';
+  position: absolute;
+  left: 18px; top: 16px;
+  color: #F97316;
+  font-size: 18px;
+  font-weight: 900;
+}
+.warn-box strong { color: var(--text); }
+
+/* ═══ CTA ═══ */
+.cta-box {
+  background: linear-gradient(135deg, rgba(212,175,55,0.1), rgba(0,212,255,0.05));
+  border: 1px solid rgba(212,175,55,0.3);
+  padding: 36px 32px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.cta-box::before {
+  content: '★';
+  position: absolute;
+  font-size: 200px;
+  color: rgba(212,175,55,0.03);
+  top: -40px; left: -40px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.cta-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(18px, 3vw, 28px);
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.cta-sub { font-size: 14px; color: var(--dim); margin-bottom: 24px; line-height: 1.8; }
+.cta-sub strong { color: var(--text); }
+
+.contact-grid {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.contact-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  border: none;
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold3), var(--gold), var(--gold2));
+  color: #000;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+}
+.btn-gold:hover { box-shadow: 0 0 30px rgba(212,175,55,0.4); transform: translateY(-2px); }
+
+.btn-line {
+  background: rgba(0,195,89,0.1);
+  color: #00C359;
+  border: 1px solid rgba(0,195,89,0.4);
+}
+.btn-line:hover { background: rgba(0,195,89,0.15); }
+
+.limited-badge {
+  display: inline-block;
+  background: rgba(255,71,87,0.1);
+  border: 1px solid rgba(255,71,87,0.3);
+  color: var(--red);
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  padding: 6px 16px;
+  margin-bottom: 20px;
+}
+
+/* ═══ FOOTER ═══ */
+.footer {
+  border-top: 1px solid rgba(212,175,55,0.1);
+  padding: 32px 0 0;
+  text-align: center;
+}
+.footer-logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold2), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 6px;
+}
+.footer p { font-size: 11px; color: var(--dim); }
+
+/* ═══ REVEAL ═══ */
+.reveal { opacity:0; transform:translateY(20px); transition:opacity 0.6s ease, transform 0.6s ease; }
+.reveal.on { opacity:1; transform:none; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="free-badge"><span class="star">★</span> ทดลองใช้ฟรี <span class="star">★</span></div>
+  <h1>
+    <span class="line1">DEMO 5 วัน</span>
+    <span class="line2">ไม่มีค่าใช้จ่าย</span>
+  </h1>
+  <p class="hero-tagline">ลองใช้ <strong>KS ULTIMATE DATA EA</strong> บนบัญชีเดโม่ก่อน<br>ไม่เสียเงิน ไม่มีความเสี่ยง เห็นผลจริงก่อนตัดสินใจ</p>
+  <div class="demo-pill"><span class="dot-live blink"></span> DEMO ACCOUNT · ปลอดภัย 100%</div>
+</div>
+
+<div class="wrap">
+
+<div class="sep"></div>
+
+<!-- INTRO -->
+<div class="intro-box reveal">
+  <h2>🎯 ทำไมต้องทดลองก่อน?</h2>
+  <p>เราเชื่อว่า <span class="hl">EA ที่ดีต้องพิสูจน์ตัวเองได้</span> ก่อนที่คุณจะตัดสินใจเช่า เราจึงเปิดให้ทดลองใช้ฟรี <span class="hl">5 วันเต็ม</span> บนบัญชีเดโม่ เพื่อให้คุณได้เห็นการทำงานจริง เห็นสัญญาณจริง เห็น Dashboard จริง <span class="hlg">โดยไม่เสียเงินแม้แต่บาทเดียว</span></p>
+  <br>
+  <p>บัญชีเดโม่คือบัญชีจำลองที่มีเงินสมมติ ใช้ราคาตลาดจริง สัญญาณเหมือนกับบัญชีจริงทุกอย่าง <span class="hlc">ต่างกันแค่ไม่ได้ใช้เงินจริง</span> เหมาะที่สุดสำหรับการเรียนรู้และทดสอบระบบครับ</p>
+</div>
+
+<!-- 5 DAY PLAN -->
+<div class="reveal">
+  <h2 class="plan-title">แผน <span>5 วันทดลอง</span></h2>
+  <p class="plan-sub">STEP BY STEP · DEMO ACCOUNT PROGRAM</p>
+</div>
+
+<div class="day-cards">
+
+  <div class="day-card d1 reveal">
+    <div class="day-num-wrap">
+      <div class="day-label">DAY</div>
+      <div class="day-num">1</div>
+    </div>
+    <div class="day-body">
+      <div class="day-title">ติดตั้งและเปิดใช้งาน</div>
+      <p class="day-desc">วันแรกคือการทำความรู้จักระบบ ติดตั้ง EA บนบัญชีเดโม่ ตั้งค่าพื้นฐาน และเปิดดู Dashboard ครั้งแรก</p>
+      <ul class="day-tasks">
+        <li>เปิดบัญชีเดโม่กับโบรกเกอร์ที่มี XAUUSDm</li>
+        <li>รับไฟล์ EA และ Indicator จาก KS Trader</li>
+        <li>ติดตั้งและลาก EA ลง Chart M5</li>
+        <li>เปิด Dashboard บนมือถือดูครั้งแรก</li>
+        <li><strong>กด SYSTEM ON และดูสัญญาณแรก</strong></li>
+      </ul>
+      <div class="day-result">🎯 เป้าหมาย — ระบบทำงานได้ AUTHORIZED</div>
+    </div>
+  </div>
+
+  <div class="day-card d2 reveal">
+    <div class="day-num-wrap">
+      <div class="day-label">DAY</div>
+      <div class="day-num">2</div>
+    </div>
+    <div class="day-body">
+      <div class="day-title">ดูสัญญาณและการเข้า Order</div>
+      <p class="day-desc">วันที่สองสังเกตว่า EA เข้า Order ตอนไหน ทำไม และ Dashboard แสดงผลอย่างไร</p>
+      <ul class="day-tasks">
+        <li>สังเกต Indicator บน Chart ว่าลูกศรขึ้นเมื่อไหร่</li>
+        <li>ดูว่า EA เข้า Order ตามสัญญาณจริงไหม</li>
+        <li>ดู P&L บน Dashboard ว่า Real-time ไหม</li>
+        <li>ทดสอบกด SYSTEM OFF แล้วดูว่า EA หยุดไหม</li>
+        <li><strong>นับสัญญาณที่เกิดขึ้นในวันนี้</strong></li>
+      </ul>
+      <div class="day-result">📊 เป้าหมาย — เข้าใจรูปแบบสัญญาณ M5</div>
+    </div>
+  </div>
+
+  <div class="day-card d3 reveal">
+    <div class="day-num-wrap">
+      <div class="day-label">DAY</div>
+      <div class="day-num">3</div>
+    </div>
+    <div class="day-body">
+      <div class="day-title">ทดสอบ Daily Target และ Stop</div>
+      <p class="day-desc">วันที่สามตั้งค่า DailyTarget และ DailyMaxLoss ตามทุนจริงที่วางแผนไว้ แล้วดูว่าระบบหยุดอัตโนมัติได้จริงไหม</p>
+      <ul class="day-tasks">
+        <li>ตั้ง DailyTarget = 10% ของทุนสมมติ</li>
+        <li>ตั้ง DailyMaxLoss = 5% ของทุนสมมติ</li>
+        <li>รอดูว่าถึงเป้าแล้วระบบหยุดไหม</li>
+        <li>ทดสอบกด EMERGENCY STOP ดูผล</li>
+        <li><strong>บันทึก Win Rate ของวันนี้</strong></li>
+      </ul>
+      <div class="day-result">🛡️ เป้าหมาย — ระบบ Auto Stop ทำงานได้</div>
+    </div>
+  </div>
+
+  <div class="day-card d4 reveal">
+    <div class="day-num-wrap">
+      <div class="day-label">DAY</div>
+      <div class="day-num">4</div>
+    </div>
+    <div class="day-body">
+      <div class="day-title">วิเคราะห์ผลและปรับ Parameter</div>
+      <p class="day-desc">วันที่สี่ดูภาพรวม 3 วันที่ผ่านมา ปรับ Lot และ Target ให้เหมาะกับสไตล์ของคุณ</p>
+      <ul class="day-tasks">
+        <li>ดู Win Rate รวม 3 วัน</li>
+        <li>ดูว่าช่วงเวลาไหน EA ทำกำไรได้ดีที่สุด</li>
+        <li>ลองเพิ่ม TotalLayers จาก 2 เป็น 3 ดูความต่าง</li>
+        <li>ลองปรับ TargetProfitUSD ดูผลกระทบ</li>
+        <li><strong>สรุปว่าระบบเหมาะกับคุณไหม</strong></li>
+      </ul>
+      <div class="day-result">🔧 เป้าหมาย — หาค่าที่เหมาะที่สุดสำหรับคุณ</div>
+    </div>
+  </div>
+
+  <div class="day-card d5 reveal">
+    <div class="day-num-wrap">
+      <div class="day-label">DAY</div>
+      <div class="day-num">5</div>
+    </div>
+    <div class="day-body">
+      <div class="day-title">ตัดสินใจและเริ่มบัญชีจริง</div>
+      <p class="day-desc">วันสุดท้ายสรุปผล 5 วัน ถ้าพอใจก็พร้อมเริ่มบัญชีจริงได้เลย ถ้ายังไม่มั่นใจ KS Trader พร้อมให้คำปรึกษาครับ</p>
+      <ul class="day-tasks">
+        <li>สรุปผลกำไร/ขาดทุนรวม 5 วัน (เดโม่)</li>
+        <li>คำนวณว่าถ้าใช้เงินจริงจะได้เท่าไหร่</li>
+        <li>ปรึกษา KS Trader เรื่องการตั้งค่าที่เหมาะสม</li>
+        <li>เลือกแพ็กเกจ Starter หรือ Premium</li>
+        <li><strong>เปิดบัญชีจริงและเริ่มต้นได้เลย!</strong></li>
+      </ul>
+      <div class="day-result">🚀 เป้าหมาย — พร้อมเริ่มบัญชีจริงอย่างมั่นใจ</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- WHAT YOU GET -->
+<div class="reveal">
+  <h2 class="plan-title" style="margin-bottom:6px">สิ่งที่ได้รับ<span> ในช่วงทดลอง</span></h2>
+  <p class="plan-sub">INCLUDED IN FREE TRIAL</p>
+</div>
+
+<div class="get-grid reveal">
+  <div class="get-card gc1">
+    <div class="get-icon">🤖</div>
+    <div class="get-label">ไฟล์ EA</div>
+    <div class="get-val">KS_ULTIMATE_DATA.mq5</div>
+    <div class="get-desc">ไฟล์ EA เต็มรูปแบบ ฟีเจอร์ครบ</div>
+  </div>
+  <div class="get-card gc2">
+    <div class="get-icon">📡</div>
+    <div class="get-label">ไฟล์ Indicator</div>
+    <div class="get-val">SuperTrend V5 Fixed</div>
+    <div class="get-desc">Indicator สัญญาณที่ EA ใช้งาน</div>
+  </div>
+  <div class="get-card gc3">
+    <div class="get-icon">📱</div>
+    <div class="get-label">Mobile Dashboard</div>
+    <div class="get-val">5 วันเต็ม</div>
+    <div class="get-desc">ดูผลและสั่งการจากมือถือได้เลย</div>
+  </div>
+  <div class="get-card gc4">
+    <div class="get-icon">💬</div>
+    <div class="get-label">Support</div>
+    <div class="get-val">Line Support</div>
+    <div class="get-desc">ช่วยติดตั้งและตั้งค่าตลอด 5 วัน</div>
+  </div>
+</div>
+
+<!-- CONDITIONS -->
+<div class="cond-box reveal">
+  <div class="cond-title">📋 เงื่อนไขการทดลองใช้ฟรี</div>
+  <ul class="cond-list">
+    <li>ใช้กับ <strong>บัญชีเดโม่ (Demo Account) เท่านั้น</strong> ไม่ใช้กับบัญชีเงินจริง</li>
+    <li>ระยะเวลา <strong>5 วันนับจากวันที่ได้รับ License Key</strong></li>
+    <li>1 คน ต่อ 1 สิทธิ์ทดลองเท่านั้น ไม่แชร์ Key ให้ผู้อื่น</li>
+    <li>License Key ผูกกับ <strong>Account Number เดโม่ของคุณ</strong></li>
+    <li>ต้องมี MT5 ติดตั้งพร้อมใช้งาน และมีโบรกเกอร์ที่มี XAUUSDm/XAUUSDc</li>
+    <li>ไม่มีการเรียกเก็บเงินใดๆ ในช่วงทดลอง <strong>ฟรี 100% ไม่มีเงื่อนไขซ่อนเร้น</strong></li>
+  </ul>
+</div>
+
+<div class="warn-box reveal">
+  <strong>หมายเหตุ:</strong> บัญชีเดโม่ใช้ราคาตลาดจริง แต่ผลลัพธ์อาจแตกต่างจากบัญชีจริงเล็กน้อย เนื่องจาก Spread และ Slippage ในบัญชีเดโม่มักดีกว่าบัญชีจริง ควรคำนึงถึงความต่างนี้ก่อนตัดสินใจลงทุนจริงครับ
+</div>
+
+<div class="sep"></div>
+
+<!-- REFERRAL DISCOUNT -->
+<div class="reveal">
+  <h2 class="plan-title" style="margin-bottom:6px">โปรพิเศษ<span> ช่วงทดลอง</span></h2>
+  <p class="plan-sub">REFERRAL REWARD · LIMITED OFFER</p>
+</div>
+
+<div style="background:linear-gradient(135deg,rgba(212,175,55,0.1),rgba(0,212,255,0.05));border:1px solid rgba(212,175,55,0.35);padding:32px;margin-bottom:16px;position:relative;overflow:hidden;" class="reveal">
+
+  <div style="position:absolute;right:-10px;top:-10px;font-family:'Orbitron',sans-serif;font-size:80px;font-weight:900;color:rgba(212,175,55,0.05);pointer-events:none;letter-spacing:2px;">BONUS</div>
+
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+    <div style="font-size:28px;">🎁</div>
+    <div>
+      <div style="font-family:'Orbitron',sans-serif;font-size:15px;font-weight:700;letter-spacing:2px;color:var(--gold);margin-bottom:4px;">แนะนำเพื่อน = ได้ส่วนลดทันที</div>
+      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--dim);">REFER A FRIEND DURING TRIAL PERIOD</div>
+    </div>
+  </div>
+
+  <p style="font-size:14px;color:#B0BDD0;line-height:1.9;margin-bottom:20px;">
+    ระหว่าง 5 วันทดลอง ถ้าคุณ <strong style="color:var(--text)">แนะนำเพื่อนมาทดลองเดโม่ได้อย่างน้อย 1 คน</strong> คุณจะได้สิทธิ์สมัครแพ็กเกจ Premium ในราคาพิเศษสุดๆ ครับ
+  </p>
+
+  <!-- Price comparison -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:20px;">
+    <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);padding:20px;text-align:center;position:relative;">
+      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--dim);margin-bottom:8px;">ราคาปกติ</div>
+      <div style="font-family:'Orbitron',sans-serif;font-size:38px;font-weight:900;color:var(--dim);line-height:1;text-decoration:line-through;opacity:0.5;">5,500</div>
+      <div style="font-size:11px;color:var(--dim);margin-top:4px;">บาท / เดือน</div>
+      <div style="position:absolute;top:10px;right:10px;background:rgba(255,71,87,0.15);border:1px solid rgba(255,71,87,0.3);color:var(--red);font-family:'Space Mono',monospace;font-size:9px;padding:2px 8px;">PREMIUM</div>
+    </div>
+    <div style="background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.4);padding:20px;text-align:center;position:relative;">
+      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:8px;">ราคาพิเศษสำหรับคุณ</div>
+      <div style="font-family:'Orbitron',sans-serif;font-size:38px;font-weight:900;color:var(--gold);line-height:1;">3,500</div>
+      <div style="font-size:11px;color:var(--dim);margin-top:4px;">บาท / เดือน</div>
+      <div style="position:absolute;top:10px;right:10px;background:rgba(0,255,136,0.12);border:1px solid rgba(0,255,136,0.3);color:var(--green);font-family:'Space Mono',monospace;font-size:9px;padding:2px 8px;">ประหยัด 2,000฿</div>
+    </div>
+  </div>
+
+  <!-- What you get same as premium -->
+  <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.05);padding:16px 20px;margin-bottom:20px;">
+    <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--green);margin-bottom:12px;">✓ ได้ฟีเจอร์ PREMIUM ทุกอย่าง ในราคา STARTER</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+      <div style="font-size:12px;color:#B0BDD0;display:flex;gap:6px;"><span style="color:var(--green)">✓</span> EA ฟีเจอร์ครบ</div>
+      <div style="font-size:12px;color:#B0BDD0;display:flex;gap:6px;"><span style="color:var(--green)">✓</span> Mobile Dashboard</div>
+      <div style="font-size:12px;color:#B0BDD0;display:flex;gap:6px;"><span style="color:var(--green)">✓</span> Priority Support 24 ชม.</div>
+      <div style="font-size:12px;color:#B0BDD0;display:flex;gap:6px;"><span style="color:var(--green)">✓</span> คำแนะนำ Lot รายสัปดาห์</div>
+      <div style="font-size:12px;color:#B0BDD0;display:flex;gap:6px;"><span style="color:var(--green)">✓</span> รายงานผลรายเดือน</div>
+      <div style="font-size:12px;color:#B0BDD0;display:flex;gap:6px;"><span style="color:var(--green)">✓</span> อัปเดต EA ฟรีตลอด</div>
+    </div>
+  </div>
+
+  <!-- How to get -->
+  <div style="border-top:1px solid rgba(212,175,55,0.15);padding-top:16px;">
+    <div style="font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:2px;color:var(--gold);margin-bottom:12px;">วิธีรับส่วนลด</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <div style="font-family:'Orbitron',sans-serif;font-size:11px;color:var(--gold);background:rgba(212,175,55,0.15);border:1px solid rgba(212,175,55,0.3);width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+        <div style="font-size:13px;color:#B0BDD0;">แนะนำเพื่อนมาทักหา KS Trader <strong style="color:var(--text)">ระหว่าง 5 วันทดลอง</strong></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <div style="font-family:'Orbitron',sans-serif;font-size:11px;color:var(--gold);background:rgba(212,175,55,0.15);border:1px solid rgba(212,175,55,0.3);width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
+        <div style="font-size:13px;color:#B0BDD0;">เพื่อนต้องลงทะเบียน <strong style="color:var(--text)">ทดลองเดโม่จริง</strong> (ไม่ใช่แค่ทัก)</div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <div style="font-family:'Orbitron',sans-serif;font-size:11px;color:var(--gold);background:rgba(212,175,55,0.15);border:1px solid rgba(212,175,55,0.3);width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+        <div style="font-size:13px;color:#B0BDD0;">คุณได้รับ Code ส่วนลด <strong style="color:var(--green)">สมัคร Premium ราคา 3,500฿</strong> ทันที</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="background:rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.2);padding:14px 20px 14px 50px;margin-bottom:32px;font-size:13px;color:#B0BDD0;line-height:1.8;position:relative;" class="reveal">
+  <span style="position:absolute;left:16px;top:14px;color:var(--green);font-size:16px;">💡</span>
+  <strong style="color:var(--text)">ไม่มีจำกัดจำนวน!</strong> แนะนำ 2 คนก็ได้ส่วนลด · เพื่อนที่แนะนำมาก็ได้ทดลองฟรีเหมือนกัน · ทุกคนได้ประโยชน์ครับ
+</div>
+
+<div class="sep"></div>
+
+<!-- CTA -->
+<div class="cta-box reveal">
+  <div class="limited-badge">⚡ รับสิทธิ์จำกัด · เดือนละ 10 สิทธิ์เท่านั้น</div>
+  <div class="cta-title">สมัครทดลองใช้ฟรีเลย!</div>
+  <p class="cta-sub">
+    ไม่ต้องจ่ายเงิน · ไม่ต้องใช้บัตรเครดิต · ไม่มีผูกมัด<br>
+    <strong>แค่ทักมาบอกว่าอยากทดลอง ก็ได้รับ Key ทันที</strong>
+  </p>
+  <div class="contact-grid">
+    <a class="contact-btn btn-gold" href="#">
+      ★ สมัครทดลองฟรี 5 วัน
+    </a>
+    <a class="contact-btn btn-line" href="#">
+      LINE: @KSTRADER
+    </a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer reveal">
+  <div class="footer-logo">KS ULTIMATE DATA EA</div>
+  <p>KS TRADER OFFICIAL · ทดลองก่อน แล้วค่อยตัดสินใจ · 2026</p>
+  <p style="margin-top:6px;opacity:0.4;font-size:10px">การเทรด Forex มีความเสี่ยง บัญชีเดโม่ใช้สำหรับการเรียนรู้เท่านั้น</p>
+</div>
+
+</div>
+
+<script>
+var obs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) { if(e.isIntersecting) e.target.classList.add('on'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+</script>
+
+</body>
+</html>
