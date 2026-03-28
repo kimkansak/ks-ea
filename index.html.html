@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KS ULTIMATE DATA — AI Trading System</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #D4AF37;
+  --gold2: #FFD700;
+  --gold3: #B8860B;
+  --cyan: #00D4FF;
+  --cyan2: #00FFFF;
+  --purple: #8B5CF6;
+  --green: #00FF88;
+  --red: #FF4757;
+  --bg: #03050A;
+  --bg2: #080D17;
+  --bg3: #0D1526;
+  --text: #E8F0FF;
+  --dim: #6B7A99;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Sarabun', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ═══ GRID BACKGROUND ═══ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ═══ HERO ═══ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 20px 60px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Glow orbs */
+.orb1, .orb2, .orb3 {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+.orb1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(0,212,255,0.12), transparent 70%);
+  top: -100px; left: 50%; transform: translateX(-50%);
+}
+.orb2 {
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, rgba(212,175,55,0.1), transparent 70%);
+  bottom: 0; left: 10%;
+}
+.orb3 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(139,92,246,0.1), transparent 70%);
+  bottom: 0; right: 5%;
+}
+
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+  animation: fadeUp 0.5s ease both;
+}
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content: '';
+  width: 40px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan));
+}
+.hero-eyebrow::after { background: linear-gradient(90deg, var(--cyan), transparent); }
+.hero-eyebrow span {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--cyan);
+}
+
+.hero-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(36px, 8vw, 88px);
+  font-weight: 900;
+  letter-spacing: 4px;
+  line-height: 1;
+  margin-bottom: 6px;
+  animation: fadeUp 0.6s ease both;
+}
+
+.hero-title .line1 { color: var(--text); }
+.hero-title .line2 {
+  background: linear-gradient(90deg, var(--gold), var(--gold2), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--dim);
+  margin-bottom: 48px;
+  animation: fadeUp 0.7s ease both;
+}
+
+/* Stats row */
+.hero-metrics {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 52px;
+  animation: fadeUp 0.8s ease both;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.metric {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(0,212,255,0.15);
+  padding: 20px 28px;
+  position: relative;
+  min-width: 130px;
+  text-align: center;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+}
+.metric::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, rgba(0,212,255,0.05), transparent);
+  pointer-events: none;
+}
+.metric .m-val {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--cyan);
+  line-height: 1;
+}
+.metric .m-val.gold { color: var(--gold); }
+.metric .m-val.green { color: var(--green); }
+.metric .m-lbl {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--dim);
+  margin-top: 6px;
+  text-transform: uppercase;
+}
+
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, var(--gold3), var(--gold), var(--gold2));
+  color: #000;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 3px;
+  padding: 18px 48px;
+  text-decoration: none;
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+  transition: all 0.3s;
+  animation: fadeUp 0.9s ease both;
+}
+.hero-cta:hover {
+  box-shadow: 0 0 40px rgba(212,175,55,0.5), 0 0 80px rgba(212,175,55,0.2);
+  transform: translateY(-2px);
+}
+.hero-cta::after { content: '→'; font-family: monospace; font-size: 16px; }
+
+/* ═══ SECTION BASE ═══ */
+.section {
+  padding: 100px 20px;
+  max-width: 960px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.section-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: var(--cyan);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-tag::before {
+  content: '';
+  width: 24px; height: 1px;
+  background: var(--cyan);
+}
+
+.section-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(28px, 5vw, 52px);
+  font-weight: 700;
+  letter-spacing: 2px;
+  line-height: 1.15;
+  margin-bottom: 14px;
+}
+
+.section-title .accent {
+  background: linear-gradient(90deg, var(--gold), var(--gold2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-desc {
+  color: var(--dim);
+  font-size: 15px;
+  max-width: 600px;
+  line-height: 1.9;
+  margin-bottom: 48px;
+}
+
+/* ═══ SEPARATOR ═══ */
+.sep {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.2), rgba(212,175,55,0.2), transparent);
+  position: relative;
+  z-index: 1;
+}
+
+/* ═══ HOW IT WORKS ═══ */
+.steps-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+@media(max-width:640px){.steps-grid{grid-template-columns:1fr;}}
+
+.step-card {
+  background: var(--bg2);
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+.step-card:hover { border-color: rgba(0,212,255,0.2); }
+.step-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--cyan), transparent);
+}
+.step-card:nth-child(2)::before { background: linear-gradient(90deg, var(--gold), transparent); }
+.step-card:nth-child(3)::before { background: linear-gradient(90deg, var(--purple), transparent); }
+.step-card:nth-child(4)::before { background: linear-gradient(90deg, var(--green), transparent); }
+
+.step-num {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 60px;
+  font-weight: 900;
+  color: rgba(255,255,255,0.04);
+  line-height: 1;
+  margin-bottom: 16px;
+}
+.step-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+.step-card p { font-size: 13px; color: var(--dim); line-height: 1.9; }
+.step-pill {
+  display: inline-block;
+  margin-top: 14px;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  padding: 4px 12px;
+  border: 1px solid rgba(0,212,255,0.3);
+  color: var(--cyan);
+}
+.step-card:nth-child(2) .step-pill { border-color: rgba(212,175,55,0.3); color: var(--gold); }
+.step-card:nth-child(3) .step-pill { border-color: rgba(139,92,246,0.3); color: #A78BFA; }
+.step-card:nth-child(4) .step-pill { border-color: rgba(0,255,136,0.3); color: var(--green); }
+
+/* ═══ LOT TABLE ═══ */
+.table-wrap {
+  background: var(--bg2);
+  border: 1px solid rgba(0,212,255,0.1);
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+.table-head {
+  background: linear-gradient(90deg, rgba(0,212,255,0.08), rgba(212,175,55,0.05));
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(0,212,255,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.table-head h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: var(--cyan);
+}
+.table-head span {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--dim);
+}
+
+table { width: 100%; border-collapse: collapse; }
+th {
+  padding: 12px 16px;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--dim);
+  text-align: right;
+  font-weight: 400;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+th:first-child { text-align: left; }
+td {
+  padding: 14px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  text-align: right;
+  font-family: 'Space Mono', monospace;
+}
+td:first-child { text-align: left; color: var(--dim); font-family: 'Sarabun', sans-serif; }
+tr:hover td { background: rgba(0,212,255,0.02); }
+tr:last-child td { border-bottom: none; }
+.tr-highlight td { background: rgba(212,175,55,0.04); }
+.tr-highlight td:first-child::after {
+  content: ' ← เริ่มต้น';
+  color: var(--gold);
+  font-size: 11px;
+  font-family: 'Sarabun', sans-serif;
+}
+.v-gold { color: var(--gold); }
+.v-green { color: var(--green); }
+.v-cyan { color: var(--cyan); }
+.v-red { color: var(--red); }
+
+/* ═══ ALERT BOX ═══ */
+.alert {
+  border: 1px solid;
+  padding: 18px 22px;
+  margin-bottom: 24px;
+  position: relative;
+  font-size: 13px;
+  line-height: 1.9;
+}
+.alert::before {
+  position: absolute;
+  top: 18px; left: 22px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+.alert-gold {
+  border-color: rgba(212,175,55,0.25);
+  background: rgba(212,175,55,0.04);
+  color: var(--dim);
+  padding-left: 80px;
+}
+.alert-gold::before { content: 'TIP'; color: var(--gold); }
+.alert-green {
+  border-color: rgba(0,255,136,0.2);
+  background: rgba(0,255,136,0.03);
+  color: var(--dim);
+}
+strong.g { color: var(--gold); }
+strong.c { color: var(--cyan); }
+strong.gr { color: var(--green); }
+
+/* ═══ CALC SECTION ═══ */
+.calc-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+  margin-bottom: 2px;
+}
+@media(max-width:600px){.calc-grid{grid-template-columns:1fr;}}
+
+.calc-card {
+  background: var(--bg2);
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.calc-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--cyan);
+}
+.calc-card.c-gold::after { background: var(--gold); }
+.calc-card.c-green::after { background: var(--green); }
+.calc-card.c-red::after { background: var(--red); }
+.calc-card.c-purple::after { background: var(--purple); }
+
+.cc-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--dim);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.cc-val {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--cyan);
+}
+.c-gold .cc-val { color: var(--gold); }
+.c-green .cc-val { color: var(--green); }
+.c-red .cc-val { color: var(--red); }
+.c-purple .cc-val { color: #A78BFA; }
+.cc-sub { font-size: 12px; color: var(--dim); margin-top: 6px; }
+
+/* ═══ BREAKDOWN TABLE ═══ */
+.breakdown {
+  background: var(--bg2);
+  border: 1px solid rgba(212,175,55,0.15);
+  margin-bottom: 24px;
+}
+.breakdown-hd {
+  background: rgba(212,175,55,0.06);
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(212,175,55,0.1);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--gold);
+}
+.brow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  font-size: 14px;
+}
+.brow:last-child { border-bottom: none; }
+.brow .bl { color: var(--dim); }
+.brow .br { font-weight: 600; font-family: 'Space Mono', monospace; font-size: 13px; }
+.brow.total { background: rgba(0,255,136,0.04); border-top: 1px solid rgba(0,255,136,0.1); }
+.brow.scale { background: rgba(255,255,255,0.01); }
+
+/* ═══ PRICING ═══ */
+.price-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+@media(max-width:580px){.price-grid{grid-template-columns:1fr;}}
+
+.price-card {
+  background: var(--bg2);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 36px 28px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+.price-card:hover { transform: translateY(-4px); }
+
+.price-card.featured {
+  border-color: rgba(212,175,55,0.3);
+  background: linear-gradient(180deg, rgba(212,175,55,0.05), var(--bg2));
+}
+
+.featured-badge {
+  position: absolute;
+  top: 0; right: 0;
+  background: linear-gradient(135deg, var(--gold3), var(--gold));
+  color: #000;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 8px;
+  letter-spacing: 2px;
+  padding: 6px 16px;
+  clip-path: polygon(12px 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.plan-name {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--dim);
+  margin-bottom: 20px;
+}
+
+.plan-price {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 56px;
+  font-weight: 900;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.plan-per { font-size: 12px; color: var(--dim); margin-bottom: 6px; }
+
+.plan-daily {
+  display: inline-block;
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.15);
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--cyan);
+  padding: 5px 12px;
+  margin-bottom: 24px;
+}
+
+.plan-sep {
+  width: 100%; height: 1px;
+  background: rgba(255,255,255,0.05);
+  margin-bottom: 20px;
+}
+
+.feature-list { list-style: none; }
+.feature-list li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 13px;
+  color: var(--dim);
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.feature-list li:last-child { border-bottom: none; }
+.feature-list li::before {
+  content: '▸';
+  color: var(--cyan);
+  font-size: 10px;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+.price-card.featured .feature-list li::before { color: var(--gold); }
+
+/* ═══ FOOTER ═══ */
+.footer {
+  border-top: 1px solid rgba(0,212,255,0.1);
+  padding: 48px 20px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.footer-logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  background: linear-gradient(90deg, var(--gold), var(--gold2), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
+}
+.footer p { font-size: 12px; color: var(--dim); line-height: 1.8; }
+.footer .disclaimer { font-size: 11px; color: rgba(107,122,153,0.5); margin-top: 16px; }
+
+/* ═══ REVEAL ═══ */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.on { opacity: 1; transform: none; }
+.reveal-d1 { transition-delay: 0.1s; }
+.reveal-d2 { transition-delay: 0.2s; }
+.reveal-d3 { transition-delay: 0.3s; }
+
+/* ═══ SCAN LINE EFFECT ═══ */
+.scan-container { position: relative; overflow: hidden; }
+.scan-container::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.4), transparent);
+  animation: scan 4s linear infinite;
+}
+@keyframes scan { to { top: 110%; } }
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.dot-pulse {
+  display: inline-block;
+  width: 6px; height: 6px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: pulse 2s ease infinite;
+  margin-right: 6px;
+}
+
+/* ═══ NUMBER TICKER ═══ */
+.ticker {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--dim);
+  background: rgba(0,212,255,0.05);
+  border: 1px solid rgba(0,212,255,0.1);
+  padding: 8px 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<div class="hero scan-container">
+  <div class="orb1"></div>
+  <div class="orb2"></div>
+  <div class="orb3"></div>
+
+  <div class="ticker">
+    <span class="dot-pulse"></span>
+    LIVE · XAU/USD · AI SIGNAL ACTIVE
+  </div>
+
+  <div class="hero-eyebrow">
+    <span>KS TRADER OFFICIAL · AUTOMATED SYSTEM</span>
+  </div>
+
+  <h1 class="hero-title">
+    <div class="line1">KS ULTIMATE</div>
+    <div class="line2">DATA EA</div>
+  </h1>
+
+  <p class="hero-subtitle">AI-POWERED GOLD TRADING · CENT ACCOUNT · AUTO RISK MANAGEMENT</p>
+
+  <div class="hero-metrics">
+    <div class="metric">
+      <div class="m-val green">10%</div>
+      <div class="m-lbl">Target / วัน</div>
+    </div>
+    <div class="metric">
+      <div class="m-val" style="color:var(--red)">5%</div>
+      <div class="m-lbl">Max Loss / วัน</div>
+    </div>
+    <div class="metric">
+      <div class="m-val gold">100$</div>
+      <div class="m-lbl">ทุนขั้นต่ำ</div>
+    </div>
+    <div class="metric">
+      <div class="m-val">24/7</div>
+      <div class="m-lbl">Auto Trade</div>
+    </div>
+    <div class="metric">
+      <div class="m-val" style="color:var(--purple)">XAU</div>
+      <div class="m-lbl">Symbol</div>
+    </div>
+  </div>
+
+  <a href="#pricing" class="hero-cta">ดูแพ็กเกจทั้งหมด</a>
+</div>
+
+<div class="sep"></div>
+
+<!-- ═══════════════════ HOW IT WORKS ═══════════════════ -->
+<div class="section">
+  <div class="section-tag reveal">SYSTEM OVERVIEW</div>
+  <h2 class="section-title reveal">ระบบทำงาน<br><span class="accent">อย่างไร?</span></h2>
+  <p class="section-desc reveal">EA วิเคราะห์ตลาด XAU/USD ด้วย Data Signal แบบ Multi-layer ส่งคำสั่งเทรดอัตโนมัติ พร้อมบริหารความเสี่ยงและแจ้งผลผ่านมือถือ Real-time</p>
+
+  <div class="steps-grid">
+    <div class="step-card reveal reveal-d1">
+      <div class="step-num">01</div>
+      <h3>วิเคราะห์ Data Signal Real-time</h3>
+      <p>ใช้ข้อมูล Supertrend + ATR + Trend Direction วิเคราะห์ทุก Tick พร้อม Multi-layer Confirmation เพื่อกรองสัญญาณผิดพลาด</p>
+      <div class="step-pill">AI-POWERED SIGNAL</div>
+    </div>
+    <div class="step-card reveal reveal-d2">
+      <div class="step-num">02</div>
+      <h3>เข้าเทรดอัตโนมัติทันที</h3>
+      <p>เมื่อสัญญาณผ่านการยืนยัน EA เปิด Order แบบ Multi-Layer พร้อม Auto SL ที่คำนวณจาก Indicator เพื่อปกป้องทุนทุกออเดอร์</p>
+      <div class="step-pill">INSTANT EXECUTION</div>
+    </div>
+    <div class="step-card reveal reveal-d1">
+      <div class="step-num">03</div>
+      <h3>Auto Risk Management ทุกวัน</h3>
+      <p>กำไรถึง 10% ต่อวัน → หยุดเทรด Lock Profit · ขาดทุน 5% ต่อวัน → หยุดทันทีปกป้องทุน ระบบ Reset ใหม่ทุกวัน</p>
+      <div class="step-pill">DAILY RISK CONTROL</div>
+    </div>
+    <div class="step-card reveal reveal-d2">
+      <div class="step-num">04</div>
+      <h3>ดูผลและสั่งการผ่านมือถือ</h3>
+      <p>Dashboard อัปเดต P&L, Cycles, Balance ทุก 5 วินาที สั่ง ON/OFF, Close All, Emergency Stop จากมือถือได้เลย ไม่ต้องอยู่หน้าคอม</p>
+      <div class="step-pill">MOBILE DASHBOARD</div>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- ═══════════════════ LOT SIZING ═══════════════════ -->
+<div class="section">
+  <div class="section-tag reveal">LOT MANAGEMENT</div>
+  <h2 class="section-title reveal">ปรับ Lot ตามทุน<br><span class="accent">เติบโตเป็นขั้นตอน</span></h2>
+  <p class="section-desc reveal">กำไร 10%/วัน · ขาดทุนหยุด 5%/วัน — ปรับ Lot ขึ้นเมื่อพอร์ตโต ลด Lot เมื่อขาดทุน วิธีนี้ทำให้พอร์ตเติบโตแบบ Compound อย่างปลอดภัย</p>
+
+  <div class="table-wrap reveal">
+    <div class="table-head">
+      <h3>CENT ACCOUNT · LOT SIZING TABLE</h3>
+      <span>Target +10%/day · SL -5%/day</span>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>ทุน (เซน / USD)</th>
+            <th>Lot</th>
+            <th>กำไร +10%/วัน</th>
+            <th>Stop -5%/วัน</th>
+            <th>กำไร/เดือน*</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="tr-highlight">
+            <td>10,000¢ / 100$</td>
+            <td class="v-gold">0.01</td>
+            <td class="v-green">+1,000¢</td>
+            <td class="v-red">-500¢</td>
+            <td class="v-cyan">~200$+</td>
+          </tr>
+          <tr>
+            <td>20,000¢ / 200$</td>
+            <td class="v-gold">0.02</td>
+            <td class="v-green">+2,000¢</td>
+            <td class="v-red">-1,000¢</td>
+            <td class="v-cyan">~400$+</td>
+          </tr>
+          <tr>
+            <td>30,000¢ / 300$</td>
+            <td class="v-gold">0.03</td>
+            <td class="v-green">+3,000¢</td>
+            <td class="v-red">-1,500¢</td>
+            <td class="v-cyan">~600$+</td>
+          </tr>
+          <tr>
+            <td>50,000¢ / 500$</td>
+            <td class="v-gold">0.05</td>
+            <td class="v-green">+5,000¢</td>
+            <td class="v-red">-2,500¢</td>
+            <td class="v-cyan">~1,000$+</td>
+          </tr>
+          <tr>
+            <td>100,000¢ / 1,000$</td>
+            <td class="v-gold">0.10</td>
+            <td class="v-green">+10,000¢</td>
+            <td class="v-red">-5,000¢</td>
+            <td class="v-cyan">~2,000$+</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="alert alert-gold reveal">
+    <strong class="g">กฎทอง:</strong> เมื่อพอร์ตโต 20% จากทุนเดิม → ขยับ Lot ขึ้น 1 ระดับ · ถ้าขาดทุนถึง 5% ใน 1 วัน → ระบบหยุดอัตโนมัติ ไม่ต้องทำอะไร · อย่าขยับ Lot เกินตาราง เพราะความเสี่ยงจะสูงขึ้นแบบทวีคูณ
+  </div>
+
+  <div class="alert alert-green reveal">
+    <p>* กำไร/เดือน คำนวณจากสมมติว่าทำกำไรได้ 20 วันทำการต่อเดือน ผลลัพธ์จริงขึ้นอยู่กับสภาวะตลาด</p>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- ═══════════════════ PROFIT CALC ═══════════════════ -->
+<div class="section">
+  <div class="section-tag reveal">ROI CALCULATOR</div>
+  <h2 class="section-title reveal">ทุน 100$ กำไร 10%/วัน<br><span class="accent">คุ้มค่าเช่าแค่ไหน?</span></h2>
+  <p class="section-desc reveal">คำนวณจากทุนขั้นต่ำ 10,000 เซน (100 USD) · ค่าเช่า 3,500 บาท/เดือน · อัตรา 35 บาท/ดอลลาร์</p>
+
+  <div class="calc-grid reveal">
+    <div class="calc-card c-green">
+      <div class="cc-label">กำไร 10% ต่อวัน (ทุน 100$)</div>
+      <div class="cc-val">10$</div>
+      <div class="cc-sub">= 350 บาท ต่อวันที่ทำกำไรได้</div>
+    </div>
+    <div class="calc-card c-red">
+      <div class="cc-label">ค่าเช่า EA ต่อเดือน</div>
+      <div class="cc-val">3,500฿</div>
+      <div class="cc-sub">= ตกวันละ ~116 บาท</div>
+    </div>
+    <div class="calc-card c-gold">
+      <div class="cc-label">วันที่ต้องกำไร เพื่อคุ้มค่าเช่า (ทุน 100$)</div>
+      <div class="cc-val">10 วัน</div>
+      <div class="cc-sub">= 10$ × 10 วัน = 100$ = 3,500฿</div>
+    </div>
+    <div class="calc-card c-purple">
+      <div class="cc-label">อีก 10 วันที่เหลือ (กำไรสุทธิ)</div>
+      <div class="cc-val">+100$</div>
+      <div class="cc-sub">= เข้ากระเป๋าล้วนๆ ~3,500฿</div>
+    </div>
+  </div>
+
+  <div class="breakdown reveal">
+    <div class="breakdown-hd">MONTHLY BREAKDOWN — ทุน 100$ (10,000 เซน)</div>
+    <div class="brow">
+      <span class="bl">กำไรรวม 20 วันทำการ (10$/วัน)</span>
+      <span class="br v-green">+200$ (~7,000฿)</span>
+    </div>
+    <div class="brow">
+      <span class="bl">ค่าเช่า EA รายเดือน</span>
+      <span class="br v-red">-3,500฿</span>
+    </div>
+    <div class="brow total">
+      <span class="bl" style="color:var(--text);font-weight:600">กำไรสุทธิเข้ากระเป๋า</span>
+      <span class="br v-green">≈ +3,500฿ (~100$)</span>
+    </div>
+  </div>
+
+  <div class="breakdown reveal">
+    <div class="breakdown-hd">SCALE UP — ยิ่งทุนมาก ยิ่งกำไรมาก</div>
+    <div class="brow scale">
+      <span class="bl">ทุน 200$ → กำไร 20$/วัน × 20 วัน = 400$</span>
+      <span class="br v-green">สุทธิ +10,500฿/เดือน</span>
+    </div>
+    <div class="brow scale">
+      <span class="bl">ทุน 500$ → กำไร 50$/วัน × 20 วัน = 1,000$</span>
+      <span class="br v-green">สุทธิ +31,500฿/เดือน</span>
+    </div>
+    <div class="brow scale">
+      <span class="bl">ทุน 1,000$ → กำไร 100$/วัน × 20 วัน = 2,000$</span>
+      <span class="br v-green">สุทธิ +66,500฿/เดือน</span>
+    </div>
+  </div>
+
+  <div class="alert alert-gold reveal">
+    <strong class="g">สรุป:</strong> ทุน 100$ ใน 10 วันแรกคุ้มค่าเช่า · อีก 10 วันที่เหลือกำไรล้วนๆ เข้ากระเป๋า · ยิ่งทุนมาก กำไรสุทธิยิ่งห่างจากค่าเช่ามากขึ้นอย่างก้าวกระโดด · <strong class="gr">แนะนำเริ่มที่ 100$ แล้ว Compound กำไรไปเรื่อยๆ</strong>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- ═══════════════════ PRICING ═══════════════════ -->
+<div class="section" id="pricing">
+  <div class="section-tag reveal">SUBSCRIPTION</div>
+  <h2 class="section-title reveal">เลือกแพ็กเกจ<br><span class="accent">ที่ใช่สำหรับคุณ</span></h2>
+  <p class="section-desc reveal">ค่าเช่ารายเดือน รวม EA + Mobile Dashboard + License Key เฉพาะบัญชีคุณ</p>
+
+  <div class="price-grid reveal">
+    <div class="price-card">
+      <div class="plan-name">STARTER PLAN</div>
+      <div class="plan-price">3,500</div>
+      <div class="plan-per">บาท / เดือน</div>
+      <div class="plan-daily">≈ 116 บาท / วัน</div>
+      <div class="plan-sep"></div>
+      <ul class="feature-list">
+        <li>EA ติดตั้งบน MT5 ของคุณ</li>
+        <li>Mobile Dashboard Real-time</li>
+        <li>License Key เฉพาะบัญชี</li>
+        <li>Auto Risk Management</li>
+        <li>Support ทาง Line</li>
+        <li>คู่มือแนะนำ Lot ตามทุน</li>
+      </ul>
+    </div>
+    <div class="price-card featured">
+      <div class="featured-badge">RECOMMENDED</div>
+      <div class="plan-name">PREMIUM PLAN</div>
+      <div class="plan-price">5,500</div>
+      <div class="plan-per">บาท / เดือน</div>
+      <div class="plan-daily">≈ 183 บาท / วัน</div>
+      <div class="plan-sep"></div>
+      <ul class="feature-list">
+        <li>ทุกอย่างใน Starter</li>
+        <li>Priority Support 24 ชม.</li>
+        <li>คำแนะนำปรับ Lot รายสัปดาห์</li>
+        <li>รายงานผลสรุปรายเดือน</li>
+        <li>อัปเดต EA ฟรีตลอดการเช่า</li>
+        <li>แจ้งเตือน Signal พิเศษ</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="alert alert-gold reveal" style="margin-top:20px">
+    <strong class="g">ทุนขั้นต่ำ:</strong> <strong class="c">10,000 เซน (100 USD)</strong> · รองรับบัญชีเซน XAUUSDm/XAUUSDc · EA รันบนคอมของคุณ MT5 ต้องเปิดทิ้งไว้ · <strong class="gr">แนะนำบัญชีเซนสำหรับผู้เริ่มต้น ความเสี่ยงต่ำ ปั้นพอร์ตได้อย่างมั่นคง</strong>
+  </div>
+</div>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<div class="sep"></div>
+<footer class="footer">
+  <div class="footer-logo">KS ULTIMATE DATA</div>
+  <p>KS TRADER OFFICIAL · AI Trading System · XAU/USD · 2026</p>
+  <p class="disclaimer">การเทรด Forex/Gold มีความเสี่ยงสูง ผลตอบแทนในอดีตไม่ได้รับประกันผลในอนาคต<br>ลงทุนเฉพาะส่วนที่รับความเสี่ยงได้ ตัวเลขกำไรเป็นการประมาณการเท่านั้น</p>
+</footer>
+
+<script>
+// Intersection Observer for reveals
+var obs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) e.target.classList.add('on');
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+
+// Smooth scroll
+document.querySelector('.hero-cta').addEventListener('click', function(e) {
+  e.preventDefault();
+  document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+});
+</script>
+</body>
+</html>
