@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KS ULTIMATE DATA EA — คู่มือการใช้งาน</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #D4AF37;
+  --gold2: #FFD700;
+  --gold3: #B8860B;
+  --cyan: #00D4FF;
+  --green: #00FF88;
+  --red: #FF4757;
+  --orange: #FF6B35;
+  --purple: #8B5CF6;
+  --bg: #03050A;
+  --bg2: #080D17;
+  --bg3: #0D1526;
+  --text: #E8F0FF;
+  --dim: #6B7A99;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Sarabun', sans-serif;
+  line-height: 1.8;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ═══ SIDEBAR NAV ═══ */
+.sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: 240px;
+  height: 100vh;
+  background: rgba(8,13,23,0.97);
+  border-right: 1px solid rgba(0,212,255,0.08);
+  padding: 24px 0;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.sidebar-logo {
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  margin-bottom: 16px;
+}
+
+.sidebar-logo .brand {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sidebar-logo .version {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: 2px;
+  margin-top: 3px;
+}
+
+.nav-section {
+  padding: 0 12px;
+  margin-bottom: 8px;
+}
+
+.nav-section-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: var(--dim);
+  padding: 8px 8px 4px;
+  text-transform: uppercase;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  color: var(--dim);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.nav-item:hover { background: rgba(0,212,255,0.06); color: var(--text); }
+.nav-item.active { background: rgba(0,212,255,0.1); color: var(--cyan); }
+.nav-item.warn { color: #FF6B35; }
+.nav-item.warn:hover { background: rgba(255,107,53,0.08); }
+
+.nav-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--dim);
+  flex-shrink: 0;
+}
+.nav-item.active .nav-dot { background: var(--cyan); }
+.nav-item.warn .nav-dot { background: var(--orange); }
+
+/* ═══ MAIN CONTENT ═══ */
+.main {
+  margin-left: 240px;
+  padding: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* ═══ HERO ═══ */
+.hero {
+  padding: 60px 60px 40px;
+  border-bottom: 1px solid rgba(0,212,255,0.06);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  width: 400px; height: 300px;
+  background: radial-gradient(ellipse, rgba(0,212,255,0.06), transparent 70%);
+  top: -50px; right: 0;
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.2);
+  padding: 5px 14px;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--cyan);
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(24px, 4vw, 44px);
+  font-weight: 900;
+  letter-spacing: 2px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+.hero h1 span {
+  background: linear-gradient(90deg, var(--gold), var(--gold2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  color: var(--dim);
+  font-size: 15px;
+  max-width: 600px;
+  line-height: 1.9;
+}
+
+.hero-meta {
+  display: flex;
+  gap: 24px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.meta-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--gold); }
+
+/* ═══ CONTENT ═══ */
+.content {
+  padding: 0 60px 80px;
+}
+
+/* ═══ SECTION ═══ */
+.doc-section {
+  padding: 48px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.doc-section:last-child { border-bottom: none; }
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.section-icon {
+  width: 40px; height: 40px;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.icon-cyan { border-color: rgba(0,212,255,0.3); color: var(--cyan); }
+.icon-gold { border-color: rgba(212,175,55,0.3); color: var(--gold); }
+.icon-green { border-color: rgba(0,255,136,0.3); color: var(--green); }
+.icon-red { border-color: rgba(255,71,87,0.3); color: var(--red); }
+.icon-orange { border-color: rgba(255,107,53,0.3); color: var(--orange); }
+.icon-purple { border-color: rgba(139,92,246,0.3); color: #A78BFA; }
+
+.section-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--dim);
+  margin-bottom: 6px;
+}
+
+.section-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(18px, 3vw, 28px);
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+
+.section-title .acc { color: var(--gold); }
+.section-title .acc2 { color: var(--cyan); }
+.section-title .acc3 { color: var(--red); }
+
+/* ═══ PROSE ═══ */
+.prose { font-size: 14px; color: #B0BDD0; line-height: 1.9; margin-bottom: 20px; }
+.prose strong { color: var(--text); font-weight: 600; }
+.prose .hl { color: var(--gold); font-weight: 600; }
+.prose .hl2 { color: var(--cyan); }
+.prose .hl3 { color: var(--green); }
+.prose .hl-red { color: var(--red); }
+
+/* ═══ CARDS ═══ */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2px;
+  margin-bottom: 24px;
+}
+
+.info-card {
+  background: var(--bg2);
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.info-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+
+.card-cyan::before { background: var(--cyan); }
+.card-gold::before { background: var(--gold); }
+.card-green::before { background: var(--green); }
+.card-red::before { background: var(--red); }
+.card-orange::before { background: var(--orange); }
+.card-purple::before { background: #A78BFA; }
+
+.card-icon { font-size: 20px; margin-bottom: 10px; }
+.card-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--dim);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.card-val {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--cyan);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.card-cyan .card-val { color: var(--cyan); }
+.card-gold .card-val { color: var(--gold); }
+.card-green .card-val { color: var(--green); }
+.card-red .card-val { color: var(--red); }
+.card-orange .card-val { color: var(--orange); }
+.card-purple .card-val { color: #A78BFA; }
+.card-desc { font-size: 12px; color: var(--dim); }
+
+/* ═══ STEP LIST ═══ */
+.step-list { list-style: none; margin-bottom: 24px; }
+.step-item {
+  display: flex;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  align-items: flex-start;
+}
+.step-item:last-child { border-bottom: none; }
+.step-num {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gold);
+  min-width: 28px;
+  height: 28px;
+  border: 1px solid rgba(212,175,55,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.step-body { font-size: 13px; color: #B0BDD0; line-height: 1.8; }
+.step-body strong { color: var(--text); }
+.step-body code {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.15);
+  color: var(--cyan);
+  padding: 1px 6px;
+}
+
+/* ═══ WARNING BOXES ═══ */
+.warn-box {
+  border: 1px solid;
+  padding: 18px 22px;
+  margin-bottom: 16px;
+  position: relative;
+  padding-left: 56px;
+}
+
+.warn-box::before {
+  position: absolute;
+  left: 18px;
+  top: 18px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+
+.warn-box.danger {
+  border-color: rgba(255,71,87,0.3);
+  background: rgba(255,71,87,0.04);
+}
+.warn-box.danger::before { content: '⚠'; color: var(--red); font-family: sans-serif; font-size: 16px; }
+
+.warn-box.caution {
+  border-color: rgba(255,107,53,0.3);
+  background: rgba(255,107,53,0.04);
+}
+.warn-box.caution::before { content: '!'; color: var(--orange); font-size: 18px; font-weight: 900; }
+
+.warn-box.info {
+  border-color: rgba(0,212,255,0.2);
+  background: rgba(0,212,255,0.03);
+}
+.warn-box.info::before { content: 'i'; color: var(--cyan); font-size: 16px; font-weight: 900; font-family: Georgia, serif; font-style: italic; }
+
+.warn-box.success {
+  border-color: rgba(0,255,136,0.2);
+  background: rgba(0,255,136,0.03);
+}
+.warn-box.success::before { content: '✓'; color: var(--green); font-size: 16px; }
+
+.warn-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.danger .warn-title { color: var(--red); }
+.caution .warn-title { color: var(--orange); }
+.info .warn-title { color: var(--cyan); }
+.success .warn-title { color: var(--green); }
+
+.warn-box p { font-size: 13px; color: #B0BDD0; line-height: 1.9; }
+.warn-box p strong { color: var(--text); }
+
+/* ═══ TABLE ═══ */
+.doc-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px; }
+.doc-table th {
+  padding: 10px 14px;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--dim);
+  text-align: left;
+  background: rgba(255,255,255,0.02);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.doc-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  color: #B0BDD0;
+  vertical-align: top;
+}
+.doc-table tr:last-child td { border-bottom: none; }
+.doc-table tr:hover td { background: rgba(0,212,255,0.02); }
+.doc-table .param { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--cyan); }
+.doc-table .default { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--gold); }
+.doc-table td strong { color: var(--text); }
+
+/* ═══ CODE BLOCK ═══ */
+.code-block {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(0,212,255,0.1);
+  padding: 16px 18px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--green);
+  margin-bottom: 20px;
+  line-height: 1.8;
+  overflow-x: auto;
+}
+.code-block .cm { color: var(--dim); }
+.code-block .ck { color: var(--gold); }
+.code-block .cv { color: var(--cyan); }
+
+/* ═══ DIVIDER ═══ */
+.sep { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,212,255,0.1), transparent); margin: 0; }
+
+/* ═══ CHECKLIST ═══ */
+.checklist { list-style: none; margin-bottom: 20px; }
+.checklist li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 7px 0;
+  font-size: 13px;
+  color: #B0BDD0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.checklist li:last-child { border-bottom: none; }
+.checklist li::before {
+  content: '▸';
+  color: var(--cyan);
+  font-size: 10px;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+.checklist li.warn::before { color: var(--red); content: '✕'; }
+.checklist li strong { color: var(--text); }
+
+/* ═══ MOBILE ═══ */
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; }
+  .hero { padding: 40px 24px 30px; }
+  .content { padding: 0 24px 60px; }
+}
+
+/* ═══ SCROLLBAR ═══ */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.2); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">KS ULTIMATE DATA</div>
+    <div class="version">USER MANUAL · v12.87</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">เริ่มต้น</div>
+    <a class="nav-item active" href="#overview"><span class="nav-dot"></span>ภาพรวมระบบ</a>
+    <a class="nav-item" href="#requirements"><span class="nav-dot"></span>สิ่งที่ต้องมี</a>
+    <a class="nav-item" href="#install"><span class="nav-dot"></span>ติดตั้ง EA</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">การตั้งค่า</div>
+    <a class="nav-item" href="#settings"><span class="nav-dot"></span>พารามิเตอร์สำคัญ</a>
+    <a class="nav-item" href="#lot"><span class="nav-dot"></span>การตั้ง Lot</a>
+    <a class="nav-item" href="#dashboard"><span class="nav-dot"></span>Mobile Dashboard</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">การใช้งาน</div>
+    <a class="nav-item" href="#daily"><span class="nav-dot"></span>ขั้นตอนประจำวัน</a>
+    <a class="nav-item" href="#signals"><span class="nav-dot"></span>อ่านสัญญาณ</a>
+    <a class="nav-item" href="#commands"><span class="nav-dot"></span>คำสั่งจาก Dashboard</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">ความปลอดภัย</div>
+    <a class="nav-item warn" href="#warnings"><span class="nav-dot"></span>คำเตือนสำคัญ</a>
+    <a class="nav-item warn" href="#risks"><span class="nav-dot"></span>ความเสี่ยง</a>
+    <a class="nav-item" href="#faq"><span class="nav-dot"></span>คำถามที่พบบ่อย</a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">📖 OFFICIAL USER MANUAL</div>
+    <h1>คู่มือการใช้งาน<br><span>KS ULTIMATE DATA EA</span></h1>
+    <p class="hero-sub">อ่านคู่มือนี้ให้ครบก่อนเริ่มใช้งาน เพื่อความเข้าใจที่ถูกต้องและผลลัพธ์ที่ดีที่สุด</p>
+    <div class="hero-meta">
+      <div class="meta-item"><span class="meta-dot"></span> Version 12.87</div>
+      <div class="meta-item"><span class="meta-dot"></span> XAU/USD · M5</div>
+      <div class="meta-item"><span class="meta-dot"></span> บัญชีเซน</div>
+      <div class="meta-item"><span class="meta-dot"></span> MT5 Platform</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ═══ OVERVIEW ═══ -->
+    <div class="doc-section" id="overview">
+      <div class="section-header">
+        <div class="section-icon icon-cyan">◈</div>
+        <div>
+          <div class="section-tag">SECTION 01</div>
+          <h2 class="section-title">ภาพรวม<span class="acc2"> ระบบ</span></h2>
+        </div>
+      </div>
+
+      <p class="prose">KS ULTIMATE DATA EA คือระบบเทรดอัตโนมัติสำหรับทอง (XAU/USD) บนแพลตฟอร์ม MetaTrader 5 ใช้ Indicator Supertrend V5 ในการวิเคราะห์ทิศทางตลาดและส่งสัญญาณ Buy/Sell โดย EA จะเข้า Order อัตโนมัติเมื่อสัญญาณยืนยัน พร้อมระบบบริหารความเสี่ยงที่หยุดเทรดอัตโนมัติเมื่อถึงเป้ากำไรหรือเพดานขาดทุน</p>
+
+      <div class="card-grid">
+        <div class="info-card card-cyan">
+          <div class="card-icon">📡</div>
+          <div class="card-title">Signal Source</div>
+          <div class="card-val" style="font-size:14px">SuperTrend V5</div>
+          <div class="card-desc">ATR Period 10 · Multiplier 3.0</div>
+        </div>
+        <div class="info-card card-gold">
+          <div class="card-icon">📊</div>
+          <div class="card-title">Timeframe</div>
+          <div class="card-val">M5</div>
+          <div class="card-desc">5 นาที · 10-20 สัญญาณ/วัน</div>
+        </div>
+        <div class="info-card card-green">
+          <div class="card-icon">🎯</div>
+          <div class="card-title">Daily Target</div>
+          <div class="card-val">10%</div>
+          <div class="card-desc">ต่อวัน · หยุดอัตโนมัติเมื่อถึง</div>
+        </div>
+        <div class="info-card card-red">
+          <div class="card-icon">🛡️</div>
+          <div class="card-title">Daily Stop Loss</div>
+          <div class="card-val">5%</div>
+          <div class="card-desc">ต่อวัน · หยุดอัตโนมัติเมื่อถึง</div>
+        </div>
+      </div>
+
+      <div class="warn-box info">
+        <div class="warn-title">วิธีการทำงานโดยย่อ</div>
+        <p>EA อ่านสัญญาณจาก Indicator → เมื่อ Trend เปลี่ยนทิศ EA จะปิดไม้เก่าและเปิดไม้ใหม่ตามทิศทางใหม่ → ระบบติดตาม P&L แบบ Real-time → เมื่อกำไรรวมถึงเป้าหรือขาดทุนถึงเพดาน EA จะหยุดเทรดอัตโนมัติจนถึงวันถัดไป</p>
+      </div>
+    </div>
+
+    <!-- ═══ REQUIREMENTS ═══ -->
+    <div class="doc-section" id="requirements">
+      <div class="section-header">
+        <div class="section-icon icon-gold">◉</div>
+        <div>
+          <div class="section-tag">SECTION 02</div>
+          <h2 class="section-title">สิ่งที่<span class="acc"> ต้องมี</span></h2>
+        </div>
+      </div>
+
+      <p class="prose">ก่อนเริ่มใช้งาน ตรวจสอบให้แน่ใจว่ามีครบทุกอย่างดังนี้:</p>
+
+      <ul class="checklist">
+        <li><strong>คอมพิวเตอร์</strong> ที่เปิดทิ้งไว้ได้ตลอดเวลาตลาดเปิด (หรือ VPS)</li>
+        <li><strong>MetaTrader 5 (MT5)</strong> ติดตั้งเรียบร้อย เชื่อมต่อ Broker แล้ว</li>
+        <li><strong>บัญชีเซน (Cent Account)</strong> กับโบรกเกอร์ที่มี XAUUSDm หรือ XAUUSDc</li>
+        <li><strong>ทุนขั้นต่ำ 10,000 เซน</strong> (เทียบเท่า 100 USD) ในบัญชี</li>
+        <li><strong>License Key</strong> ที่ได้รับจาก KS Trader Official</li>
+        <li><strong>ไฟล์ EA</strong> — KS_ULTIMATE_DATA.mq5</li>
+        <li><strong>ไฟล์ Indicator</strong> — SuperTrend_V5_Fixed.mq5</li>
+        <li><strong>Internet</strong> เชื่อมต่อตลอดเวลาที่ EA รันอยู่</li>
+        <li><strong>อนุญาต WebRequest</strong> ใน MT5 สำหรับ URL ของระบบ</li>
+      </ul>
+
+      <div class="warn-box caution">
+        <div class="warn-title">สำคัญ — VPS แนะนำ</div>
+        <p>ถ้าคอมที่บ้านปิดหรือไฟดับ EA จะหยุดทำงานทันที แนะนำใช้ <strong>VPS (Virtual Private Server)</strong> เพื่อให้ระบบทำงานต่อเนื่อง 24/7 โดยไม่พึ่งคอมที่บ้านครับ</p>
+      </div>
+    </div>
+
+    <!-- ═══ INSTALL ═══ -->
+    <div class="doc-section" id="install">
+      <div class="section-header">
+        <div class="section-icon icon-cyan">⬡</div>
+        <div>
+          <div class="section-tag">SECTION 03</div>
+          <h2 class="section-title">ขั้นตอน<span class="acc2"> ติดตั้ง</span></h2>
+        </div>
+      </div>
+
+      <ol class="step-list">
+        <li class="step-item">
+          <div class="step-num">01</div>
+          <div class="step-body">
+            <strong>ติดตั้งไฟล์ Indicator</strong><br>
+            รับไฟล์ <code>SuperTrend_V5_Fixed.mq5</code> จาก KS Trader → ลากไฟล์ไปวางในโฟลเดอร์ <code>MQL5/Indicators/</code> ได้เลย ไม่ต้องทำอะไรเพิ่ม
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">02</div>
+          <div class="step-body">
+            <strong>ติดตั้งไฟล์ EA</strong><br>
+            รับไฟล์ <code>KS_ULTIMATE_DATA.mq5</code> จาก KS Trader → ลากไฟล์ไปวางในโฟลเดอร์ <code>MQL5/Experts/</code> ได้เลย ไม่ต้องทำอะไรเพิ่ม
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">03</div>
+          <div class="step-body">
+            <strong>อนุญาต WebRequest ใน MT5</strong><br>
+            ไปที่ Tools → Options → Expert Advisors → ติ๊ก "Allow WebRequests" แล้วเพิ่ม URL ของระบบ KS
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">04</div>
+          <div class="step-body">
+            <strong>เปิด Chart XAUUSDm (หรือ XAUUSDc) Timeframe M5</strong><br>
+            ใน MT5 คลิกขวาที่ Symbol → เปิด Chart → เปลี่ยน TF เป็น M5
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">05</div>
+          <div class="step-body">
+            <strong>ลาก EA ลง Chart</strong><br>
+            จาก Navigator panel ลาก EA ลง Chart → ใส่ License Key → ตั้งค่าตามต้องการ → กด OK
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">06</div>
+          <div class="step-body">
+            <strong>ตรวจสอบ Experts Tab</strong><br>
+            ดูที่แถบ Experts ด้านล่าง MT5 ควรเห็น <code>KS AUTH: [AUTHORIZED]</code> แสดงว่าพร้อมใช้งาน
+          </div>
+        </li>
+      </ol>
+
+      <div class="warn-box danger">
+        <div class="warn-title">ห้ามลาก EA สองตัวพร้อมกัน</div>
+        <p>ห้ามลาก EA ลงบน Chart เดียวกันสองตัว หรือลาก EA ตัวเดียวลงบนหลาย Chart พร้อมกัน จะทำให้ระบบสั่งงานซ้ำซ้อนและเกิดความผิดพลาดในการนับ P&L ครับ</p>
+      </div>
+    </div>
+
+    <!-- ═══ SETTINGS ═══ -->
+    <div class="doc-section" id="settings">
+      <div class="section-header">
+        <div class="section-icon icon-gold">⚙</div>
+        <div>
+          <div class="section-tag">SECTION 04</div>
+          <h2 class="section-title">พารามิเตอร์<span class="acc"> สำคัญ</span></h2>
+        </div>
+      </div>
+
+      <p class="prose">เมื่อลาก EA ลง Chart จะมีหน้าต่างตั้งค่า ค่าที่สำคัญที่สุดมีดังนี้:</p>
+
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>พารามิเตอร์</th>
+            <th>ค่าแนะนำ</th>
+            <th>คำอธิบาย</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="param">InpLicenseKey</td>
+            <td class="default">PXXX-MMDD-RAND-SIGN</td>
+            <td>ใส่ License Key ที่ได้รับ <strong>สำคัญมาก</strong></td>
+          </tr>
+          <tr>
+            <td class="param">InpIndiName</td>
+            <td class="default">SuperTrend_V5_Fixed</td>
+            <td>ชื่อไฟล์ Indicator ต้องตรงกับที่ติดตั้ง</td>
+          </tr>
+          <tr>
+            <td class="param">LotSize</td>
+            <td class="default">0.01</td>
+            <td>ขนาด Lot ต่อไม้ แนะนำ 0.01 สำหรับทุน 100$</td>
+          </tr>
+          <tr>
+            <td class="param">TotalLayers</td>
+            <td class="default">2</td>
+            <td>จำนวนไม้ต่อสัญญาณ แนะนำ 2 ไม้</td>
+          </tr>
+          <tr>
+            <td class="param">TargetProfitUSD</td>
+            <td class="default">3-5</td>
+            <td>เป้ากำไรต่อชุด (Basket) หน่วยเป็น USD</td>
+          </tr>
+          <tr>
+            <td class="param">StopLossUSD</td>
+            <td class="default">2-3</td>
+            <td>ตัดขาดทุนต่อชุด หน่วยเป็น USD</td>
+          </tr>
+          <tr>
+            <td class="param">DailyTargetUSD</td>
+            <td class="default">10</td>
+            <td>เป้ากำไรรายวัน (10% ของทุน 100$)</td>
+          </tr>
+          <tr>
+            <td class="param">DailyMaxLossUSD</td>
+            <td class="default">5</td>
+            <td>เพดานขาดทุนรายวัน (5% ของทุน 100$)</td>
+          </tr>
+          <tr>
+            <td class="param">BrokerOffset</td>
+            <td class="default">4</td>
+            <td>ความต่างเวลา Server กับไทย (GMT+7 = 4 ถ้า Server คือ GMT+3)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="warn-box info">
+        <div class="warn-title">สูตรคำนวณ Daily Target / Loss</div>
+        <p><strong>DailyTargetUSD</strong> = ทุน × 10% เช่น ทุน 100$ → ตั้ง 10 · ทุน 200$ → ตั้ง 20<br>
+        <strong>DailyMaxLossUSD</strong> = ทุน × 5% เช่น ทุน 100$ → ตั้ง 5 · ทุน 200$ → ตั้ง 10</p>
+      </div>
+    </div>
+
+    <!-- ═══ LOT SIZING ═══ -->
+    <div class="doc-section" id="lot">
+      <div class="section-header">
+        <div class="section-icon icon-green">◆</div>
+        <div>
+          <div class="section-tag">SECTION 05</div>
+          <h2 class="section-title">การตั้ง<span class="acc"> Lot</span> ตามทุน</h2>
+        </div>
+      </div>
+
+      <p class="prose">กฎทองคือ <span class="hl">Lot ไม่ควรเกิน 1% ของทุน</span> ต่อ 1 ไม้ สำหรับบัญชีเซน ใช้ตารางนี้เป็นแนวทาง:</p>
+
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>ทุน (USD)</th>
+            <th>Lot/ไม้</th>
+            <th>TotalLayers</th>
+            <th>DailyTarget</th>
+            <th>DailyMaxLoss</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>100$</strong> (เริ่มต้น)</td>
+            <td class="default">0.01</td>
+            <td class="default">2</td>
+            <td class="default">10$</td>
+            <td class="default">5$</td>
+          </tr>
+          <tr>
+            <td><strong>200$</strong></td>
+            <td class="default">0.02</td>
+            <td class="default">2</td>
+            <td class="default">20$</td>
+            <td class="default">10$</td>
+          </tr>
+          <tr>
+            <td><strong>500$</strong></td>
+            <td class="default">0.05</td>
+            <td class="default">2</td>
+            <td class="default">50$</td>
+            <td class="default">25$</td>
+          </tr>
+          <tr>
+            <td><strong>1,000$</strong></td>
+            <td class="default">0.10</td>
+            <td class="default">2</td>
+            <td class="default">100$</td>
+            <td class="default">50$</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="warn-box danger">
+        <div class="warn-title">ห้ามตั้ง Lot เกินตาราง</div>
+        <p>การตั้ง Lot เกินกว่าที่ตารางแนะนำ <strong>มีความเสี่ยงสูงมาก</strong> โดยเฉพาะช่วง News ที่ทองอาจวิ่งแรงมาก อาจทำให้ขาดทุนเกิน 5% ได้ภายในไม้เดียว ถ้าอยากเพิ่ม Lot ให้เพิ่มทุนก่อน แล้วค่อยขยับ Lot ตามตารางครับ</p>
+      </div>
+    </div>
+
+    <!-- ═══ DASHBOARD ═══ -->
+    <div class="doc-section" id="dashboard">
+      <div class="section-header">
+        <div class="section-icon icon-cyan">◈</div>
+        <div>
+          <div class="section-tag">SECTION 06</div>
+          <h2 class="section-title">Mobile<span class="acc2"> Dashboard</span></h2>
+        </div>
+      </div>
+
+      <p class="prose">Dashboard คือหน้าเว็บที่ใช้ดูสถิติและสั่งการ EA จากมือถือหรือคอมโดยไม่ต้องอยู่หน้าจอ MT5</p>
+
+      <div class="card-grid">
+        <div class="info-card card-cyan">
+          <div class="card-title">ดูได้</div>
+          <ul class="checklist" style="margin:0">
+            <li>Balance ปัจจุบัน</li>
+            <li>Daily Net P&L</li>
+            <li>Open P&L</li>
+            <li>จำนวน Cycles</li>
+            <li>Win / Loss</li>
+            <li>Symbol ที่กำลังเทรด</li>
+          </ul>
+        </div>
+        <div class="info-card card-gold">
+          <div class="card-title">สั่งได้</div>
+          <ul class="checklist" style="margin:0">
+            <li><strong>SYSTEM ON</strong> — เปิดระบบ</li>
+            <li><strong>SYSTEM OFF</strong> — ปิดระบบ</li>
+            <li><strong>CLOSE ALL</strong> — ปิดไม้ทั้งหมด</li>
+            <li><strong>EMERGENCY</strong> — หยุดฉุกเฉิน</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="warn-box info">
+        <div class="warn-title">คำสั่งใช้เวลา 3-5 วินาที</div>
+        <p>เมื่อกดปุ่มบน Dashboard EA จะรับคำสั่งภายใน 3-5 วินาที (Poll ทุก 3 วิ) ไม่ต้องกดซ้ำครับ รอดูที่ HUD บน MT5 ว่าสถานะเปลี่ยนไหม</p>
+      </div>
+    </div>
+
+    <!-- ═══ DAILY ROUTINE ═══ -->
+    <div class="doc-section" id="daily">
+      <div class="section-header">
+        <div class="section-icon icon-purple">◈</div>
+        <div>
+          <div class="section-tag">SECTION 07</div>
+          <h2 class="section-title">ขั้นตอน<span class="acc"> ประจำวัน</span></h2>
+        </div>
+      </div>
+
+      <ol class="step-list">
+        <li class="step-item">
+          <div class="step-num">AM</div>
+          <div class="step-body">
+            <strong>ก่อนตลาดเปิด (~08:00 ไทย)</strong><br>
+            ตรวจสอบ MT5 ว่า EA ยังรันอยู่ · ตรวจ Internet · เช็ค Balance ใน Dashboard
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">ON</div>
+          <div class="step-body">
+            <strong>เปิดระบบ</strong><br>
+            กด SYSTEM ON จาก Dashboard หรือกดปุ่มบน HUD ใน MT5 · รอดูสัญญาณแรก
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">14:00</div>
+          <div class="step-body">
+            <strong>London Session เปิด</strong><br>
+            ช่วงที่สัญญาณมักแรงที่สุด · คอยดู Dashboard ว่าระบบทำงานปกติ
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">✓</div>
+          <div class="step-body">
+            <strong>เมื่อถึงเป้ากำไร</strong><br>
+            EA หยุดอัตโนมัติ · HUD ขึ้น DAILY GOAL REACHED · ไม่ต้องทำอะไร · รอวันพรุ่งนี้
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">23:00</div>
+          <div class="step-body">
+            <strong>ก่อน Rollover</strong><br>
+            EA หยุดเทรดอัตโนมัติช่วง 23:00-02:00 · ไม่ต้องทำอะไร · ระบบ Reset เองวันถัดไป
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <!-- ═══ WARNINGS ═══ -->
+    <div class="doc-section" id="warnings">
+      <div class="section-header">
+        <div class="section-icon icon-red">⚠</div>
+        <div>
+          <div class="section-tag">SECTION 08 — อ่านให้ครบ</div>
+          <h2 class="section-title">คำเตือน<span class="acc3"> สำคัญ</span></h2>
+        </div>
+      </div>
+
+      <div class="warn-box danger">
+        <div class="warn-title">การลงทุนมีความเสี่ยง</div>
+        <p>การเทรด Forex และทองคำมีความเสี่ยงสูงมาก <strong>อาจขาดทุนได้ทั้งหมด</strong> ผลตอบแทนในอดีตไม่ได้รับประกันผลในอนาคต ลงทุนเฉพาะเงินที่รับความเสี่ยงได้เท่านั้น ไม่ควรนำเงินที่ใช้ในชีวิตประจำวันหรือเงินกู้มาลงทุนครับ</p>
+      </div>
+
+      <div class="warn-box danger">
+        <div class="warn-title">ช่วง News — ความเสี่ยงสูงสุด</div>
+        <p>ช่วงประกาศตัวเลขสำคัญเช่น <strong>Non-Farm Payrolls, CPI, Fed Rate Decision</strong> ทองอาจวิ่งแรงมากภายในวินาที EA อาจโดน Stop Loss หลายชุดติดกัน แนะนำ <strong>ตั้ง NewsSlot ใน EA</strong> เพื่อหยุดเทรดช่วง News หรือกด SYSTEM OFF ก่อนถึงเวลา News ครับ</p>
+      </div>
+
+      <div class="warn-box danger">
+        <div class="warn-title">License Key เป็นความลับ</div>
+        <p>License Key ผูกกับ Account Number ของคุณเท่านั้น <strong>ห้ามแชร์ให้ผู้อื่น</strong> ถ้า Key ถูกนำไปใช้กับบัญชีอื่น ระบบจะตรวจพบและระงับ Key ทันทีครับ</p>
+      </div>
+
+      <div class="warn-box caution">
+        <div class="warn-title">MT5 ต้องเปิดตลอดเวลา</div>
+        <p>EA ทำงานอยู่บนคอมของคุณ ถ้าคอมปิด ไฟดับ หรือ Internet หลุด EA จะหยุดทำงานทันที และออเดอร์ที่เปิดอยู่จะลอยค้างในตลาดโดยไม่มีการจัดการ แนะนำใช้ <strong>VPS</strong> ครับ</p>
+      </div>
+
+      <div class="warn-box caution">
+        <div class="warn-title">อย่าแก้ค่า Parameter ขณะเทรด</div>
+        <p>ห้ามแก้ค่า Lot, DailyTarget หรือ DailyMaxLoss ขณะที่มี Order เปิดอยู่ เพราะจะทำให้การคำนวณ P&L ผิดพลาด ถ้าต้องการเปลี่ยนค่าให้ <strong>ปิด Order ทั้งหมดก่อน</strong> แล้วจึง Remove EA และ Load ใหม่ครับ</p>
+      </div>
+
+      <div class="warn-box caution">
+        <div class="warn-title">ตลาด Sideways — EA ทำงานไม่ดี</div>
+        <p>ในช่วงตลาด Sideways หรือ Range ไม่มีทิศทาง EA อาจสัญญาณผิดบ่อย ถ้าเห็นว่าตลาดไม่มีทิศ แนะนำ <strong>กด SYSTEM OFF ชั่วคราว</strong> แล้วรอจนตลาดมีทิศทางชัดเจนก่อนครับ</p>
+      </div>
+
+      <div class="warn-box info">
+        <div class="warn-title">EA ไม่ใช่ ATM</div>
+        <p>EA เป็นเครื่องมือช่วยเทรด ไม่ใช่การรับประกันกำไร บางวันตลาดไม่เอื้ออำนวย EA อาจทำกำไรได้น้อยหรือขาดทุนได้ ต้องเข้าใจว่า <strong>ขาดทุนเป็นส่วนหนึ่งของการเทรด</strong> ระบบ 5%/วัน คือการป้องกันไม่ให้ขาดทุนมากเกินไป ไม่ใช่ขาดทุนไม่ได้เลยครับ</p>
+      </div>
+    </div>
+
+    <!-- ═══ RISKS ═══ -->
+    <div class="doc-section" id="risks">
+      <div class="section-header">
+        <div class="section-icon icon-orange">◈</div>
+        <div>
+          <div class="section-tag">SECTION 09</div>
+          <h2 class="section-title">ความเสี่ยง<span class="acc"> ที่ควรรู้</span></h2>
+        </div>
+      </div>
+
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>ความเสี่ยง</th>
+            <th>ระดับ</th>
+            <th>วิธีป้องกัน</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>News Spike</strong> — ทองวิ่งแรงช่วง News</td>
+            <td style="color:var(--red)">สูงมาก</td>
+            <td>ตั้ง NewsSlot หรือปิด EA ก่อน News</td>
+          </tr>
+          <tr>
+            <td><strong>Sideways Market</strong> — ตลาดไม่มีทิศ</td>
+            <td style="color:var(--orange)">ปานกลาง</td>
+            <td>ดูชาร์ตก่อนเปิด ถ้า Range แคบ ไม่เปิด</td>
+          </tr>
+          <tr>
+            <td><strong>Slippage</strong> — ราคาเลื่อนตอน Execute</td>
+            <td style="color:var(--orange)">ปานกลาง</td>
+            <td>เลือกโบรกเกอร์ที่ Spread ต่ำ ECN</td>
+          </tr>
+          <tr>
+            <td><strong>Internet Disconnect</strong> — หลุดระหว่างเทรด</td>
+            <td style="color:var(--orange)">ปานกลาง</td>
+            <td>ใช้ VPS หรือ Internet สำรอง</td>
+          </tr>
+          <tr>
+            <td><strong>Over-Leverage</strong> — Lot เกินกำลัง</td>
+            <td style="color:var(--red)">สูงมาก</td>
+            <td>ตั้ง Lot ตามตารางเท่านั้น</td>
+          </tr>
+          <tr>
+            <td><strong>Margin Call</strong> — ทุนหมด</td>
+            <td style="color:var(--red)">สูงมาก</td>
+            <td>ตั้ง DailyMaxLoss ให้ถูกต้อง</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ FAQ ═══ -->
+    <div class="doc-section" id="faq">
+      <div class="section-header">
+        <div class="section-icon icon-cyan">?</div>
+        <div>
+          <div class="section-tag">SECTION 10</div>
+          <h2 class="section-title">คำถาม<span class="acc2"> ที่พบบ่อย</span></h2>
+        </div>
+      </div>
+
+      <div class="warn-box info" style="margin-bottom:12px">
+        <div class="warn-title">EA ขึ้น CLOUD AUTH DENIED ทำยังไง?</div>
+        <p>ตรวจสอบ 3 อย่าง: 1) License Key ถูกต้องไหม 2) Account Number ตรงกับที่ลงทะเบียนไหม 3) อนุญาต WebRequest ใน MT5 แล้วหรือยัง</p>
+      </div>
+
+      <div class="warn-box info" style="margin-bottom:12px">
+        <div class="warn-title">EA เปิดได้แต่ไม่เข้า Order?</div>
+        <p>ตรวจสอบว่า 1) กด SYSTEM ON แล้วหรือยัง 2) ชื่อ Indicator ใน InpIndiName ตรงกับไฟล์ที่ติดตั้งไหม 3) ไม่ได้อยู่ในช่วง NewsSlot หรือ Rollover ใช่ไหม</p>
+      </div>
+
+      <div class="warn-box info" style="margin-bottom:12px">
+        <div class="warn-title">Dashboard บนมือถือเข้าไม่ได้?</div>
+        <p>ใช้ URL พร้อม Key ต่อท้ายเลยครับ เช่น <code style="font-family:monospace;font-size:11px;color:var(--cyan)">https://...exec?key=PXXX-MMDD-RAND-SIGN</code> เข้าได้ทั้งมือถือและคอมทุกเครื่อง</p>
+      </div>
+
+      <div class="warn-box info" style="margin-bottom:12px">
+        <div class="warn-title">EA หยุดเองตอนกลางวัน เป็นอะไร?</div>
+        <p>ถึงเป้า DailyTarget หรือ DailyMaxLoss แล้วครับ HUD จะขึ้น DAILY GOAL REACHED ถือว่าปกติ ระบบจะ Reset ใหม่วันถัดไปครับ</p>
+      </div>
+
+      <div class="warn-box info">
+        <div class="warn-title">อยากเพิ่มทุนและขยับ Lot ทำยังไง?</div>
+        <p>เมื่อพอร์ตเติบโตถึงระดับถัดไปในตาราง Lot ให้ 1) ปิด Order ทั้งหมดก่อน 2) Remove EA 3) Load EA ใหม่ 4) ตั้งค่า Lot และ DailyTarget ใหม่ตามตารางครับ</p>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+// Active nav on scroll
+var sections = document.querySelectorAll('.doc-section[id]');
+var navItems = document.querySelectorAll('.nav-item[href^="#"]');
+
+window.addEventListener('scroll', function() {
+  var pos = window.scrollY + 120;
+  sections.forEach(function(s) {
+    if (s.offsetTop <= pos && (s.offsetTop + s.offsetHeight) > pos) {
+      navItems.forEach(function(n) {
+        n.classList.remove('active');
+        if (n.getAttribute('href') === '#' + s.id) n.classList.add('active');
+      });
+    }
+  });
+});
+</script>
+
+</body>
+</html>
