@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KS EA — สถิติสัญญาณและกำไร</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #D4AF37;
+  --gold2: #FFD700;
+  --gold3: #B8860B;
+  --cyan: #00D4FF;
+  --green: #00FF88;
+  --red: #FF4757;
+  --purple: #8B5CF6;
+  --bg: #03050A;
+  --bg2: #080D17;
+  --bg3: #0D1526;
+  --text: #E8F0FF;
+  --dim: #6B7A99;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Sarabun', sans-serif;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ═══ HERO ═══ */
+.hero {
+  text-align: center;
+  padding: 70px 20px 50px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  width: 600px; height: 400px;
+  background: radial-gradient(ellipse, rgba(0,212,255,0.08), transparent 70%);
+  top: 0; left: 50%; transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,255,136,0.08);
+  border: 1px solid rgba(0,255,136,0.25);
+  padding: 6px 16px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--green);
+  margin-bottom: 24px;
+}
+
+.dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: blink 1.5s ease infinite;
+}
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+.hero h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(28px, 6vw, 64px);
+  font-weight: 900;
+  letter-spacing: 3px;
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+
+.hero h1 span {
+  background: linear-gradient(90deg, var(--gold), var(--gold2), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--dim);
+  margin-bottom: 40px;
+}
+
+/* ═══ SIGNAL COUNTER ═══ */
+.counter-row {
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+  flex-wrap: wrap;
+  margin-bottom: 50px;
+}
+
+.counter-box {
+  background: var(--bg2);
+  border: 1px solid rgba(0,212,255,0.15);
+  padding: 22px 24px;
+  text-align: center;
+  min-width: 120px;
+  position: relative;
+  overflow: hidden;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+}
+
+.counter-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--cyan);
+}
+.counter-box.gold::before { background: var(--gold); }
+.counter-box.green::before { background: var(--green); }
+.counter-box.purple::before { background: var(--purple); }
+.counter-box.red::before { background: var(--red); }
+
+.counter-num {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 38px;
+  font-weight: 900;
+  color: var(--cyan);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.counter-box.gold .counter-num { color: var(--gold); }
+.counter-box.green .counter-num { color: var(--green); }
+.counter-box.purple .counter-num { color: #A78BFA; }
+.counter-box.red .counter-num { color: var(--red); }
+
+.counter-lbl {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--dim);
+  text-transform: uppercase;
+}
+
+/* ═══ SECTION ═══ */
+.section {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.section-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: var(--cyan);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-tag::before { content: ''; width: 20px; height: 1px; background: var(--cyan); }
+
+.section-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(22px, 4vw, 40px);
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+.section-title .acc {
+  background: linear-gradient(90deg, var(--gold), var(--gold2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-desc {
+  color: var(--dim);
+  font-size: 14px;
+  line-height: 1.9;
+  margin-bottom: 32px;
+  max-width: 680px;
+}
+
+.sep { width:100%; height:1px; background: linear-gradient(90deg, transparent, rgba(0,212,255,0.15), rgba(212,175,55,0.15), transparent); position:relative; z-index:1; }
+
+/* ═══ SIGNAL TABLE ═══ */
+.tbl-wrap {
+  background: var(--bg2);
+  border: 1px solid rgba(0,212,255,0.1);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.tbl-head {
+  background: linear-gradient(90deg, rgba(0,212,255,0.08), transparent);
+  padding: 16px 22px;
+  border-bottom: 1px solid rgba(0,212,255,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tbl-head h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: var(--cyan);
+}
+
+.tbl-head span {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--dim);
+}
+
+table { width: 100%; border-collapse: collapse; }
+
+th {
+  padding: 11px 16px;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--dim);
+  text-align: center;
+  font-weight: 400;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.02);
+}
+th:first-child { text-align: left; }
+
+td {
+  padding: 13px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+}
+td:first-child {
+  text-align: left;
+  font-family: 'Sarabun', sans-serif;
+  font-size: 14px;
+  color: var(--dim);
+}
+
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(0,212,255,0.02); }
+.tr-best td { background: rgba(212,175,55,0.05); }
+.tr-best td:first-child { color: var(--gold); }
+
+.v-gold { color: var(--gold); font-weight: 600; }
+.v-green { color: var(--green); font-weight: 600; }
+.v-cyan { color: var(--cyan); }
+.v-red { color: var(--red); }
+.v-purple { color: #A78BFA; }
+.v-dim { color: var(--dim); }
+
+/* ═══ PROFIT CARDS ═══ */
+.profit-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  margin-bottom: 24px;
+}
+@media(max-width:640px){ .profit-grid { grid-template-columns: 1fr; } }
+
+.profit-card {
+  background: var(--bg2);
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 22px 18px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.profit-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+}
+.profit-card.c1::after { background: var(--cyan); }
+.profit-card.c2::after { background: var(--gold); }
+.profit-card.c3::after { background: var(--green); }
+.profit-card.c4::after { background: #A78BFA; }
+.profit-card.c5::after { background: var(--red); }
+.profit-card.c6::after { background: #F97316; }
+
+.pc-icon { font-size: 22px; margin-bottom: 8px; }
+.pc-lbl {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--dim);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+.pc-val {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--cyan);
+}
+.profit-card.c2 .pc-val { color: var(--gold); }
+.profit-card.c3 .pc-val { color: var(--green); }
+.profit-card.c4 .pc-val { color: #A78BFA; }
+.profit-card.c5 .pc-val { color: var(--red); }
+.profit-card.c6 .pc-val { color: #F97316; }
+.pc-sub { font-size: 11px; color: var(--dim); margin-top: 5px; }
+
+/* ═══ TIMELINE ═══ */
+.timeline {
+  background: var(--bg2);
+  border: 1px solid rgba(212,175,55,0.15);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.timeline-hd {
+  background: rgba(212,175,55,0.06);
+  padding: 16px 22px;
+  border-bottom: 1px solid rgba(212,175,55,0.1);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tl-row {
+  display: flex;
+  align-items: center;
+  padding: 14px 22px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  gap: 16px;
+  font-size: 13px;
+}
+.tl-row:last-child { border-bottom: none; }
+
+.tl-time {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--cyan);
+  min-width: 60px;
+  flex-shrink: 0;
+}
+
+.tl-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.tl-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+}
+
+.tl-sig {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  min-width: 30px;
+  text-align: right;
+  color: var(--gold);
+}
+
+.tl-label { font-size: 12px; color: var(--dim); min-width: 100px; }
+
+.tl-profit { font-family: 'Space Mono', monospace; font-size: 11px; }
+
+/* ═══ DREAM BOX ═══ */
+.dream-box {
+  background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(0,212,255,0.04));
+  border: 1px solid rgba(212,175,55,0.25);
+  padding: 28px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.dream-box::before {
+  content: '★';
+  position: absolute;
+  font-size: 120px;
+  color: rgba(212,175,55,0.04);
+  right: -20px;
+  top: -20px;
+  line-height: 1;
+}
+
+.dream-box h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 16px;
+  letter-spacing: 2px;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+
+.dream-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 14px;
+}
+.dream-row:last-child { border-bottom: none; padding-bottom: 0; }
+.dream-row .dl { color: var(--dim); }
+.dream-row .dr { font-family: 'Space Mono', monospace; font-size: 13px; font-weight: 600; }
+
+/* ═══ ALERT ═══ */
+.alert {
+  border: 1px solid;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--dim);
+}
+.alert.gold { border-color: rgba(212,175,55,0.25); background: rgba(212,175,55,0.04); }
+.alert.green { border-color: rgba(0,255,136,0.2); background: rgba(0,255,136,0.03); }
+.alert.cyan { border-color: rgba(0,212,255,0.2); background: rgba(0,212,255,0.03); }
+strong.g { color: var(--gold); }
+strong.c { color: var(--cyan); }
+strong.gr { color: var(--green); }
+
+/* ═══ REVEAL ═══ */
+.reveal { opacity:0; transform:translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.on { opacity:1; transform:none; }
+
+/* ═══ FOOTER ═══ */
+.footer {
+  border-top: 1px solid rgba(0,212,255,0.08);
+  padding: 36px 20px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.footer-logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  background: linear-gradient(90deg, var(--gold), var(--gold2), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+.footer p { font-size: 11px; color: var(--dim); }
+
+@media(max-width:600px){
+  .counter-row { gap: 2px; }
+  .counter-box { min-width: 100px; padding: 16px 14px; }
+  .counter-num { font-size: 28px; }
+  .tl-label { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="live-badge"><span class="dot"></span>M5 TIMEFRAME · XAU/USD CENT ACCOUNT</div>
+  <h1>สัญญาณ <span>10-20 ครั้ง</span><br>ต่อวัน ทุกวัน</h1>
+  <p class="hero-sub">KS ULTIMATE DATA EA · AI SIGNAL · AUTO EXECUTION</p>
+
+  <div class="counter-row">
+    <div class="counter-box">
+      <div class="counter-num" id="cnt1">0</div>
+      <div class="counter-lbl">สัญญาณ/วัน</div>
+    </div>
+    <div class="counter-box gold">
+      <div class="counter-num" id="cnt2">0</div>
+      <div class="counter-lbl">กำไร/สัญญาณ ($)</div>
+    </div>
+    <div class="counter-box green">
+      <div class="counter-num" id="cnt3">0</div>
+      <div class="counter-lbl">กำไรรวม/วัน ($)</div>
+    </div>
+    <div class="counter-box purple">
+      <div class="counter-num" id="cnt4">0</div>
+      <div class="counter-lbl">Win Rate (%)</div>
+    </div>
+    <div class="counter-box red">
+      <div class="counter-num" id="cnt5">0</div>
+      <div class="counter-lbl">Max Loss/วัน ($)</div>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- SIGNAL TABLE -->
+<div class="section">
+  <div class="section-tag reveal">SIGNAL ANALYSIS</div>
+  <h2 class="section-title reveal">ตารางสัญญาณ<br><span class="acc">M5 รายชั่วโมง</span></h2>
+  <p class="section-desc reveal">EA สแกนสัญญาณตลอด 24 ชั่วโมง แต่ช่วงที่ทองวิ่งแรงที่สุดคือตอน London และ New York Session — นี่คือช่วงที่ทำเงินได้มากที่สุดครับ</p>
+
+  <div class="tbl-wrap reveal">
+    <div class="tbl-head">
+      <h3>SIGNAL FREQUENCY TABLE — XAU/USD M5</h3>
+      <span>เฉลี่ยต่อวัน · บัญชีเซน Lot 0.01 × 2 ไม้</span>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>ช่วงเวลา (ไทย)</th>
+            <th>Session</th>
+            <th>สัญญาณ/ชม.</th>
+            <th>สัญญาณ/วัน</th>
+            <th>Win Rate</th>
+            <th>กำไร/ชุด</th>
+            <th>กำไรช่วงนี้</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>02:00 - 06:00</td>
+            <td class="v-dim">Tokyo</td>
+            <td class="v-dim">1-2</td>
+            <td class="v-dim">4-8</td>
+            <td class="v-dim">55%</td>
+            <td class="v-dim">0.5-1$</td>
+            <td class="v-dim">~2-4$</td>
+          </tr>
+          <tr class="tr-best">
+            <td>14:00 - 17:00 ⭐</td>
+            <td class="v-gold">London</td>
+            <td class="v-gold">2-4</td>
+            <td class="v-gold">6-12</td>
+            <td class="v-green">72%</td>
+            <td class="v-green">1-3$</td>
+            <td class="v-gold">~8-15$</td>
+          </tr>
+          <tr class="tr-best">
+            <td>19:00 - 23:00 ⭐</td>
+            <td class="v-gold">New York</td>
+            <td class="v-gold">3-5</td>
+            <td class="v-gold">12-20</td>
+            <td class="v-green">75%</td>
+            <td class="v-green">1-4$</td>
+            <td class="v-gold">~10-20$</td>
+          </tr>
+          <tr>
+            <td>23:00 - 02:00</td>
+            <td class="v-dim">Rollover</td>
+            <td class="v-dim">0-1</td>
+            <td class="v-dim">0-2</td>
+            <td class="v-dim">-</td>
+            <td class="v-dim">-</td>
+            <td class="v-red">หยุดพัก</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="timeline reveal">
+    <div class="timeline-hd">📊 สัญญาณเฉลี่ยรายชั่วโมง — วันปกติ</div>
+    <div class="tl-row">
+      <span class="tl-time">02:00</span>
+      <div class="tl-bar"><div class="tl-fill" style="width:20%"></div></div>
+      <span class="tl-sig v-dim">2</span>
+      <span class="tl-label v-dim">Tokyo เปิด</span>
+      <span class="tl-profit v-dim">~1$</span>
+    </div>
+    <div class="tl-row">
+      <span class="tl-time">08:00</span>
+      <div class="tl-bar"><div class="tl-fill" style="width:30%"></div></div>
+      <span class="tl-sig v-cyan">3</span>
+      <span class="tl-label v-dim">Pre-London</span>
+      <span class="tl-profit v-cyan">~2$</span>
+    </div>
+    <div class="tl-row">
+      <span class="tl-time">14:00</span>
+      <div class="tl-bar"><div class="tl-fill" style="width:65%; background: linear-gradient(90deg,var(--gold),var(--gold2))"></div></div>
+      <span class="tl-sig v-gold">7</span>
+      <span class="tl-label v-gold">London เปิด ⭐</span>
+      <span class="tl-profit v-gold">~6$</span>
+    </div>
+    <div class="tl-row">
+      <span class="tl-time">19:00</span>
+      <div class="tl-bar"><div class="tl-fill" style="width:100%; background: linear-gradient(90deg,var(--green),var(--cyan))"></div></div>
+      <span class="tl-sig v-green">12</span>
+      <span class="tl-label v-green">NY เปิด 🔥🔥</span>
+      <span class="tl-profit v-green">~15$</span>
+    </div>
+    <div class="tl-row">
+      <span class="tl-time">22:00</span>
+      <div class="tl-bar"><div class="tl-fill" style="width:45%"></div></div>
+      <span class="tl-sig v-cyan">4</span>
+      <span class="tl-label v-dim">NY ปิด</span>
+      <span class="tl-profit v-cyan">~3$</span>
+    </div>
+    <div class="tl-row">
+      <span class="tl-time">23:00</span>
+      <div class="tl-bar"><div class="tl-fill" style="width:5%; background: var(--red)"></div></div>
+      <span class="tl-sig v-red">0</span>
+      <span class="tl-label v-red">Rollover หยุด</span>
+      <span class="tl-profit v-red">-</span>
+    </div>
+  </div>
+
+  <div class="alert cyan reveal">
+    <strong class="c">หมายเหตุ:</strong> EA จะหยุดเทรดอัตโนมัติช่วง Rollover 23:00-02:00 (เวลาไทย) เพื่อป้องกัน Spread สูง และจะ Reset เป้าหมายใหม่ทุกวันอัตโนมัติครับ
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- PROFIT PER SET -->
+<div class="section">
+  <div class="section-tag reveal">PROFIT BREAKDOWN</div>
+  <h2 class="section-title reveal">กำไรต่อชุด<br><span class="acc">แต่ละสัญญาณทำได้เท่าไหร่?</span></h2>
+  <p class="section-desc reveal">เข้า 2 ไม้ต่อสัญญาณ Lot 0.01 ต่อไม้ · บัญชีเซน XAUUSDm · ตัวเลขอ้างอิงจากสัญญาณจริงใน M5</p>
+
+  <div class="profit-grid reveal">
+    <div class="profit-card c1">
+      <div class="pc-icon">⚡</div>
+      <div class="pc-lbl">สัญญาณเล็ก</div>
+      <div class="pc-val">0.5$</div>
+      <div class="pc-sub">ทอง sideways / Noise</div>
+    </div>
+    <div class="profit-card c2">
+      <div class="pc-icon">📈</div>
+      <div class="pc-lbl">สัญญาณปกติ</div>
+      <div class="pc-val">1-2$</div>
+      <div class="pc-sub">ทองวิ่ง 50-100 pip</div>
+    </div>
+    <div class="profit-card c3">
+      <div class="pc-icon">🔥</div>
+      <div class="pc-lbl">สัญญาณแรง</div>
+      <div class="pc-val">3-5$</div>
+      <div class="pc-sub">Trend ชัด / News</div>
+    </div>
+    <div class="profit-card c4">
+      <div class="pc-icon">💎</div>
+      <div class="pc-lbl">สัญญาณ Premium</div>
+      <div class="pc-val">5-10$</div>
+      <div class="pc-sub">London + NY Overlap</div>
+    </div>
+    <div class="profit-card c5">
+      <div class="pc-icon">🛡️</div>
+      <div class="pc-lbl">Max Loss/ชุด</div>
+      <div class="pc-val">-1$</div>
+      <div class="pc-sub">Auto SL ตัดทันที</div>
+    </div>
+    <div class="profit-card c6">
+      <div class="pc-icon">🎯</div>
+      <div class="pc-lbl">เฉลี่ยต่อสัญญาณ</div>
+      <div class="pc-val">1.5$</div>
+      <div class="pc-sub">Win Rate 70%+</div>
+    </div>
+  </div>
+
+  <div class="tbl-wrap reveal">
+    <div class="tbl-head">
+      <h3>LOT × PROFIT TABLE — ต่อสัญญาณ</h3>
+      <span>2 ไม้ต่อสัญญาณ · บัญชีเซน</span>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>ทุน</th>
+            <th>Lot/ไม้</th>
+            <th>รวม Lot</th>
+            <th>กำไร/สัญญาณ (เฉลี่ย)</th>
+            <th>10 สัญญาณ/วัน</th>
+            <th>20 สัญญาณ/วัน</th>
+            <th>% ต่อวัน</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="tr-best">
+            <td>100$ (เริ่มต้น)</td>
+            <td class="v-gold">0.01</td>
+            <td class="v-cyan">0.02</td>
+            <td class="v-green">~1.5$</td>
+            <td class="v-green">~10$</td>
+            <td class="v-green">~20$</td>
+            <td class="v-gold">10-20%</td>
+          </tr>
+          <tr>
+            <td>200$</td>
+            <td class="v-gold">0.02</td>
+            <td class="v-cyan">0.04</td>
+            <td class="v-green">~3$</td>
+            <td class="v-green">~20$</td>
+            <td class="v-green">~40$</td>
+            <td class="v-gold">10-20%</td>
+          </tr>
+          <tr>
+            <td>500$</td>
+            <td class="v-gold">0.05</td>
+            <td class="v-cyan">0.10</td>
+            <td class="v-green">~7.5$</td>
+            <td class="v-green">~50$</td>
+            <td class="v-green">~100$</td>
+            <td class="v-gold">10-20%</td>
+          </tr>
+          <tr>
+            <td>1,000$</td>
+            <td class="v-gold">0.10</td>
+            <td class="v-cyan">0.20</td>
+            <td class="v-green">~15$</td>
+            <td class="v-green">~100$</td>
+            <td class="v-green">~200$</td>
+            <td class="v-gold">10-20%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- DREAM SECTION -->
+<div class="section">
+  <div class="section-tag reveal">INCOME PROJECTION</div>
+  <h2 class="section-title reveal">ถ้า EA ทำงานทุกวัน<br><span class="acc">รายได้จะเป็นแบบนี้</span></h2>
+  <p class="section-desc reveal">สมมติการณ์จากทุน 100$ · เฉลี่ย 10 สัญญาณต่อวัน · Win Rate 65% · กำไรเฉลี่ย 1.5$ ต่อสัญญาณ</p>
+
+  <div class="dream-box reveal">
+    <h3>💰 INCOME PROJECTION — ทุน 100$</h3>
+    <div class="dream-row">
+      <span class="dl">กำไรต่อวัน (เฉลี่ย)</span>
+      <span class="dr v-green">~10$ (~350฿)</span>
+    </div>
+    <div class="dream-row">
+      <span class="dl">กำไรต่อสัปดาห์ (5 วันทำการ)</span>
+      <span class="dr v-green">~50$ (~1,750฿)</span>
+    </div>
+    <div class="dream-row">
+      <span class="dl">กำไรต่อเดือน (20 วันทำการ)</span>
+      <span class="dr v-gold">~200$ (~7,000฿)</span>
+    </div>
+    <div class="dream-row">
+      <span class="dl">หักค่าเช่า EA 3,500฿</span>
+      <span class="dr v-red">-3,500฿</span>
+    </div>
+    <div class="dream-row" style="border-top:1px solid rgba(0,255,136,0.2);margin-top:8px;padding-top:16px">
+      <span class="dl" style="color:var(--text);font-weight:600">กำไรสุทธิเข้ากระเป๋า</span>
+      <span class="dr v-green" style="font-size:16px">~3,500฿/เดือน 🎉</span>
+    </div>
+  </div>
+
+  <div class="dream-box reveal" style="border-color:rgba(0,212,255,0.25);background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(139,92,246,0.03))">
+    <h3 style="color:var(--cyan)">🚀 COMPOUND EFFECT — ปั้นพอร์ตแบบ Snowball</h3>
+    <div class="dream-row">
+      <span class="dl">เดือนที่ 1 (เริ่ม 100$)</span>
+      <span class="dr v-cyan">พอร์ต ~200$ (+100%)</span>
+    </div>
+    <div class="dream-row">
+      <span class="dl">เดือนที่ 2 (ทุน 200$)</span>
+      <span class="dr v-cyan">พอร์ต ~400$ (กำไร 2เท่า)</span>
+    </div>
+    <div class="dream-row">
+      <span class="dl">เดือนที่ 3 (ทุน 400$)</span>
+      <span class="dr v-purple">พอร์ต ~800$ (ก้าวกระโดด!)</span>
+    </div>
+    <div class="dream-row">
+      <span class="dl">เดือนที่ 6 (ทุน 1,600$)</span>
+      <span class="dr v-gold">พอร์ต ~3,200$ (32เท่าจากทุนเริ่ม!)</span>
+    </div>
+    <div class="dream-row" style="border-top:1px solid rgba(212,175,55,0.2);margin-top:8px;padding-top:16px">
+      <span class="dl" style="color:var(--text);font-weight:600">กำไรเดือนที่ 6 ต่อเดือน</span>
+      <span class="dr v-gold" style="font-size:15px">~100,000฿+/เดือน 🔥</span>
+    </div>
+  </div>
+
+  <div class="alert gold reveal">
+    <strong class="g">หมายเหตุสำคัญ:</strong> ตัวเลขข้างต้นเป็นการประมาณการจากสถิติสัญญาณจริงในอดีต ผลลัพธ์จริงขึ้นอยู่กับสภาวะตลาด Win Rate และการบริหาร Lot อย่างถูกต้อง · <strong class="g">ระบบ Auto Stop Loss 5%/วัน ปกป้องทุนไม่ให้หายเกินนี้ครับ</strong>
+  </div>
+
+  <div class="alert green reveal">
+    <strong class="gr">เคล็ดลับ Compound:</strong> อย่าถอนกำไรออกในช่วง 3 เดือนแรก ปล่อยให้กำไรทบต้นไปเรื่อยๆ แล้วปรับ Lot ขึ้นตามทุนที่เพิ่ม · <strong class="gr">นี่คือวิธีที่เร็วที่สุดในการปั้นพอร์ตจาก 100$ เป็น 10,000$</strong>
+  </div>
+</div>
+
+<div class="sep"></div>
+<footer class="footer">
+  <div class="footer-logo">KS ULTIMATE DATA EA</div>
+  <p>AI Trading System · XAU/USD · M5 · Cent Account · 2026</p>
+  <p style="margin-top:6px;opacity:0.4;font-size:10px">การเทรด Forex มีความเสี่ยง ผลตอบแทนในอดีตไม่ได้รับประกันผลในอนาคต</p>
+</footer>
+
+<script>
+// Animate counters
+function animateCounter(id, target, duration, decimals) {
+  var el = document.getElementById(id);
+  var start = 0;
+  var step = target / (duration / 16);
+  var timer = setInterval(function() {
+    start += step;
+    if (start >= target) { start = target; clearInterval(timer); }
+    el.textContent = decimals ? start.toFixed(decimals) : Math.floor(start);
+  }, 16);
+}
+
+setTimeout(function() {
+  animateCounter('cnt1', 15, 1500);
+  animateCounter('cnt2', 1.5, 1500, 1);
+  animateCounter('cnt3', 10, 1500, 0);
+  animateCounter('cnt4', 70, 1500);
+  animateCounter('cnt5', 5, 1500, 0);
+}, 300);
+
+// Reveal
+var obs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) { if(e.isIntersecting) e.target.classList.add('on'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+</script>
+</body>
+</html>
