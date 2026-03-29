@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KS ADMIN — Member Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #D4AF37;
+  --gold2: #FFD700;
+  --cyan: #00D4FF;
+  --green: #00FF88;
+  --red: #FF4757;
+  --orange: #FF6B35;
+  --purple: #A78BFA;
+  --bg: #03050A;
+  --bg2: #080D17;
+  --bg3: #0D1526;
+  --text: #E8F0FF;
+  --dim: #6B7A99;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Sarabun', sans-serif;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.02) 1px, transparent 1px);
+  background-size: 55px 55px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* LOGIN */
+.login-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.login-card {
+  background: var(--bg2);
+  border: 1px solid rgba(212,175,55,0.2);
+  border-radius: 12px;
+  padding: 40px 36px;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+}
+
+.login-logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold2), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 6px;
+}
+
+.login-sub {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--dim);
+  margin-bottom: 28px;
+}
+
+.login-label {
+  font-size: 11px;
+  color: var(--dim);
+  text-align: left;
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+}
+
+.login-input {
+  width: 100%;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(0,212,255,0.15);
+  color: var(--text);
+  padding: 12px 14px;
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  outline: none;
+  margin-bottom: 14px;
+  letter-spacing: 2px;
+}
+.login-input:focus { border-color: rgba(212,175,55,0.4); }
+
+.login-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: #000;
+  border: none;
+  padding: 13px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.login-btn:hover { box-shadow: 0 0 20px rgba(212,175,55,0.3); }
+
+.login-err {
+  color: var(--red);
+  font-size: 11px;
+  margin-top: 10px;
+  font-family: 'Space Mono', monospace;
+}
+
+/* ADMIN LAYOUT */
+.admin-wrap { display: none; position: relative; z-index: 1; }
+.admin-wrap.show { display: block; }
+
+/* TOPBAR */
+.topbar {
+  background: rgba(8,13,23,0.98);
+  border-bottom: 1px solid rgba(0,212,255,0.08);
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.topbar-logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.refresh-btn {
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.2);
+  color: var(--cyan);
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.refresh-btn:hover { background: rgba(0,212,255,0.15); }
+
+.last-update {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--dim);
+}
+
+.logout-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--dim);
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  padding: 7px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.logout-btn:hover { border-color: var(--red); color: var(--red); }
+
+/* CONTENT */
+.content { padding: 24px 28px; max-width: 1200px; }
+
+/* SUMMARY CARDS */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 3px;
+  margin-bottom: 28px;
+}
+
+.sum-card {
+  background: var(--bg2);
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.sum-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+
+.sc-cyan::before   { background: var(--cyan); }
+.sc-gold::before   { background: var(--gold); }
+.sc-green::before  { background: var(--green); }
+.sc-red::before    { background: var(--red); }
+.sc-purple::before { background: var(--purple); }
+
+.sum-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--dim);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.sum-val {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.sc-cyan .sum-val   { color: var(--cyan); }
+.sc-gold .sum-val   { color: var(--gold); }
+.sc-green .sum-val  { color: var(--green); }
+.sc-red .sum-val    { color: var(--red); }
+.sc-purple .sum-val { color: var(--purple); }
+
+.sum-sub { font-size: 11px; color: var(--dim); }
+
+/* MEMBER TABLE */
+.table-box {
+  background: var(--bg2);
+  border: 1px solid rgba(0,212,255,0.08);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.table-head-bar {
+  background: rgba(0,0,0,0.3);
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.table-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--cyan);
+}
+
+.filter-row {
+  display: flex;
+  gap: 6px;
+}
+
+.filter-btn {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  padding: 4px 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: transparent;
+  color: var(--dim);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-btn:hover, .filter-btn.active {
+  border-color: rgba(0,212,255,0.3);
+  color: var(--cyan);
+  background: rgba(0,212,255,0.05);
+}
+
+.member-table { width: 100%; border-collapse: collapse; overflow-x: auto; }
+
+.member-table th {
+  padding: 10px 14px;
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--dim);
+  text-align: left;
+  background: rgba(255,255,255,0.02);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  white-space: nowrap;
+}
+
+.member-table td {
+  padding: 12px 14px;
+  font-size: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  white-space: nowrap;
+}
+
+.member-table tr:last-child td { border-bottom: none; }
+.member-table tr:hover td { background: rgba(0,212,255,0.02); }
+
+.badge {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  padding: 2px 8px;
+  border: 1px solid;
+}
+
+.badge-green  { border-color: rgba(0,255,136,0.3); color: var(--green); }
+.badge-red    { border-color: rgba(255,71,87,0.3);  color: var(--red); }
+.badge-gold   { border-color: rgba(212,175,55,0.3); color: var(--gold); }
+.badge-orange { border-color: rgba(255,107,53,0.3); color: var(--orange); }
+.badge-cyan   { border-color: rgba(0,212,255,0.3);  color: var(--cyan); }
+.badge-dim    { border-color: rgba(107,122,153,0.3);color: var(--dim); }
+
+.profit-pos { color: var(--green); font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 600; }
+.profit-neg { color: var(--red);   font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 600; }
+.profit-zer { color: var(--dim);   font-family: 'Space Mono', monospace; font-size: 11px; }
+
+.acct-id { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--dim); }
+.sym-tag  { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--cyan); }
+
+/* LOADING */
+.loading {
+  text-align: center;
+  padding: 40px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--dim);
+  letter-spacing: 2px;
+}
+
+.spinner {
+  width: 20px; height: 20px;
+  border: 2px solid rgba(0,212,255,0.2);
+  border-top-color: var(--cyan);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* NO DATA */
+.no-data {
+  text-align: center;
+  padding: 40px;
+  color: var(--dim);
+  font-size: 13px;
+}
+
+/* FOOTER */
+.admin-footer {
+  padding: 20px 28px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--dim);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="login-page">
+  <div class="login-card">
+    <div class="login-logo">KS ADMIN</div>
+    <div class="login-sub">MEMBER DASHBOARD · ADMIN ONLY</div>
+    <div class="login-label">ADMIN PASSWORD</div>
+    <input type="password" class="login-input" id="admin-pass" placeholder="••••••••" autocomplete="off">
+    <button class="login-btn" onclick="doLogin()">ENTER ADMIN</button>
+    <div class="login-err" id="login-err"></div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="admin-wrap" id="admin-page">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-logo">KS ADMIN · MEMBER OVERVIEW</div>
+    <div class="topbar-right">
+      <div class="last-update" id="last-update">อัปเดตล่าสุด: --:--:--</div>
+      <button class="refresh-btn" onclick="loadData()">↻ REFRESH</button>
+      <button class="logout-btn" onclick="doLogout()">LOGOUT</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- SUMMARY -->
+    <div class="summary-grid">
+      <div class="sum-card sc-cyan">
+        <div class="sum-label">สมาชิกทั้งหมด</div>
+        <div class="sum-val" id="s-total">-</div>
+        <div class="sum-sub">accounts</div>
+      </div>
+      <div class="sum-card sc-green">
+        <div class="sum-label">กำลังเทรด</div>
+        <div class="sum-val" id="s-active">-</div>
+        <div class="sum-sub">SYSTEM ON</div>
+      </div>
+      <div class="sum-card sc-gold">
+        <div class="sum-label">Balance รวม</div>
+        <div class="sum-val" id="s-balance">-</div>
+        <div class="sum-sub">USD ทุกบัญชี</div>
+      </div>
+      <div class="sum-card sc-green">
+        <div class="sum-label">กำไรวันนี้รวม</div>
+        <div class="sum-val" id="s-profit">-</div>
+        <div class="sum-sub">USD ทุกบัญชี</div>
+      </div>
+      <div class="sum-card sc-purple">
+        <div class="sum-label">Cycles รวม</div>
+        <div class="sum-val" id="s-cycles">-</div>
+        <div class="sum-sub">ทุกบัญชีรวมกัน</div>
+      </div>
+    </div>
+
+    <!-- MEMBER TABLE -->
+    <div class="table-box">
+      <div class="table-head-bar">
+        <div class="table-title">MEMBER LIST</div>
+        <div class="filter-row">
+          <button class="filter-btn active" onclick="filterTable('all',this)">ALL</button>
+          <button class="filter-btn" onclick="filterTable('on',this)">ACTIVE</button>
+          <button class="filter-btn" onclick="filterTable('off',this)">OFFLINE</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="member-table">
+          <thead>
+            <tr>
+              <th>ACCOUNT</th>
+              <th>NAME</th>
+              <th>PLAN</th>
+              <th>STATUS</th>
+              <th>SYMBOL</th>
+              <th>BALANCE</th>
+              <th>DAILY NET</th>
+              <th>OPEN P&L</th>
+              <th>CYCLES</th>
+              <th>WIN</th>
+              <th>LOSS</th>
+              <th>WIN RATE</th>
+              <th>UPDATED</th>
+            </tr>
+          </thead>
+          <tbody id="member-tbody">
+            <tr><td colspan="13"><div class="loading"><span class="spinner"></span>LOADING DATA...</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="admin-footer">
+    <span>KS ULTIMATE DATA EA · Admin Panel</span>
+    <span id="footer-count">สมาชิก 0 คน</span>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// CONFIG — แก้ตรงนี้
+// ══════════════════════════════════════════
+var GAS_URL   = 'https://script.google.com/macros/s/AKfycbw5nrJlfD-WpBO5bB8Xjga0UEfRjTD4H5RTK2pETlhHCZP1IO9gp-SW-tbcRiv-iiMT/exec'; // ← ใส่ Apps Script URL
+var ADMIN_KEY = 'KS_ADMIN_2026';     // ← เปลี่ยนรหัส Admin ตามต้องการ
+
+// ══════════════════════════════════════════
+// LOGIN
+// ══════════════════════════════════════════
+function doLogin() {
+  var pass = document.getElementById('admin-pass').value.trim();
+  if (pass === ADMIN_KEY) {
+    document.getElementById('login-page').style.display = 'none';
+    document.getElementById('admin-page').classList.add('show');
+    loadData();
+    setInterval(loadData, 30000); // Auto refresh ทุก 30 วิ
+  } else {
+    document.getElementById('login-err').textContent = 'รหัสผ่านไม่ถูกต้องครับ';
+  }
+}
+
+document.getElementById('admin-pass').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doLogin();
+});
+
+function doLogout() {
+  document.getElementById('login-page').style.display = 'flex';
+  document.getElementById('admin-page').classList.remove('show');
+  document.getElementById('admin-pass').value = '';
+}
+
+// ══════════════════════════════════════════
+// LOAD DATA
+// ══════════════════════════════════════════
+var allMembers = [];
+var currentFilter = 'all';
+
+async function loadData() {
+  try {
+    var res = await fetch(GAS_URL + '?api=admin&adminKey=' + encodeURIComponent(ADMIN_KEY) + '&_=' + Date.now());
+    var data = await res.json();
+
+    if (!data || data.error) {
+      showError('ไม่สามารถดึงข้อมูลได้: ' + (data ? data.error : 'unknown'));
+      return;
+    }
+
+    allMembers = data.members || [];
+    renderSummary(allMembers);
+    renderTable(allMembers, currentFilter);
+
+    var now = new Date();
+    document.getElementById('last-update').textContent =
+      'อัปเดตล่าสุด: ' + now.toLocaleTimeString('th-TH');
+
+  } catch(e) {
+    showError('Connection error: ' + e.message);
+  }
+}
+
+function showError(msg) {
+  document.getElementById('member-tbody').innerHTML =
+    '<tr><td colspan="13"><div class="no-data">⚠ ' + msg + '</div></td></tr>';
+}
+
+// ══════════════════════════════════════════
+// SUMMARY
+// ══════════════════════════════════════════
+function renderSummary(members) {
+  var total   = members.length;
+  var active  = members.filter(function(m){ return String(m.sys_on) === 'true'; }).length;
+  var balance = members.reduce(function(s,m){ return s + parseFloat(m.balance || 0); }, 0);
+  var profit  = members.reduce(function(s,m){ return s + parseFloat(m.daily_net || 0); }, 0);
+  var cycles  = members.reduce(function(s,m){ return s + parseInt(m.cycles || 0); }, 0);
+
+  document.getElementById('s-total').textContent   = total;
+  document.getElementById('s-active').textContent  = active;
+  document.getElementById('s-balance').textContent = balance.toFixed(0);
+  document.getElementById('s-profit').textContent  = (profit >= 0 ? '+' : '') + profit.toFixed(2);
+  document.getElementById('s-cycles').textContent  = cycles;
+
+  var pEl = document.getElementById('s-profit');
+  pEl.style.color = profit >= 0 ? 'var(--green)' : 'var(--red)';
+
+  document.getElementById('footer-count').textContent = 'สมาชิก ' + total + ' คน · กำลังเทรด ' + active + ' คน';
+}
+
+// ══════════════════════════════════════════
+// TABLE
+// ══════════════════════════════════════════
+function filterTable(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  renderTable(allMembers, filter);
+}
+
+function renderTable(members, filter) {
+  var filtered = members;
+  if (filter === 'on')  filtered = members.filter(function(m){ return String(m.sys_on) === 'true'; });
+  if (filter === 'off') filtered = members.filter(function(m){ return String(m.sys_on) !== 'true'; });
+
+  if (filtered.length === 0) {
+    document.getElementById('member-tbody').innerHTML =
+      '<tr><td colspan="13"><div class="no-data">ไม่มีข้อมูลที่ตรงกับตัวกรองนี้ครับ</div></td></tr>';
+    return;
+  }
+
+  var html = '';
+  filtered.forEach(function(m) {
+    var isOn     = String(m.sys_on) === 'true';
+    var net      = parseFloat(m.daily_net || 0);
+    var pnl      = parseFloat(m.open_pnl || 0);
+    var bal      = parseFloat(m.balance || 0);
+    var wins     = parseInt(m.wins || 0);
+    var losses   = parseInt(m.losses || 0);
+    var total    = wins + losses;
+    var winRate  = total > 0 ? Math.round((wins / total) * 100) : 0;
+
+    var statusBadge = isOn
+      ? '<span class="badge badge-green">● ACTIVE</span>'
+      : '<span class="badge badge-dim">○ OFFLINE</span>';
+
+    var planBadge = m.plan === 'PREMIUM'
+      ? '<span class="badge badge-gold">PREMIUM</span>'
+      : '<span class="badge badge-cyan">STARTER</span>';
+
+    var netClass  = net > 0  ? 'profit-pos' : (net < 0  ? 'profit-neg' : 'profit-zer');
+    var pnlClass  = pnl > 0  ? 'profit-pos' : (pnl < 0  ? 'profit-neg' : 'profit-zer');
+
+    var wrColor = winRate >= 60 ? 'var(--green)' : (winRate >= 45 ? 'var(--gold)' : 'var(--red)');
+
+    html += '<tr>'
+      + '<td class="acct-id">' + (m.account || '-') + '</td>'
+      + '<td>' + (m.name || '-') + '</td>'
+      + '<td>' + planBadge + '</td>'
+      + '<td>' + statusBadge + '</td>'
+      + '<td class="sym-tag">' + (m.symbol || '-') + '</td>'
+      + '<td style="font-family:\'Space Mono\',monospace;font-size:11px;color:var(--text)">$' + bal.toFixed(2) + '</td>'
+      + '<td><span class="' + netClass + '">' + (net >= 0 ? '+' : '') + '$' + net.toFixed(2) + '</span></td>'
+      + '<td><span class="' + pnlClass + '">' + (pnl >= 0 ? '+' : '') + '$' + pnl.toFixed(2) + '</span></td>'
+      + '<td style="font-family:\'Space Mono\',monospace;font-size:11px;color:var(--dim)">' + (m.cycles || 0) + '</td>'
+      + '<td style="font-family:\'Space Mono\',monospace;font-size:11px;color:var(--green)">' + wins + '</td>'
+      + '<td style="font-family:\'Space Mono\',monospace;font-size:11px;color:var(--red)">'   + losses + '</td>'
+      + '<td style="font-family:\'Space Mono\',monospace;font-size:11px;font-weight:700;color:' + wrColor + '">' + winRate + '%</td>'
+      + '<td style="font-family:\'Space Mono\',monospace;font-size:10px;color:var(--dim)">' + (m.updated_at || '--') + '</td>'
+      + '</tr>';
+  });
+
+  document.getElementById('member-tbody').innerHTML = html;
+}
+</script>
+
+</body>
+</html>
