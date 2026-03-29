@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KS ULTIMATE DATA EA — ต่ออายุ License</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #D4AF37;
+  --gold2: #FFD700;
+  --gold3: #B8860B;
+  --cyan: #00D4FF;
+  --green: #00FF88;
+  --red: #FF4757;
+  --orange: #FF6B35;
+  --bg: #03050A;
+  --bg2: #080D17;
+  --text: #E8F0FF;
+  --dim: #6B7A99;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Sarabun', sans-serif;
+  overflow-x: hidden;
+  line-height: 1.8;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.02) 1px, transparent 1px);
+  background-size: 55px 55px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wrap { max-width: 760px; margin: 0 auto; padding: 0 20px 80px; position: relative; z-index: 1; }
+
+/* HERO */
+.hero {
+  text-align: center;
+  padding: 60px 20px 40px;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(212,175,55,0.08);
+  border: 1px solid rgba(212,175,55,0.25);
+  padding: 5px 16px;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(24px, 5vw, 52px);
+  font-weight: 900;
+  letter-spacing: 2px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+.hero h1 span {
+  background: linear-gradient(90deg, var(--gold), var(--gold2), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub { font-size: 14px; color: var(--dim); max-width: 500px; margin: 0 auto; line-height: 1.9; }
+
+/* SEP */
+.sep { width:100%; height:1px; background:linear-gradient(90deg, transparent, rgba(212,175,55,0.15), transparent); margin:36px 0; }
+
+/* COUNTDOWN */
+.countdown-box {
+  background: var(--bg2);
+  border: 1px solid rgba(212,175,55,0.2);
+  padding: 28px;
+  text-align: center;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.countdown-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold3), var(--gold), var(--gold2));
+}
+
+.cd-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--dim);
+  margin-bottom: 14px;
+}
+
+.cd-row {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.cd-item { text-align: center; }
+
+.cd-num {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--gold);
+  line-height: 1;
+  min-width: 70px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(212,175,55,0.2);
+  padding: 8px 4px;
+}
+
+.cd-unit {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: 2px;
+  margin-top: 4px;
+}
+
+.cd-sep {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 36px;
+  color: var(--gold);
+  opacity: 0.4;
+  line-height: 1.2;
+  padding-top: 10px;
+}
+
+.cd-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  padding: 5px 14px;
+  border: 1px solid;
+}
+
+.status-ok { border-color: rgba(0,255,136,0.3); color: var(--green); }
+.status-warn { border-color: rgba(255,107,53,0.3); color: var(--orange); }
+.status-exp { border-color: rgba(255,71,87,0.3); color: var(--red); }
+
+.dot-pulse { width:6px;height:6px;border-radius:50%;flex-shrink:0; }
+.dot-green { background:var(--green); animation:blink 1.5s ease infinite; }
+.dot-orange { background:var(--orange); animation:blink 1s ease infinite; }
+.dot-red { background:var(--red); }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+/* TIMELINE */
+.timeline-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: var(--gold);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tl-wrap {
+  background: var(--bg2);
+  border: 1px solid rgba(255,255,255,0.05);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.tl-item {
+  display: flex;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  align-items: flex-start;
+  position: relative;
+}
+.tl-item:last-child { border-bottom: none; }
+
+.tl-dot-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.tl-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  border: 2px solid;
+  margin-top: 4px;
+}
+
+.tl-dot.green { border-color: var(--green); background: rgba(0,255,136,0.2); }
+.tl-dot.gold  { border-color: var(--gold);  background: rgba(212,175,55,0.2); }
+.tl-dot.orange{ border-color: var(--orange);background: rgba(255,107,53,0.2); }
+.tl-dot.red   { border-color: var(--red);   background: rgba(255,71,87,0.2); }
+.tl-dot.dim   { border-color: var(--dim);   background: transparent; }
+
+.tl-line {
+  width: 1px;
+  flex: 1;
+  background: rgba(255,255,255,0.06);
+  min-height: 20px;
+  margin-top: 4px;
+}
+
+.tl-day {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.tl-body { flex: 1; }
+.tl-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.tl-desc  { font-size: 12px; color: var(--dim); line-height: 1.7; }
+.tl-desc strong { color: var(--text); }
+
+/* HOW TO RENEW */
+.renew-steps {
+  background: var(--bg2);
+  border: 1px solid rgba(0,212,255,0.1);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.renew-head {
+  background: rgba(0,212,255,0.05);
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(0,212,255,0.08);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--cyan);
+}
+
+.renew-step {
+  display: flex;
+  gap: 16px;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  align-items: flex-start;
+}
+.renew-step:last-child { border-bottom: none; }
+
+.renew-num {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--cyan);
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.2);
+  width: 28px; height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.renew-body { font-size: 13px; color: #B0BDD0; line-height: 1.8; }
+.renew-body strong { color: var(--text); }
+.renew-body code {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.15);
+  color: var(--cyan);
+  padding: 1px 7px;
+}
+
+/* PRICE CARDS */
+.price-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  margin-bottom: 24px;
+}
+@media(max-width:500px){ .price-grid { grid-template-columns: 1fr; } }
+
+.price-card {
+  background: var(--bg2);
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 24px 20px;
+  text-align: center;
+  position: relative;
+}
+
+.price-card.featured {
+  border-color: rgba(212,175,55,0.35);
+  background: linear-gradient(180deg, rgba(212,175,55,0.05), var(--bg2));
+}
+
+.feat-badge {
+  position: absolute;
+  top: 0; right: 0;
+  background: linear-gradient(135deg, var(--gold3), var(--gold));
+  color: #000;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 8px;
+  letter-spacing: 1px;
+  padding: 4px 12px;
+  clip-path: polygon(12px 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.plan-name {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--dim);
+  margin-bottom: 10px;
+}
+
+.plan-price {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 46px;
+  font-weight: 900;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.plan-per { font-size: 12px; color: var(--dim); margin-bottom: 14px; }
+
+.plan-list { list-style: none; text-align: left; }
+.plan-list li {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--dim);
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.plan-list li:last-child { border-bottom: none; }
+.plan-list li::before { content:'✓'; color:var(--green); font-size:11px; flex-shrink:0; }
+
+/* ALERT */
+.alert {
+  border: 1px solid;
+  padding: 14px 18px 14px 48px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  color: #B0BDD0;
+  line-height: 1.8;
+  position: relative;
+}
+.alert.warn { border-color: rgba(255,107,53,0.25); background: rgba(255,107,53,0.03); }
+.alert.warn::before { content:'!'; position:absolute;left:16px;top:14px;color:var(--orange);font-size:18px;font-weight:900; }
+.alert.info { border-color: rgba(0,212,255,0.2); background: rgba(0,212,255,0.03); }
+.alert.info::before { content:'i'; position:absolute;left:16px;top:14px;color:var(--cyan);font-size:16px;font-style:italic;font-family:Georgia,serif;font-weight:900; }
+.alert strong { color: var(--text); }
+
+/* FOOTER */
+.footer { border-top:1px solid rgba(0,212,255,0.08); padding:28px 0 0; text-align:center; }
+.footer-logo { font-family:'Orbitron',sans-serif; font-size:13px; font-weight:900; letter-spacing:3px; background:linear-gradient(90deg,var(--gold),var(--gold2),var(--cyan)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:6px; }
+.footer p { font-size:11px; color:var(--dim); }
+
+/* REVEAL */
+.reveal { opacity:0; transform:translateY(16px); transition:opacity 0.5s ease, transform 0.5s ease; }
+.reveal.on { opacity:1; transform:none; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">🔑 LICENSE RENEWAL</div>
+  <h1>ต่ออายุ<br><span>License Key</span></h1>
+  <p class="hero-sub">ต่ออายุง่าย ไม่สะดุด ทำก่อน Key หมด 3 วันเพื่อการเทรดที่ต่อเนื่องครับ</p>
+</div>
+
+<div class="wrap">
+
+<!-- COUNTDOWN DEMO -->
+<div class="countdown-box reveal">
+  <div class="cd-label">KEY EXPIRES IN</div>
+  <div class="cd-row">
+    <div class="cd-item">
+      <div class="cd-num" id="cd-d">07</div>
+      <div class="cd-unit">DAYS</div>
+    </div>
+    <div class="cd-sep">:</div>
+    <div class="cd-item">
+      <div class="cd-num" id="cd-h">14</div>
+      <div class="cd-unit">HOURS</div>
+    </div>
+    <div class="cd-sep">:</div>
+    <div class="cd-item">
+      <div class="cd-num" id="cd-m">32</div>
+      <div class="cd-unit">MINS</div>
+    </div>
+  </div>
+  <div class="cd-status status-ok">
+    <span class="dot-pulse dot-green"></span>
+    KEY ACTIVE — ยังใช้งานได้ปกติ
+  </div>
+  <p style="font-size:11px;color:var(--dim);margin-top:10px;font-family:'Space Mono',monospace;">* ตัวอย่างการแสดงผล — ระบบแจ้งเตือนอัตโนมัติผ่าน Dashboard</p>
+</div>
+
+<div class="sep"></div>
+
+<!-- TIMELINE -->
+<div class="reveal">
+  <div class="timeline-title">📅 Timeline การหมดอายุ</div>
+</div>
+
+<div class="tl-wrap reveal">
+  <div class="tl-item">
+    <div class="tl-dot-wrap">
+      <div class="tl-dot green"></div>
+      <div class="tl-line"></div>
+    </div>
+    <div class="tl-day" style="color:var(--green)">วันที่ 1-27</div>
+    <div class="tl-body">
+      <div class="tl-title">ใช้งานปกติ</div>
+      <div class="tl-desc">EA ทำงานเต็มประสิทธิภาพ Dashboard อัปเดต Real-time ไม่มีข้อจำกัดใดๆ</div>
+    </div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-dot-wrap">
+      <div class="tl-dot gold"></div>
+      <div class="tl-line"></div>
+    </div>
+    <div class="tl-day" style="color:var(--gold)">วันที่ 28</div>
+    <div class="tl-body">
+      <div class="tl-title">แจ้งเตือนครั้งแรก</div>
+      <div class="tl-desc">Dashboard แสดงแจ้งเตือน <strong>"Key หมดอายุใน 3 วัน"</strong> · แนะนำต่ออายุเลยครับ</div>
+    </div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-dot-wrap">
+      <div class="tl-dot orange"></div>
+      <div class="tl-line"></div>
+    </div>
+    <div class="tl-day" style="color:var(--orange)">วันที่ 29-30</div>
+    <div class="tl-body">
+      <div class="tl-title">แจ้งเตือนต่อเนื่อง</div>
+      <div class="tl-desc">EA ยังทำงานปกติ แต่ Dashboard แสดงนับถอยหลังชัดเจน ต่ออายุก่อนสายครับ</div>
+    </div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-dot-wrap">
+      <div class="tl-dot red"></div>
+      <div class="tl-line"></div>
+    </div>
+    <div class="tl-day" style="color:var(--red)">วันที่ 31</div>
+    <div class="tl-body">
+      <div class="tl-title">Key หมดอายุ — EA หยุดทันที</div>
+      <div class="tl-desc"><strong>EA หยุดทำงานทันที</strong> · ออเดอร์ที่เปิดอยู่จะลอยค้างในตลาด · Dashboard แสดง KEY EXPIRED</div>
+    </div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-dot-wrap">
+      <div class="tl-dot dim"></div>
+    </div>
+    <div class="tl-day" style="color:var(--dim)">หลัง 7 วัน</div>
+    <div class="tl-body">
+      <div class="tl-title">ข้อมูล Dashboard อาจถูกล้าง</div>
+      <div class="tl-desc">ถ้าไม่ต่ออายุภายใน 7 วัน ข้อมูลสถิติใน Dashboard อาจถูกรีเซ็ตครับ</div>
+    </div>
+  </div>
+</div>
+
+<div class="alert warn reveal">
+  <strong>สำคัญ:</strong> ถ้า Key หมดอายุขณะมีออเดอร์เปิดอยู่ EA จะหยุดบริหารจัดการออเดอร์นั้นทันที แนะนำ <strong>ปิดออเดอร์ก่อนวัน Key หมด</strong> หรือต่ออายุก่อนล่วงหน้าครับ
+</div>
+
+<div class="sep"></div>
+
+<!-- HOW TO RENEW -->
+<div class="reveal">
+  <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:4px;color:var(--cyan);margin-bottom:10px;display:flex;align-items:center;gap:10px;"><span style="width:20px;height:1px;background:var(--cyan);display:inline-block;"></span>HOW TO RENEW</div>
+  <div style="font-family:'Orbitron',sans-serif;font-size:clamp(18px,4vw,32px);font-weight:700;letter-spacing:2px;margin-bottom:10px;">วิธีต่ออายุ<span style="color:var(--gold);"> Key</span></div>
+  <p style="font-size:14px;color:var(--dim);margin-bottom:20px;">ง่ายมากครับ ทำได้ภายใน 5 นาที</p>
+</div>
+
+<div class="renew-steps reveal">
+  <div class="renew-head">ขั้นตอนต่ออายุ License Key</div>
+  <div class="renew-step">
+    <div class="renew-num">1</div>
+    <div class="renew-body">
+      <strong>ทักหา KS Trader ผ่าน Line</strong><br>
+      แจ้งว่าต้องการต่ออายุ พร้อมบอก <code>Account Number</code> และแพ็กเกจที่ต้องการ
+    </div>
+  </div>
+  <div class="renew-step">
+    <div class="renew-num">2</div>
+    <div class="renew-body">
+      <strong>ชำระเงินตามแพ็กเกจ</strong><br>
+      โอนเงินตามจำนวน แล้วส่งสลิปให้ KS Trader ยืนยัน
+    </div>
+  </div>
+  <div class="renew-step">
+    <div class="renew-num">3</div>
+    <div class="renew-body">
+      <strong>รับ Key ใหม่ภายใน 15 นาที</strong><br>
+      KS Trader จะอัปเดต Key ใหม่ให้ทันที ไม่ต้องลง EA ใหม่ ไม่ต้องตั้งค่าใหม่ EA ทำงานต่อได้เลย
+    </div>
+  </div>
+  <div class="renew-step">
+    <div class="renew-num">4</div>
+    <div class="renew-body">
+      <strong>ใส่ Key ใหม่ใน EA</strong><br>
+      Remove EA → Load ใหม่ → ใส่ Key ใหม่ → OK → พร้อมเทรดต่อเลยครับ
+    </div>
+  </div>
+</div>
+
+<div class="alert info reveal">
+  <strong>ต่ออายุก่อน Key หมด</strong> = ไม่ต้องหยุดเทรดแม้แต่วันเดียว แนะนำต่ออายุล่วงหน้า 3 วันก่อน Key หมดเสมอครับ
+</div>
+
+<div class="sep"></div>
+
+<!-- PRICING -->
+<div class="reveal" style="margin-bottom:16px;">
+  <div style="font-family:'Orbitron',sans-serif;font-size:clamp(18px,4vw,32px);font-weight:700;letter-spacing:2px;margin-bottom:6px;">แพ็กเกจ<span style="color:var(--gold);"> ต่ออายุ</span></div>
+  <p style="font-size:14px;color:var(--dim);">ราคาเดียวกับสมัครใหม่ ไม่มีค่าธรรมเนียมพิเศษครับ</p>
+</div>
+
+<div class="price-grid reveal">
+  <div class="price-card">
+    <div class="plan-name">STARTER</div>
+    <div class="plan-price">3,500</div>
+    <div class="plan-per">บาท / เดือน</div>
+    <ul class="plan-list">
+      <li>EA ฟีเจอร์ครบ</li>
+      <li>Mobile Dashboard</li>
+      <li>License Key 1 เดือน</li>
+      <li>Support ทาง Line</li>
+    </ul>
+  </div>
+  <div class="price-card featured">
+    <div class="feat-badge">RECOMMENDED</div>
+    <div class="plan-name">PREMIUM</div>
+    <div class="plan-price">5,500</div>
+    <div class="plan-per">บาท / เดือน</div>
+    <ul class="plan-list">
+      <li>ทุกอย่างใน Starter</li>
+      <li>Priority Support 24 ชม.</li>
+      <li>คำแนะนำ Lot รายสัปดาห์</li>
+      <li>รายงานผลรายเดือน</li>
+      <li>อัปเดต EA ฟรีตลอด</li>
+    </ul>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer reveal">
+  <div class="footer-logo">KS ULTIMATE DATA EA</div>
+  <p>License Renewal Guide · 2026 · ทักมาได้เลยครับ</p>
+  <p style="margin-top:6px;opacity:0.4;font-size:10px">KS TRADER OFFICIAL · Line: @KSTRADER</p>
+</div>
+
+</div>
+
+<script>
+// Countdown demo
+function updateCD() {
+  var now = new Date();
+  var expiry = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDate() + 7);
+  var diff = expiry - now;
+  if (diff < 0) diff = 0;
+  var days = Math.floor(diff / 86400000);
+  var hours = Math.floor((diff % 86400000) / 3600000);
+  var mins = Math.floor((diff % 3600000) / 60000);
+  document.getElementById('cd-d').textContent = String(days).padStart(2,'0');
+  document.getElementById('cd-h').textContent = String(hours).padStart(2,'0');
+  document.getElementById('cd-m').textContent = String(mins).padStart(2,'0');
+}
+updateCD();
+setInterval(updateCD, 60000);
+
+// Reveal
+var obs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) { if(e.isIntersecting) e.target.classList.add('on'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+</script>
+
+</body>
+</html>

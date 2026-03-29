@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KS ULTIMATE DATA EA — ข้อตกลงการใช้งาน</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #D4AF37;
+  --gold2: #FFD700;
+  --cyan: #00D4FF;
+  --green: #00FF88;
+  --red: #FF4757;
+  --orange: #FF6B35;
+  --bg: #03050A;
+  --bg2: #080D17;
+  --text: #E8F0FF;
+  --dim: #6B7A99;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Sarabun', sans-serif;
+  overflow-x: hidden;
+  line-height: 1.8;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.02) 1px, transparent 1px);
+  background-size: 55px 55px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wrap { max-width: 760px; margin: 0 auto; padding: 0 20px 80px; position: relative; z-index: 1; }
+
+/* HERO */
+.hero {
+  text-align: center;
+  padding: 60px 20px 40px;
+  position: relative;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.2);
+  padding: 5px 16px;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--cyan);
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(24px, 5vw, 48px);
+  font-weight: 900;
+  letter-spacing: 2px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+.hero h1 span {
+  background: linear-gradient(90deg, var(--gold), var(--gold2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-meta {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.meta-dot { width:4px; height:4px; border-radius:50%; background:var(--gold); }
+
+/* SEP */
+.sep { width:100%; height:1px; background:linear-gradient(90deg, transparent, rgba(0,212,255,0.12), transparent); margin:36px 0; }
+
+/* SECTION */
+.term-section {
+  background: var(--bg2);
+  border: 1px solid rgba(255,255,255,0.05);
+  margin-bottom: 3px;
+  overflow: hidden;
+}
+
+.term-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  background: rgba(0,0,0,0.2);
+}
+
+.term-num {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gold);
+  background: rgba(212,175,55,0.1);
+  border: 1px solid rgba(212,175,55,0.25);
+  width: 32px; height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.term-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text);
+}
+
+.term-body {
+  padding: 20px 22px;
+}
+
+.term-body p {
+  font-size: 13px;
+  color: #B0BDD0;
+  line-height: 1.9;
+  margin-bottom: 10px;
+}
+.term-body p:last-child { margin-bottom: 0; }
+.term-body p strong { color: var(--text); }
+.term-body p .hl { color: var(--gold); }
+.term-body p .hlr { color: var(--red); }
+.term-body p .hlg { color: var(--green); }
+.term-body p .hlc { color: var(--cyan); }
+
+.term-list { list-style: none; }
+.term-list li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 13px;
+  color: #B0BDD0;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  line-height: 1.7;
+}
+.term-list li:last-child { border-bottom: none; }
+.term-list li::before { content:'·'; color:var(--gold); font-size:16px; margin-top:-1px; flex-shrink:0; }
+.term-list li strong { color: var(--text); }
+
+/* WARN */
+.warn-box {
+  border: 1px solid rgba(255,71,87,0.3);
+  background: rgba(255,71,87,0.05);
+  padding: 16px 20px;
+  margin-bottom: 3px;
+  font-size: 13px;
+  color: #B0BDD0;
+  line-height: 1.9;
+}
+.warn-box strong { color: var(--text); }
+.warn-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--red);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+/* AGREE BOX */
+.agree-box {
+  background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(0,212,255,0.04));
+  border: 1px solid rgba(212,175,55,0.3);
+  padding: 28px 28px;
+  text-align: center;
+  margin: 32px 0 24px;
+}
+
+.agree-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.agree-box p { font-size: 13px; color: var(--dim); line-height: 1.9; margin-bottom: 16px; }
+.agree-box p strong { color: var(--text); }
+
+.agree-sign {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: #000;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 12px 32px;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+}
+
+/* FOOTER */
+.footer { border-top:1px solid rgba(0,212,255,0.08); padding:28px 0 0; text-align:center; }
+.footer-logo { font-family:'Orbitron',sans-serif; font-size:13px; font-weight:900; letter-spacing:3px; background:linear-gradient(90deg,var(--gold),var(--gold2),var(--cyan)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:6px; }
+.footer p { font-size:11px; color:var(--dim); }
+
+/* REVEAL */
+.reveal { opacity:0; transform:translateY(16px); transition:opacity 0.5s ease, transform 0.5s ease; }
+.reveal.on { opacity:1; transform:none; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">📄 TERMS & CONDITIONS</div>
+  <h1>ข้อตกลง<br><span>การใช้งาน EA</span></h1>
+  <div class="hero-meta">
+    <div class="meta-item"><span class="meta-dot"></span> KS TRADER OFFICIAL</div>
+    <div class="meta-item"><span class="meta-dot"></span> Version 1.0</div>
+    <div class="meta-item"><span class="meta-dot"></span> มีผลตั้งแต่ มีนาคม 2026</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<div class="warn-box reveal">
+  <div class="warn-title">⚠ กรุณาอ่านให้ครบก่อนใช้งาน</div>
+  การใช้งาน KS ULTIMATE DATA EA ถือว่าคุณได้อ่านและยอมรับข้อตกลงทุกข้อด้านล่างนี้แล้ว หากไม่ยอมรับข้อตกลงใดข้อหนึ่ง กรุณาหยุดใช้งานและแจ้ง KS Trader ทันทีครับ
+</div>
+
+<!-- 1 -->
+<div class="term-section reveal">
+  <div class="term-header">
+    <div class="term-num">1</div>
+    <div class="term-title">ข้อสงวนสิทธิ์และความเสี่ยง</div>
+  </div>
+  <div class="term-body">
+    <p><strong>การเทรด Forex และทองคำ (XAU/USD) มีความเสี่ยงสูงมาก</strong> และอาจทำให้สูญเสียเงินลงทุนทั้งหมดหรือบางส่วนได้ KS ULTIMATE DATA EA เป็นเพียงเครื่องมือช่วยเทรด <span class="hlr">ไม่ใช่การรับประกันกำไร</span></p>
+    <ul class="term-list">
+      <li>ผลตอบแทนในอดีตไม่ได้รับประกันผลในอนาคต</li>
+      <li>ตัวเลขกำไรที่แสดงในสื่อโฆษณาเป็นการประมาณการเท่านั้น</li>
+      <li><strong>ลงทุนเฉพาะเงินที่รับความเสี่ยงได้</strong> ห้ามนำเงินที่ใช้ในชีวิตประจำวันหรือเงินกู้มาลงทุน</li>
+      <li>KS Trader ไม่รับผิดชอบต่อผลขาดทุนที่เกิดขึ้นจากการใช้ EA</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 2 -->
+<div class="term-section reveal">
+  <div class="term-header">
+    <div class="term-num">2</div>
+    <div class="term-title">สิทธิ์การใช้งาน License</div>
+  </div>
+  <div class="term-body">
+    <p>License Key ที่ได้รับมีเงื่อนไขดังนี้:</p>
+    <ul class="term-list">
+      <li><strong>1 Key ต่อ 1 บัญชีเทรดเท่านั้น</strong> ไม่สามารถใช้กับหลายบัญชีพร้อมกัน</li>
+      <li><span class="hlr">ห้ามแชร์ Key ให้ผู้อื่น</span> ไม่ว่ากรณีใดก็ตาม ระบบจะตรวจพบและระงับ Key ทันที</li>
+      <li>ห้ามขาย โอน หรือให้เช่า Key ต่อโดยไม่ได้รับอนุญาต</li>
+      <li>Key มีอายุตามระยะเวลาที่ชำระเงิน เมื่อหมดอายุต้องต่ออายุก่อนใช้งานต่อ</li>
+      <li>KS Trader สงวนสิทธิ์ระงับ Key หากพบการละเมิดข้อตกลงนี้ โดยไม่คืนเงิน</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 3 -->
+<div class="term-section reveal">
+  <div class="term-header">
+    <div class="term-num">3</div>
+    <div class="term-title">ค่าบริการและการชำระเงิน</div>
+  </div>
+  <div class="term-body">
+    <ul class="term-list">
+      <li>ค่าบริการรายเดือน <strong>Starter 3,500 บาท / Premium 5,500 บาท</strong></li>
+      <li>ชำระเงินล่วงหน้าก่อนเริ่มใช้งาน ไม่มีการทดลองใช้งานบัญชีจริงฟรี</li>
+      <li><span class="hlg">ทดลองใช้งานฟรี 5 วันบนบัญชีเดโม่เท่านั้น</span></li>
+      <li><span class="hlr">ไม่มีการคืนเงิน</span> หลังจากได้รับ License Key แล้วทุกกรณี ยกเว้นระบบมีปัญหาจาก KS Trader โดยตรง</li>
+      <li>ราคาอาจเปลี่ยนแปลงได้ KS Trader จะแจ้งล่วงหน้าอย่างน้อย 7 วัน</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 4 -->
+<div class="term-section reveal">
+  <div class="term-header">
+    <div class="term-num">4</div>
+    <div class="term-title">หน้าที่และความรับผิดชอบของผู้ใช้</div>
+  </div>
+  <div class="term-body">
+    <p>ผู้ใช้งานมีหน้าที่รับผิดชอบดังนี้:</p>
+    <ul class="term-list">
+      <li><strong>ตั้งค่า Lot และ Risk Management ด้วยตัวเอง</strong> ตามคำแนะนำในคู่มือ</li>
+      <li>ดูแลให้ MT5 และ Internet ทำงานต่อเนื่องตลอดเวลาที่ EA รันอยู่</li>
+      <li><strong>ติดตามผลการเทรดด้วยตัวเอง</strong> อย่าปล่อยทิ้งโดยไม่ดูแลเป็นระยะ</li>
+      <li>ศึกษาคู่มือการใช้งานให้เข้าใจก่อนเริ่มใช้งานจริง</li>
+      <li>แจ้ง KS Trader ทันทีหากพบปัญหาผิดปกติของระบบ</li>
+      <li>รับผิดชอบผลลัพธ์จากการตั้งค่าที่ผิดพลาดด้วยตัวเอง</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 5 -->
+<div class="term-section reveal">
+  <div class="term-header">
+    <div class="term-num">5</div>
+    <div class="term-title">ข้อจำกัดความรับผิดชอบของ KS Trader</div>
+  </div>
+  <div class="term-body">
+    <p>KS Trader <span class="hlr">ไม่รับผิดชอบ</span> ต่อความเสียหายที่เกิดจาก:</p>
+    <ul class="term-list">
+      <li>การขาดทุนจากการเทรดไม่ว่ากรณีใดก็ตาม</li>
+      <li>ปัญหาจาก Broker เช่น Requote, Spread สูง, Server ล่ม</li>
+      <li>Internet หลุด คอมปิด หรือไฟดับระหว่างที่ EA ทำงาน</li>
+      <li>การตั้งค่า Lot หรือ Parameter ที่ผิดพลาดโดยผู้ใช้</li>
+      <li>ความเสียหายจากเหตุการณ์ที่ควบคุมไม่ได้ เช่น ข่าวด่วน วิกฤตตลาด</li>
+      <li>การใช้งาน EA ผิดวัตถุประสงค์หรือผิดจากคู่มือที่แนะนำ</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 6 -->
+<div class="term-section reveal">
+  <div class="term-header">
+    <div class="term-num">6</div>
+    <div class="term-title">การต่ออายุและการยกเลิก</div>
+  </div>
+  <div class="term-body">
+    <ul class="term-list">
+      <li>Key จะหมดอายุอัตโนมัติตามวันที่กำหนด EA จะหยุดทำงานทันที</li>
+      <li><strong>แจ้งต่ออายุก่อนหมด 3 วัน</strong> เพื่อไม่ให้การเทรดสะดุด</li>
+      <li>ถ้าไม่ต่ออายุภายใน 7 วันหลังหมด ข้อมูลใน Dashboard อาจถูกล้างครับ</li>
+      <li>ผู้ใช้สามารถยกเลิกได้ทุกเวลา แต่ไม่มีการคืนเงินส่วนที่เหลือ</li>
+      <li>KS Trader สงวนสิทธิ์ยกเลิก Key หากพบการละเมิดข้อตกลง</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 7 -->
+<div class="term-section reveal">
+  <div class="term-header">
+    <div class="term-num">7</div>
+    <div class="term-title">ความเป็นส่วนตัวของข้อมูล</div>
+  </div>
+  <div class="term-body">
+    <ul class="term-list">
+      <li>ระบบเก็บข้อมูล Account Number, Balance, P&L เพื่อแสดงบน Dashboard เท่านั้น</li>
+      <li><strong>ไม่มีการเข้าถึงรหัสผ่านบัญชีเทรดของคุณ</strong> ระบบไม่สามารถถอนเงินได้</li>
+      <li>ข้อมูลไม่ถูกเปิดเผยให้บุคคลที่สามโดยไม่ได้รับอนุญาต</li>
+      <li>ข้อมูลถูกเก็บบน Google Sheets ที่ปลอดภัยของ KS Trader</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 8 -->
+<div class="term-section reveal">
+  <div class="term-header">
+    <div class="term-num">8</div>
+    <div class="term-title">การแก้ไขข้อตกลง</div>
+  </div>
+  <div class="term-body">
+    <p>KS Trader สงวนสิทธิ์แก้ไขข้อตกลงนี้ได้ตลอดเวลา โดยจะแจ้งให้ผู้ใช้งานทราบผ่านช่องทาง Line Official ล่วงหน้าอย่างน้อย <strong>7 วัน</strong> ก่อนมีผลบังคับใช้ การใช้งานต่อเนื่องหลังจากมีการแก้ไขถือว่ายอมรับข้อตกลงใหม่ครับ</p>
+  </div>
+</div>
+
+<!-- AGREE -->
+<div class="agree-box reveal">
+  <div class="agree-title">📋 การยอมรับข้อตกลง</div>
+  <p>การรับ License Key และเริ่มใช้งาน <strong>KS ULTIMATE DATA EA</strong> ถือว่าคุณได้อ่าน เข้าใจ และยอมรับข้อตกลงทุกข้อข้างต้นแล้ว หากมีข้อสงสัยสามารถสอบถาม KS Trader ก่อนเริ่มใช้งานได้ครับ</p>
+  <div class="agree-sign">✓ ยอมรับข้อตกลงการใช้งาน</div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer reveal">
+  <div class="footer-logo">KS ULTIMATE DATA EA</div>
+  <p>Terms & Conditions · Version 1.0 · มีนาคม 2026</p>
+  <p style="margin-top:6px;opacity:0.4;font-size:10px">KS TRADER OFFICIAL · สอบถามเพิ่มเติมผ่าน Line Official</p>
+</div>
+
+</div>
+
+<script>
+var obs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) { if(e.isIntersecting) e.target.classList.add('on'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+</script>
+
+</body>
+</html>
