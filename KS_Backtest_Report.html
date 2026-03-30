@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>รายงานสรุปผลการทดสอบ — KS TRADER</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #070a10;
+  --bg2: #0d1117;
+  --bg3: #111827;
+  --border: #1e2a3a;
+  --accent: #6d28d9;
+  --accent2: #8b5cf6;
+  --green: #10b981;
+  --green2: #4ade80;
+  --amber: #f59e0b;
+  --red: #ef4444;
+  --blue: #3b82f6;
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --dim: #334155;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Sarabun', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* Grid background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: 0.2;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 56px;
+  animation: fadeDown 0.7s ease both;
+}
+
+.tag {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--accent2);
+  border: 1px solid var(--accent2);
+  padding: 4px 16px;
+  border-radius: 2px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 12px;
+  color: #fff;
+}
+
+.title span {
+  color: var(--accent2);
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 14px;
+  font-family: 'Space Mono', monospace;
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  margin: 48px 0;
+  opacity: 0.5;
+}
+
+/* Section header */
+.sec-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--accent2);
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.sec-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sec-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Metric cards */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.metric-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .2s, transform .2s;
+  animation: fadeUp .5s ease both;
+}
+
+.metric-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.metric-card:hover::before { opacity: 1; }
+
+.metric-card.green::before { background: var(--green); }
+.metric-card.amber::before { background: var(--amber); }
+.metric-card.blue::before  { background: var(--blue); }
+.metric-card.red::before   { background: var(--red); }
+
+.m-label {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  font-family: 'Space Mono', monospace;
+}
+
+.m-value {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+  font-family: 'Space Mono', monospace;
+}
+
+.m-value.green { color: var(--green2); }
+.m-value.amber { color: var(--amber); }
+.m-value.blue  { color: var(--blue); }
+.m-value.red   { color: var(--red); }
+.m-value.white { color: #fff; }
+
+.m-sub {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* Stat table */
+.stat-table {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+  transition: background .15s;
+}
+
+.stat-row:last-child { border-bottom: none; }
+.stat-row:hover { background: rgba(109,40,217,.06); }
+
+.stat-key {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.stat-val {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.stat-val.green { color: var(--green2); }
+.stat-val.amber { color: var(--amber); }
+.stat-val.red   { color: var(--red); }
+
+/* Info box */
+.info-box {
+  background: linear-gradient(135deg, rgba(109,40,217,.08), rgba(139,92,246,.04));
+  border: 1px solid rgba(109,40,217,.3);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text);
+}
+
+.info-box .ib-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--accent2);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+/* Settings table */
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 600px) {
+  .settings-grid { grid-template-columns: 1fr; }
+}
+
+.setting-group {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.sg-header {
+  background: rgba(109,40,217,.15);
+  padding: 10px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent2);
+  letter-spacing: 1px;
+  font-family: 'Space Mono', monospace;
+}
+
+.sg-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+
+.sg-row:last-child { border-bottom: none; }
+.sg-key { color: var(--muted); }
+.sg-val { color: #fff; font-weight: 600; font-family: 'Space Mono', monospace; }
+.sg-val.green { color: var(--green2); }
+.sg-val.amber { color: var(--amber); }
+
+/* Equity chart visual */
+.equity-visual {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.eq-title {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: 'Space Mono', monospace;
+  margin-bottom: 16px;
+  letter-spacing: 1px;
+}
+
+.eq-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.eq-label { font-size: 10px; color: var(--muted); font-family: 'Space Mono', monospace; }
+
+.eq-chart {
+  height: 80px;
+  position: relative;
+  background: rgba(16,185,129,.04);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.eq-line {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 100%;
+}
+
+.eq-range {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.eq-start { font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; }
+.eq-end   { font-size: 11px; color: var(--green2); font-weight: 700; font-family: 'Space Mono', monospace; }
+
+/* Summary box */
+.summary {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent2);
+  border-radius: 0 10px 10px 0;
+  padding: 20px 24px;
+  font-size: 14px;
+  line-height: 1.9;
+  color: var(--text);
+  margin-bottom: 48px;
+  animation: fadeUp .6s ease .4s both;
+}
+
+.summary strong {
+  color: var(--accent2);
+  font-family: 'Space Mono', monospace;
+}
+
+/* Weekly bars */
+.bar-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+  align-items: end;
+  height: 80px;
+  margin-bottom: 8px;
+}
+
+.bar-col { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.bar { border-radius: 3px 3px 0 0; background: var(--green); min-height: 4px; transition: height .5s; }
+.bar-lbl { font-size: 9px; color: var(--muted); font-family: 'Space Mono', monospace; }
+
+/* Footer */
+.footer {
+  text-align: center;
+  color: var(--dim);
+  font-size: 12px;
+  font-family: 'Space Mono', monospace;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+  animation: fadeUp .6s ease .5s both;
+}
+
+/* Animations */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.metric-card:nth-child(1) { animation-delay: .05s; }
+.metric-card:nth-child(2) { animation-delay: .10s; }
+.metric-card:nth-child(3) { animation-delay: .15s; }
+.metric-card:nth-child(4) { animation-delay: .20s; }
+.metric-card:nth-child(5) { animation-delay: .25s; }
+.metric-card:nth-child(6) { animation-delay: .30s; }
+
+.badge {
+  display: inline-block;
+  font-size: 9px;
+  font-family: 'Space Mono', monospace;
+  padding: 2px 8px;
+  border-radius: 3px;
+  letter-spacing: 1px;
+}
+
+.badge.green { background: rgba(16,185,129,.15); color: var(--green2); }
+.badge.amber { background: rgba(245,158,11,.15); color: var(--amber); }
+.badge.red   { background: rgba(239,68,68,.15);  color: var(--red); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="tag">รายงานสรุปผลการทดสอบ</div>
+    <div class="title">KS TRADER <span>OFFICIAL</span></div>
+    <div class="title" style="font-size:clamp(16px,3vw,22px);color:var(--muted);font-weight:400;margin-top:-8px">
+      Executive Summary Report
+    </div>
+    <div class="subtitle" style="margin-top:12px">XAUUSD · M5 · ทุนเริ่มต้น $100</div>
+  </div>
+
+  <!-- Section 1: Key Metrics -->
+  <div class="sec-num">01 / 04</div>
+  <div class="sec-title">ผลลัพธ์หลัก</div>
+
+  <div class="metric-grid">
+    <div class="metric-card green">
+      <div class="m-label">กำไรสุทธิ</div>
+      <div class="m-value green">$429.64</div>
+      <div class="m-sub">จากทุน $100.00</div>
+    </div>
+    <div class="metric-card amber">
+      <div class="m-label">กำไรรวม</div>
+      <div class="m-value amber">$637.46</div>
+      <div class="m-sub">ก่อนหักขาดทุน</div>
+    </div>
+    <div class="metric-card blue">
+      <div class="m-label">Profit Factor</div>
+      <div class="m-value blue">3.07</div>
+      <div class="m-sub">ระดับดีมาก</div>
+    </div>
+    <div class="metric-card green">
+      <div class="m-label">Win Rate</div>
+      <div class="m-value green">63.57%</div>
+      <div class="m-sub">246 / 387 ครั้ง</div>
+    </div>
+    <div class="metric-card amber">
+      <div class="m-label">Max Drawdown</div>
+      <div class="m-value amber">19.97%</div>
+      <div class="m-sub">Equity Drawdown</div>
+    </div>
+    <div class="metric-card green">
+      <div class="m-label">Recovery Factor</div>
+      <div class="m-value white">17.57</div>
+      <div class="m-sub">ฟื้นตัวเร็วมาก</div>
+    </div>
+  </div>
+
+  <!-- Equity Chart Visual -->
+  <div class="equity-visual">
+    <div class="eq-title">BALANCE / EQUITY CURVE — มีนาคม 2026</div>
+    <div class="eq-labels">
+      <span class="eq-label">$100</span>
+      <span class="eq-label">$215</span>
+      <span class="eq-label">$288</span>
+      <span class="eq-label">$360</span>
+      <span class="eq-label">$469</span>
+      <span class="eq-label">$542</span>
+    </div>
+    <div class="eq-chart">
+      <svg width="100%" height="100%" viewBox="0 0 860 80" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="eqgrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#10b981" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#10b981" stop-opacity="0.02"/>
+          </linearGradient>
+        </defs>
+        <path d="M0,72 C20,70 40,65 60,60 C80,55 100,52 130,50 C160,48 180,46 200,44
+                 C220,42 240,44 260,43 C280,42 300,43 320,42 C340,41 360,42 380,41
+                 C400,40 420,38 450,36 C480,34 500,33 520,30
+                 C540,27 560,25 580,22 C600,19 620,18 640,16
+                 C660,14 680,12 700,10 C720,8 740,7 760,6
+                 C780,5 800,4 830,3 C845,2 855,2 860,1
+                 L860,80 L0,80 Z"
+              fill="url(#eqgrad)"/>
+        <path d="M0,72 C20,70 40,65 60,60 C80,55 100,52 130,50 C160,48 180,46 200,44
+                 C220,42 240,44 260,43 C280,42 300,43 320,42 C340,41 360,42 380,41
+                 C400,40 420,38 450,36 C480,34 500,33 520,30
+                 C540,27 560,25 580,22 C600,19 620,18 640,16
+                 C660,14 680,12 700,10 C720,8 740,7 760,6
+                 C780,5 800,4 830,3 C845,2 855,2 860,1"
+              fill="none" stroke="#10b981" stroke-width="2"/>
+      </svg>
+    </div>
+    <div class="eq-range">
+      <span class="eq-start">2026.03.02 — $100.00</span>
+      <span class="eq-end">2026.03.27 — $542.00 (+442%)</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Section 2: Daily/Weekly Performance -->
+  <div class="sec-num">02 / 04</div>
+  <div class="sec-title">ประสิทธิภาพตามระยะเวลา</div>
+
+  <div class="metric-grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="metric-card green">
+      <div class="m-label">1 วัน (ดีสุด)</div>
+      <div class="m-value green">10.00%</div>
+      <div class="m-sub">Win Rate 85.71%</div>
+    </div>
+    <div class="metric-card amber">
+      <div class="m-label">1 สัปดาห์</div>
+      <div class="m-value amber">+31.45%</div>
+      <div class="m-sub">Win Rate 67.74%</div>
+    </div>
+    <div class="metric-card blue">
+      <div class="m-label">1 เดือน</div>
+      <div class="m-value blue">+178.34%</div>
+      <div class="m-sub">เฉลี่ย 8-9%/วัน</div>
+    </div>
+  </div>
+
+  <!-- Weekly bars -->
+  <div class="stat-table" style="padding:20px">
+    <div style="font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:16px;letter-spacing:1px">กำไรเฉลี่ยตามวันในสัปดาห์</div>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;align-items:end;height:90px;margin-bottom:8px">
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px">
+        <div style="background:var(--green);border-radius:3px 3px 0 0;width:100%;height:20%"></div>
+        <span style="font-size:9px;color:var(--muted);font-family:'Space Mono',monospace">Sun</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px">
+        <div style="background:var(--green);border-radius:3px 3px 0 0;width:100%;height:95%"></div>
+        <span style="font-size:9px;color:var(--muted);font-family:'Space Mono',monospace">Mon</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px">
+        <div style="background:var(--green);border-radius:3px 3px 0 0;width:100%;height:78%"></div>
+        <span style="font-size:9px;color:var(--muted);font-family:'Space Mono',monospace">Tue</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px">
+        <div style="background:var(--green);border-radius:3px 3px 0 0;width:100%;height:70%"></div>
+        <span style="font-size:9px;color:var(--muted);font-family:'Space Mono',monospace">Wed</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px">
+        <div style="background:var(--green);border-radius:3px 3px 0 0;width:100%;height:65%"></div>
+        <span style="font-size:9px;color:var(--muted);font-family:'Space Mono',monospace">Thu</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px">
+        <div style="background:var(--amber);border-radius:3px 3px 0 0;width:100%;height:30%"></div>
+        <span style="font-size:9px;color:var(--muted);font-family:'Space Mono',monospace">Fri</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Section 3: Risk Management -->
+  <div class="sec-num">03 / 04</div>
+  <div class="sec-title">ระบบควบคุมความเสี่ยง</div>
+
+  <div class="stat-table" style="margin-bottom:20px">
+    <div class="stat-row">
+      <span class="stat-key">Balance Drawdown Absolute</span>
+      <span class="stat-val green">$4.32 <span class="badge green">ต่ำมาก</span></span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-key">Balance Drawdown Maximal</span>
+      <span class="stat-val amber">$15.83 (5.12%)</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-key">Equity Drawdown Maximal</span>
+      <span class="stat-val amber">$24.45 (19.97%)</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-key">Sharpe Ratio</span>
+      <span class="stat-val green">65.74 <span class="badge green">ดีเยี่ยม</span></span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-key">Recovery Factor</span>
+      <span class="stat-val green">17.57</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-key">AHPR (ต่อการซื้อขาย)</span>
+      <span class="stat-val green">1.0045 (0.45%)</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-key">กำไรติดต่อกันสูงสุด</span>
+      <span class="stat-val green">$65.02 (12 ครั้ง)</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-key">ขาดทุนติดต่อกันสูงสุด</span>
+      <span class="stat-val red">$15.83 (2 ครั้ง)</span>
+    </div>
+  </div>
+
+  <!-- Section 4: Settings Used -->
+  <div class="divider"></div>
+  <div class="sec-num">04 / 04</div>
+  <div class="sec-title">ค่าพารามิเตอร์ที่ใช้ทดสอบ</div>
+
+  <div class="settings-grid">
+    <div class="setting-group">
+      <div class="sg-header">การจัดการ Lot</div>
+      <div class="sg-row"><span class="sg-key">Auto Lot</span><span class="sg-val green">เปิด</span></div>
+      <div class="sg-row"><span class="sg-key">Lot Step (USD)</span><span class="sg-val">100</span></div>
+      <div class="sg-row"><span class="sg-key">Lot ขั้นต่ำ</span><span class="sg-val">0.01</span></div>
+    </div>
+    <div class="setting-group">
+      <div class="sg-header">เป้าหมายกำไร / SL</div>
+      <div class="sg-row"><span class="sg-key">Target ต่อไม้ (USD)</span><span class="sg-val amber">10</span></div>
+      <div class="sg-row"><span class="sg-key">Stop Loss ต่อไม้ (USD)</span><span class="sg-val">100</span></div>
+      <div class="sg-row"><span class="sg-key">Daily Target (USD)</span><span class="sg-val amber">10</span></div>
+    </div>
+    <div class="setting-group">
+      <div class="sg-header">Breakeven</div>
+      <div class="sg-row"><span class="sg-key">เปิดใช้งาน</span><span class="sg-val green">เปิด</span></div>
+      <div class="sg-row"><span class="sg-key">Trigger (USD)</span><span class="sg-val">2</span></div>
+      <div class="sg-row"><span class="sg-key">Lock Profit (USD)</span><span class="sg-val">1</span></div>
+    </div>
+    <div class="setting-group">
+      <div class="sg-header">Trailing Stop</div>
+      <div class="sg-row"><span class="sg-key">เปิดใช้งาน</span><span class="sg-val green">เปิด</span></div>
+      <div class="sg-row"><span class="sg-key">เริ่มที่ % ของเป้า</span><span class="sg-val">3%</span></div>
+      <div class="sg-row"><span class="sg-key">Trail Step (USD)</span><span class="sg-val">1</span></div>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary">
+    <strong>สรุป</strong> — เป้าหมายกำไร <strong>10% ต่อวัน</strong> บนทุน $100 สามารถทำได้จริงภายใต้เงื่อนไข Auto Lot Step 200 ในช่วงทดสอบ 1 เดือน ระบบทำกำไรได้ <strong>+178.34%</strong> โดยมี Drawdown สูงสุดเพียง <strong>19.97%</strong> และ Profit Factor <strong>3.07</strong> ซึ่งถือว่าดีมาก บางวันที่ตลาดผันผวนต่ำอาจทำได้ 4-7% แต่ภาพรวมรายเดือนยังคงสูงกว่า <strong>100%</strong> ได้อย่างสม่ำเสมอ
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    KS TRADER OFFICIAL &nbsp;·&nbsp; XAUUSD M5 &nbsp;·&nbsp; มีนาคม 2026 &nbsp;·&nbsp; Backtest Report
+  </div>
+
+</div>
+</body>
+</html>
