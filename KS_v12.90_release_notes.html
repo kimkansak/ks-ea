@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KS v12.90 — Release Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+Thai:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #070a10;
+    --surface:  #0d1117;
+    --border:   #1c2333;
+    --accent:   #7c3aed;
+    --accent2:  #06b6d4;
+    --gold:     #f59e0b;
+    --green:    #10b981;
+    --red:      #ef4444;
+    --text:     #e2e8f0;
+    --muted:    #64748b;
+    --mono:     'Space Mono', monospace;
+    --sans:     'Noto Sans Thai', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 56px;
+    animation: fadeDown 0.8s ease both;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent2);
+    border: 1px solid var(--accent2);
+    padding: 4px 14px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+
+  .title {
+    font-family: var(--mono);
+    font-size: clamp(32px, 6vw, 52px);
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+
+  .title span {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    font-family: var(--mono);
+    letter-spacing: 1px;
+  }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    margin: 48px 0;
+    opacity: 0.6;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 40px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .section:nth-child(1) { animation-delay: 0.1s; }
+  .section:nth-child(2) { animation-delay: 0.2s; }
+  .section:nth-child(3) { animation-delay: 0.3s; }
+
+  .section-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Feature cards */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 560px) {
+    .feature-grid { grid-template-columns: 1fr; }
+  }
+
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .feature-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .feature-card:hover::before { opacity: 1; }
+
+  .card-icon {
+    font-size: 22px;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .card-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--accent2);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .card-desc {
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* Shift comparison */
+  .shift-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  @media (max-width: 560px) {
+    .shift-grid { grid-template-columns: 1fr; }
+  }
+
+  .shift-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+  }
+
+  .shift-card.recommended {
+    border-color: var(--green);
+    background: rgba(16, 185, 129, 0.05);
+  }
+
+  .shift-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .shift-val {
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .shift-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    padding: 3px 8px;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+
+  .shift-tag.fast { background: rgba(245,158,11,0.15); color: var(--gold); }
+  .shift-tag.safe { background: rgba(16,185,129,0.15); color: var(--green); }
+
+  .shift-name {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .pro-con {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .pro-con li {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+
+  .pro-con li .dot {
+    flex-shrink: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-top: 5px;
+  }
+
+  .dot.pro { background: var(--green); }
+  .dot.con { background: var(--red); }
+
+  /* Tip box */
+  .tip-box {
+    background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(6,182,212,0.05));
+    border: 1px solid rgba(124,58,237,0.3);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-top: 32px;
+  }
+
+  .tip-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .tip-text {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.8;
+  }
+
+  /* Recommend table */
+  .rec-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+    font-size: 13px;
+  }
+
+  .rec-table th {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .rec-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(28,35,51,0.5);
+    color: var(--text);
+  }
+
+  .rec-table tr:hover td { background: rgba(124,58,237,0.04); }
+
+  .tag-shift {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: rgba(124,58,237,0.15);
+    color: var(--accent);
+    padding: 2px 8px;
+    border-radius: 2px;
+  }
+
+  /* Summary */
+  .summary {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 20px 24px;
+    margin-top: 40px;
+    font-size: 14px;
+    line-height: 1.9;
+    color: var(--text);
+    animation: fadeUp 0.6s ease 0.4s both;
+  }
+
+  .summary strong {
+    color: var(--accent2);
+    font-family: var(--mono);
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 60px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    animation: fadeUp 0.6s ease 0.5s both;
+  }
+
+  /* Animations */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="badge">Release Notes</div>
+    <div class="title">KS ULTIMATE<br><span>v12.90</span></div>
+    <div class="subtitle">KS TRADER Official — 2026</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Feature 1 -->
+  <div class="section">
+    <div class="section-num">01 / 03</div>
+    <div class="section-title">Dynamic Signal Shift Control</div>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <span class="card-icon">⚡</span>
+        <div class="card-label">Entry Timing</div>
+        <div class="card-title">ควบคุมจังหวะเข้าได้</div>
+        <div class="card-desc">ปรับ InpSignalShift เพื่อเลือกว่าจะเข้าออเดอร์ทันทีหรือรอแท่งปิดก่อน</div>
+      </div>
+      <div class="feature-card">
+        <span class="card-icon">🛡️</span>
+        <div class="card-label">Anti-Repaint</div>
+        <div class="card-title">กรองสัญญาณหลอก</div>
+        <div class="card-desc">Shift 1 รอแท่งปิดยืนยัน ลดการโดนหลอกจากลูกศร Repaint</div>
+      </div>
+    </div>
+
+    <div class="shift-grid">
+      <div class="shift-card">
+        <div class="shift-header">
+          <div class="shift-val">0</div>
+          <div class="shift-tag fast">Aggressive</div>
+        </div>
+        <div class="shift-name">Current Bar — เข้าทันที</div>
+        <ul class="pro-con">
+          <li><span class="dot pro"></span>ได้ราคาต้นน้ำที่สุด</li>
+          <li><span class="dot pro"></span>เหมาะกับ Scalping สาย Rapid</li>
+          <li><span class="dot con"></span>อาจโดน Repaint ถ้าแท่งยังไม่ปิด</li>
+          <li><span class="dot con"></span>ความเสี่ยงสูงกว่า</li>
+        </ul>
+      </div>
+      <div class="shift-card recommended">
+        <div class="shift-header">
+          <div class="shift-val">1</div>
+          <div class="shift-tag safe">✓ แนะนำ</div>
+        </div>
+        <div class="shift-name">Closed Bar — รอปิดแท่ง</div>
+        <ul class="pro-con">
+          <li><span class="dot pro"></span>สัญญาณยืนยัน 100%</li>
+          <li><span class="dot pro"></span>Win Rate สูงกว่า</li>
+          <li><span class="dot pro"></span>ลดอาการ SL สบัด</li>
+          <li><span class="dot con"></span>ราคาห่างจากต้นน้ำเล็กน้อย</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Feature 2 -->
+  <div class="section">
+    <div class="section-num">02 / 03</div>
+    <div class="section-title">Trailing Stop ที่นิ่งขึ้น</div>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <span class="card-icon">📍</span>
+        <div class="card-label">SL Management</div>
+        <div class="card-title">ป้องกัน Stop Hunt</div>
+        <div class="card-desc">เมื่อใช้ Shift 1 EA จะดึงค่า Supertrend จากแท่งปิดแล้ว ทำให้ SL ไม่ขยับตามราคาที่กระชาก</div>
+      </div>
+      <div class="feature-card">
+        <span class="card-icon">🎯</span>
+        <div class="card-label">Precision</div>
+        <div class="card-title">แม่นยำขึ้น</div>
+        <div class="card-desc">ค่าเส้น Supertrend ที่นิ่งแล้วช่วยให้การ Trailing SL ทำงานได้ถูกต้องและมีเสถียรภาพมากขึ้น</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Feature 3 -->
+  <div class="section">
+    <div class="section-num">03 / 03</div>
+    <div class="section-title">Performance & UI</div>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <span class="card-icon">⚙️</span>
+        <div class="card-label">Core Optimization</div>
+        <div class="card-title">ลด CPU Load</div>
+        <div class="card-desc">ปรับ CopyBuffer ให้ดึงเฉพาะข้อมูลที่จำเป็น ลดการทำงานซ้ำซ้อน เหมาะกับ VPS</div>
+      </div>
+      <div class="feature-card">
+        <span class="card-icon">📊</span>
+        <div class="card-label">Dashboard</div>
+        <div class="card-title">HUD sync กับ Shift</div>
+        <div class="card-desc">ตัวเลข Dashboard แสดงผลสอดคล้องกับค่า Shift ที่เลือก ข้อมูลถูกต้องทุกจุด</div>
+      </div>
+    </div>
+
+    <!-- Recommend table -->
+    <table class="rec-table">
+      <thead>
+        <tr>
+          <th>Symbol / Timeframe</th>
+          <th>แนะนำ Shift</th>
+          <th>เหตุผล</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Gold M1 / M5</td>
+          <td><span class="tag-shift">Shift 1</span></td>
+          <td>ผันผวนสูง ต้องการยืนยันสัญญาณ</td>
+        </tr>
+        <tr>
+          <td>Forex Major M5+</td>
+          <td><span class="tag-shift">Shift 1</span></td>
+          <td>กรองสัญญาณหลอกช่วงข่าว</td>
+        </tr>
+        <tr>
+          <td>Scalping สาย Speed</td>
+          <td><span class="tag-shift">Shift 0</span></td>
+          <td>ต้องการราคาคม + คุม Lot เอง</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Tip -->
+  <div class="tip-box">
+    <div class="tip-label">💡 KS Pro Tip</div>
+    <div class="tip-text">
+      สำหรับ <strong>Gold M1/M5</strong> แนะนำ <strong>Shift 1</strong> เพื่อสู้กับความผันผวนและลดการโดนหลอกในจังหวะข่าว<br>
+      สาย <strong>Scalping</strong> ที่มั่นใจในระบบ สามารถใช้ <strong>Shift 0</strong> ได้ แต่ต้องคุม Lot ให้เหมาะสม
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary">
+    <strong>สรุป v12.90</strong> — เพิ่มระบบกรองสัญญาณหลอก เลือกได้ว่าจะเข้าทันทีหรือรอปิดแท่งยืนยัน
+    ช่วยให้การเทรดทองคำนิ่งขึ้นและลดอาการโดนสะบัดกิน SL ได้อย่างมีประสิทธิภาพ
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    KS TRADER OFFICIAL &nbsp;·&nbsp; v12.90 &nbsp;·&nbsp; 2026
+  </div>
+
+</div>
+</body>
+</html>
