@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KS ULTIMATE DATA EA - Strategic Cent Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;400;600&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #020406;
+            --card-bg: rgba(13, 20, 29, 0.85);
+            --accent-yellow: #f8df1d;
+            --accent-blue: #00e5ff;
+            --accent-green: #00ff88;
+            --accent-red: #ff4d4d;
+            --text-main: #e0e0e0;
+            --text-dim: #a0a0a0;
+            --border-color: rgba(0, 229, 255, 0.2);
+        }
+
+        * { box-sizing: border-box; scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 5% 5%, rgba(0, 229, 255, 0.1) 0%, transparent 25%),
+                radial-gradient(circle at 95% 95%, rgba(248, 223, 29, 0.1) 0%, transparent 25%);
+            color: var(--text-main);
+            font-family: 'Kanit', sans-serif;
+            margin: 0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Scanline Effect */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+            z-index: 100;
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 60px 20px; position: relative; z-index: 10; }
+
+        /* Header Section */
+        .header { text-align: center; margin-bottom: 80px; }
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.2rem, 8vw, 4.5rem);
+            font-weight: 900;
+            letter-spacing: 12px;
+            margin: 0;
+            background: linear-gradient(135deg, var(--accent-yellow) 30%, #fff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(248, 223, 29, 0.4));
+            animation: titleGlow 3s infinite alternate;
+        }
+        @keyframes titleGlow {
+            from { filter: drop-shadow(0 0 10px rgba(248, 223, 29, 0.2)); }
+            to { filter: drop-shadow(0 0 30px rgba(248, 223, 29, 0.6)); }
+        }
+        .header p { color: var(--accent-blue); font-family: 'Orbitron', sans-serif; letter-spacing: 5px; font-size: 1.1rem; margin-top: 15px; opacity: 0.8; }
+
+        .main-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 35px; }
+
+        /* Content Area */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-left: 15px;
+            position: relative;
+        }
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0; height: 100%; width: 4px;
+            background: var(--accent-blue);
+            box-shadow: 0 0 15px var(--accent-blue);
+        }
+        .section-title h2 { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; color: #fff; margin: 0; text-transform: uppercase; letter-spacing: 2px; }
+
+        .setting-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+        }
+        .setting-box:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-blue);
+            box-shadow: 0 15px 50px rgba(0, 229, 255, 0.15);
+        }
+
+        .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        .config-item { 
+            background: rgba(255,255,255,0.02); 
+            padding: 20px; 
+            border-radius: 15px; 
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .config-item h4 { margin: 0 0 15px 0; font-size: 0.85rem; color: var(--accent-blue); font-family: 'Orbitron'; }
+        
+        .param-row { display: flex; justify-content: space-between; font-size: 0.95rem; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .val { font-family: 'Orbitron', sans-serif; color: var(--accent-green); }
+        .val.red { color: var(--accent-red); }
+        .val.highlight { 
+            background: linear-gradient(90deg, rgba(0, 229, 255, 0.2), transparent); 
+            color: #fff; padding: 2px 12px; border-radius: 5px; border-left: 2px solid var(--accent-blue);
+        }
+
+        /* Table Section */
+        .risk-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.95rem; }
+        .risk-table th { background: rgba(0, 229, 255, 0.08); color: var(--accent-blue); padding: 18px; text-align: left; font-family: 'Orbitron'; border-bottom: 1px solid var(--border-color); }
+        .risk-table td { padding: 18px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .risk-table tr:hover td { background: rgba(0, 229, 255, 0.05); color: #fff; }
+
+        /* Sidebar Section */
+        .sidebar-card {
+            background: linear-gradient(165deg, rgba(20,25,35,0.95), rgba(5,10,15,0.95));
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.05);
+            border-top: 3px solid var(--accent-yellow);
+        }
+        .sidebar-card h3 { color: var(--accent-yellow); margin-top: 0; font-family: 'Orbitron'; font-size: 1.1rem; }
+        .sidebar-card ul { padding-left: 20px; font-size: 0.9rem; color: var(--text-dim); }
+        .sidebar-card li { margin-bottom: 15px; }
+
+        /* Badge Animation */
+        .badge { 
+            display: inline-block; padding: 6px 16px; border-radius: 50px; font-size: 0.75rem; font-weight: bold; 
+            text-transform: uppercase; margin-bottom: 15px; font-family: 'Orbitron';
+            animation: pulseSafe 2s infinite;
+        }
+        @keyframes pulseSafe {
+            0% { box-shadow: 0 0 5px rgba(0, 255, 136, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.5); }
+            100% { box-shadow: 0 0 5px rgba(0, 255, 136, 0.2); }
+        }
+        .badge-safe { background: var(--accent-green); color: #000; }
+
+        /* LINE Button & Shimmer Effect */
+        .btn-line-link { text-decoration: none; display: inline-block; width: 100%; text-align: center; }
+        
+        .brand-box-line {
+            font-family: 'Orbitron'; 
+            color: var(--accent-yellow); 
+            font-size: 1.3rem; 
+            border: 2px solid var(--accent-yellow); 
+            padding: 15px 30px; 
+            display: inline-block; 
+            position: relative; 
+            transition: all 0.3s ease;
+            background: rgba(248, 223, 29, 0.05);
+            cursor: pointer;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(248, 223, 29, 0.2);
+            width: 100%;
+            max-width: 280px;
+        }
+
+        .brand-box-line:hover {
+            background: var(--accent-yellow);
+            color: #000;
+            box-shadow: 0 0 35px var(--accent-yellow);
+            transform: translateY(-3px);
+        }
+
+        .line-tag {
+            font-size: 0.7rem;
+            background: #00b900;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        .shimmer {
+            position: absolute;
+            top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shine 3.5s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        .footer { text-align: center; padding: 80px 0; color: var(--text-dim); font-family: 'Orbitron'; font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.05); letter-spacing: 2px; }
+
+        @media (max-width: 968px) {
+            .main-layout { grid-template-columns: 1fr; }
+            .config-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header class="header">
+        <div class="badge badge-safe">Official Strategy v12.87</div>
+        <h1>KS ULTIMATE DATA</h1>
+        <p>XAUUSD CENT STRATEGY DASHBOARD</p>
+    </header>
+
+    <div class="main-layout">
+        <div class="content-area">
+            
+            <section>
+                <div class="section-title">
+                    <h2>01. การตั้งค่าระบบพอร์ตเซน (10,000 USC)</h2>
+                </div>
+                <div class="setting-box">
+                    <div class="config-grid">
+                        <div class="config-item">
+                            <h4>LOT MANAGEMENT</h4>
+                            <div class="param-row"><span>คำนวณ Lot อัตโนมัติ</span><span class="val red">false</span></div>
+                            <div class="param-row"><span>ขนาด Lot ขั้นต่ำ (Fixed)</span><span class="val highlight">0.10 - 0.50</span></div>
+                            <div class="param-row"><span>Magic Number</span><span class="val">123456</span></div>
+                        </div>
+                        <div class="config-item">
+                            <h4>RISK CONTROL (MAX LOSS 5%)</h4>
+                            <div class="param-row"><span>เป้ากำไร/ไม้</span><span class="val">1,000 USC</span></div>
+                            <div class="param-row"><span>ตัดขาดทุน/ไม้</span><span class="val red">500 USC</span></div>
+                            <div class="param-row"><span>Daily Max Loss</span><span class="val highlight">500 USC (5%)</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="section-title">
+                    <h2>02. ตารางวิเคราะห์ระยะย่อตัว (Drawdown Limit 5%)</h2>
+                </div>
+                <div class="setting-box" style="padding: 0; overflow: hidden;">
+                    <table class="risk-table">
+                        <thead>
+                            <tr>
+                                <th>Fixed Lot (Cent)</th>
+                                <th>ทุนเริ่มต้น</th>
+                                <th>ระยะย่อที่ทนได้ (5%)</th>
+                                <th>ระดับความเสี่ยง</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>0.10 Lot</td>
+                                <td>10,000 USC</td>
+                                <td style="font-weight: 600;">5,000 จุด</td>
+                                <td style="color: var(--accent-green);">ต่ำมาก (Ultra Safe)</td>
+                            </tr>
+                            <tr>
+                                <td>0.30 Lot</td>
+                                <td>10,000 USC</td>
+                                <td style="font-weight: 600;">1,666 จุด</td>
+                                <td style="color: var(--accent-green);">ต่ำ (Conservative)</td>
+                            </tr>
+                            <tr>
+                                <td>0.50 Lot</td>
+                                <td>10,000 USC</td>
+                                <td style="font-weight: 600;">1,000 จุด</td>
+                                <td style="color: var(--accent-yellow);">ปานกลาง (Balanced)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="padding: 20px; background: rgba(0, 229, 255, 0.03); border-top: 1px solid rgba(255,255,255,0.03);">
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--accent-blue);">
+                            ⓘ ระยะทนลากคำนวณจากขีดจำกัดขาดทุน 5% เพื่อรักษาเงินทุนส่วนใหญ่ให้ปลอดภัยเสมอ
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="sidebar">
+            <div class="sidebar-card">
+                <h3>Safety First (Gold Focus)</h3>
+                <ul>
+                    <li><strong>ลดโอกาสโดน SL:</strong> การออกไม้เล็กช่วยให้พอร์ตมีช่องว่างในการแกว่งตัวของทองคำได้ดีขึ้น</li>
+                    <li><strong>ไม่ตกรถ:</strong> ระยะทนลากที่เหมาะสมช่วยให้ EA ถือสถานะสู้ต่อได้ในเทรนหลัก</li>
+                    <li><strong>วินัย 5%:</strong> ออกแบบมาเพื่อป้องกัน Drawdown หนักจากการสวิงที่รุนแรง</li>
+                </ul>
+            </div>
+
+            <div class="sidebar-card" style="border-top-color: var(--accent-blue);">
+                <h3>Technical Note</h3>
+                <p style="font-size: 0.85rem; color: var(--text-dim);">
+                    ระบบ Cent ช่วยเพิ่มความยืดหยุ่นในการสู้กับความผันผวนของ XAUUSD ได้อย่างยั่งยืน
+                </p>
+            </div>
+
+            <div style="text-align: center; padding: 20px;">
+                <a href="https://line.me/ti/p/kstrader" target="_blank" class="btn-line-link">
+                    <div class="brand-box-line">
+                        <span class="line-tag">LINE</span> KS TRADER
+                        <div class="shimmer"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        KS TRADER OFFICIAL © 2026<br>
+        DESIGNED FOR SUSTAINABLE GOLD TRADING
+    </footer>
+</div>
+
+</body>
+</html>
