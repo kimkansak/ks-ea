@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KS TRADER — TP/SL Profiles</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#07090d;
+  --bg2:#0c1018;
+  --bg3:#111820;
+  --border:rgba(255,255,255,0.06);
+  --border2:rgba(255,255,255,0.13);
+  --gold:#c9a84c;--gold2:#e8c46a;--gold3:#f5d98a;
+  --teal:#2dd4a0;--teal2:#0d9e75;
+  --blue:#4a9eff;--purple:#a78bfa;
+  --coral:#ff6b6b;--green:#4ade80;
+  --text:#e2e8f0;--muted:#64748b;--muted2:#94a3b8;
+  --font-mono:'JetBrains Mono',monospace;
+  --font-display:'Syne',sans-serif;
+}
+
+body{font-family:var(--font-mono);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(201,168,76,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,0.025) 1px,transparent 1px);
+  background-size:48px 48px;pointer-events:none;z-index:0;
+}
+
+.wrap{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:56px 28px 80px;}
+
+/* Header */
+.hdr{text-align:center;margin-bottom:60px;animation:fu .7s ease both;}
+.badge{display:inline-flex;align-items:center;gap:8px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,.28);padding:5px 14px;border-radius:2px;margin-bottom:18px;}
+.badge::before{content:'';width:6px;height:6px;background:var(--teal);border-radius:50%;animation:pulse 2s ease infinite;}
+h1{font-family:var(--font-display);font-size:clamp(26px,5vw,46px);font-weight:900;letter-spacing:-.03em;color:#fff;margin-bottom:10px;}
+h1 em{color:var(--gold);font-style:normal;}
+.hdrsub{font-size:12px;color:var(--muted2);letter-spacing:.06em;}
+
+/* Stats bar */
+.statsbar{
+  display:flex;gap:0;background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+  overflow:hidden;margin-bottom:52px;animation:fu .8s ease .1s both;
+}
+.stat{flex:1;padding:16px 20px;text-align:center;border-right:1px solid var(--border);}
+.stat:last-child{border-right:none;}
+.stat-v{font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--gold2);}
+.stat-l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:3px;}
+
+/* Grid */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.grid{grid-template-columns:1fr;}}
+
+/* Card */
+.card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;cursor:pointer;position:relative;
+  transition:transform .2s,box-shadow .2s,border-color .2s;
+  animation:fu .6s ease both;
+}
+.card:hover{transform:translateY(-4px);border-color:var(--border2);box-shadow:0 16px 48px rgba(0,0,0,.5);}
+.card.active{border-color:rgba(201,168,76,.5);box-shadow:0 0 40px rgba(201,168,76,.08);}
+
+/* Card top accent bar */
+.accent{height:3px;width:100%;}
+
+/* Card header */
+.chead{padding:20px 20px 14px;border-bottom:1px solid var(--border);}
+.crow{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.cnum{font-size:10px;color:var(--muted);letter-spacing:.15em;}
+.ctag{font-size:10px;padding:3px 10px;border-radius:2px;letter-spacing:.08em;text-transform:uppercase;}
+.cname{font-family:var(--font-display);font-size:18px;font-weight:800;color:#fff;margin-bottom:3px;}
+.cdesc{font-size:11px;color:var(--muted2);line-height:1.5;}
+
+/* Params */
+.params{padding:16px 20px;display:flex;flex-direction:column;gap:10px;}
+.param-row{display:flex;justify-content:space-between;align-items:center;}
+.param-key{font-size:11px;color:var(--muted2);}
+.param-val{font-family:var(--font-display);font-size:16px;font-weight:800;}
+.param-sub{font-size:10px;color:var(--muted);text-align:right;}
+.param-bar{height:3px;background:var(--border);border-radius:2px;margin-top:2px;overflow:hidden;}
+.param-fill{height:100%;border-radius:2px;transition:width .6s ease;}
+
+/* Metrics */
+.metrics{padding:14px 20px 18px;border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.met{text-align:center;}
+.met-v{font-family:var(--font-display);font-size:15px;font-weight:800;}
+.met-l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:2px;}
+
+/* Best for */
+.bestfor{padding:10px 20px 16px;display:flex;gap:6px;flex-wrap:wrap;}
+.tag{font-size:10px;padding:3px 9px;border-radius:2px;background:rgba(255,255,255,.05);color:var(--muted2);letter-spacing:.06em;}
+
+/* Comparison chart */
+.compare{margin-top:52px;animation:fu .9s ease .2s both;}
+.sec-title{font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);text-align:center;margin-bottom:28px;}
+.chart{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:28px;}
+.chart-row{display:flex;align-items:center;gap:16px;margin-bottom:16px;}
+.chart-row:last-child{margin-bottom:0;}
+.chart-label{width:120px;font-size:11px;color:var(--muted2);text-align:right;flex-shrink:0;}
+.chart-bars{flex:1;display:flex;gap:4px;align-items:center;}
+.chart-bar{height:24px;border-radius:3px;display:flex;align-items:center;padding:0 8px;font-size:10px;font-weight:700;min-width:32px;transition:width .8s ease;font-family:var(--font-display);}
+.chart-bar span{white-space:nowrap;}
+
+/* Note */
+.note{
+  margin-top:32px;background:rgba(201,168,76,.05);
+  border:1px solid rgba(201,168,76,.15);border-radius:8px;
+  padding:18px 20px;font-size:11px;color:var(--muted2);line-height:1.8;
+  animation:fu 1s ease .3s both;
+}
+.note strong{color:var(--gold2);}
+
+/* Animations */
+@keyframes fu{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+/* Stagger */
+.card:nth-child(1){animation-delay:.05s;}
+.card:nth-child(2){animation-delay:.10s;}
+.card:nth-child(3){animation-delay:.15s;}
+.card:nth-child(4){animation-delay:.20s;}
+.card:nth-child(5){animation-delay:.25s;}
+.card:nth-child(6){animation-delay:.30s;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- Header -->
+<div class="hdr">
+  <div class="badge">จากสถิติ 5,221 trades จริง</div>
+  <h1>TP / SL / Trail <em>Profiles</em></h1>
+  <p class="hdrsub">6 รูปแบบที่ออกแบบจากข้อมูลจริง · เลือกใช้ตามจังหวะตลาด</p>
+</div>
+
+<!-- Stats bar -->
+<div class="statsbar">
+  <div class="stat"><div class="stat-v">70.8%</div><div class="stat-l">Win Rate</div></div>
+  <div class="stat"><div class="stat-v">854</div><div class="stat-l">Avg MFE (pts)</div></div>
+  <div class="stat"><div class="stat-v">184</div><div class="stat-l">Avg MAE (pts)</div></div>
+  <div class="stat"><div class="stat-v">4.64</div><div class="stat-l">RR Ratio</div></div>
+  <div class="stat"><div class="stat-v">551</div><div class="stat-l">Expectancy (pts)</div></div>
+  <div class="stat"><div class="stat-v">5,221</div><div class="stat-l">Total trades</div></div>
+</div>
+
+<!-- Cards -->
+<div class="grid" id="cards"></div>
+
+<!-- Comparison chart -->
+<div class="compare">
+  <div class="sec-title">เปรียบเทียบ Expectancy ต่อ trade (คำนวณจากสถิติจริง)</div>
+  <div class="chart" id="chart"></div>
+</div>
+
+<!-- Note -->
+<div class="note">
+  <strong>วิธีเลือก Profile ที่เหมาะสม:</strong><br>
+  ตลาด Trend ชัด / Volatile → ใช้ <strong>Sniper</strong> หรือ <strong>Momentum</strong> เพื่อ capture move ใหญ่ |
+  ตลาด Choppy / Range → ใช้ <strong>Scalper</strong> หรือ <strong>Safe Harvest</strong> เพื่อปิดกำไรเร็ว ลด exposure |
+  ต้องการสม่ำเสมอทุกสภาวะ → ใช้ <strong>Balanced</strong> (ค่า default ปัจจุบัน) |
+  ช่วง Low Volatility / เซิฟทุน → ใช้ <strong>Capital Guard</strong> เพื่อ DD ต่ำสุด
+</div>
+
+</div>
+
+<script>
+const WR = 0.708;
+const profiles = [
+  {
+    id:1, name:'Scalper', emoji:'⚡',
+    tag:'Quick Win', tagColor:'rgba(45,212,160,.15)', tagText:'#2dd4a0',
+    accent:'linear-gradient(90deg,#2dd4a0,#0d9e75)',
+    color:'#2dd4a0',
+    tp:510, sl:120, trail:400, trailStep:60,
+    desc:'ปิดกำไรเร็ว ลด exposure ในตลาด Choppy — MFE p25 = 510',
+    rr:null, exp:null,
+    bestFor:['Choppy market','Range-bound','ช่วง Low Vol','ลด DD'],
+    note:'Trail เริ่มเร็วที่ 400 ล็อคกำไรทันที',
+    maxBar:510,
+  },
+  {
+    id:2, name:'Safe Harvest', emoji:'🌾',
+    tag:'Low Risk', tagColor:'rgba(74,158,255,.12)', tagText:'#4a9eff',
+    accent:'linear-gradient(90deg,#4a9eff,#185fa5)',
+    color:'#4a9eff',
+    tp:697, sl:150, trail:500, trailStep:70,
+    desc:'Balance ระหว่างความปลอดภัยและกำไร — MFE p40 = 697',
+    rr:null, exp:null,
+    bestFor:['Conservative','ทุนน้อย','เริ่มต้นระบบ','Sideways mild'],
+    note:'SL p60 ของ MAE รอด 60% ของ trade ที่แพ้',
+    maxBar:697,
+  },
+  {
+    id:3, name:'Balanced', emoji:'⚖️',
+    tag:'Default', tagColor:'rgba(201,168,76,.15)', tagText:'#c9a84c',
+    accent:'linear-gradient(90deg,#c9a84c,#e8c46a)',
+    color:'#c9a84c',
+    tp:800, sl:161, trail:600, trailStep:75,
+    desc:'ค่าปัจจุบันที่ Optimizer คำนวณ — Expectancy สูงสุดในข้อมูลจริง',
+    rr:null, exp:null,
+    bestFor:['ทุกสภาวะ','Default','Optimizer pick','5,221 trades'],
+    note:'SL p70 MAE · Trail เริ่มหลัง TP 75% · RR 4.97',
+    maxBar:800,
+    highlight:true,
+  },
+  {
+    id:4, name:'Momentum', emoji:'🚀',
+    tag:'High RR', tagColor:'rgba(167,139,250,.15)', tagText:'#a78bfa',
+    accent:'linear-gradient(90deg,#a78bfa,#7c3aed)',
+    color:'#a78bfa',
+    tp:1100, sl:200, trail:700, trailStep:80,
+    desc:'ใช้ตอนตลาด Trend ชัด — MFE p65 = 1,100 pts',
+    rr:null, exp:null,
+    bestFor:['Strong trend','US OPEN','High Vol day','News event'],
+    note:'Trail เริ่มที่ 700 ให้ราคามีพื้นที่วิ่ง · SL p80 MAE',
+    maxBar:1100,
+  },
+  {
+    id:5, name:'Sniper', emoji:'🎯',
+    tag:'Max Profit', tagColor:'rgba(248,113,113,.15)', tagText:'#f87171',
+    accent:'linear-gradient(90deg,#f87171,#dc2626)',
+    color:'#f87171',
+    tp:1566, sl:250, trail:900, trailStep:100,
+    desc:'ตั้ง TP ไว้ไกล รอ Big Move — MFE p85 = 1,566 pts',
+    rr:null, exp:null,
+    bestFor:['Breakout day','Strong momentum','ตลาด Volatile','หลัง consolidation'],
+    note:'Win rate ต่อ trade น้อยลง แต่ profit ต่อ win สูงมาก',
+    maxBar:1566,
+  },
+  {
+    id:6, name:'Capital Guard', emoji:'🛡️',
+    tag:'Preserve Capital', tagColor:'rgba(74,222,128,.12)', tagText:'#4ade80',
+    accent:'linear-gradient(90deg,#4ade80,#16a34a)',
+    color:'#4ade80',
+    tp:510, sl:80, trail:350, trailStep:50,
+    desc:'เซิฟเงินทุนสูงสุด DD ต่ำที่สุด เหมาะตอน drawdown สูง',
+    rr:null, exp:null,
+    bestFor:['DD สูง > 8%','ตลาดไม่ชัด','ช่วง reset','บัญชีใหม่'],
+    note:'SL แคบ p50 MAE · Trail เร็วมาก · ปิดกำไรเล็กๆ บ่อยๆ',
+    maxBar:510,
+  },
+];
+
+// คำนวณ RR และ Expectancy
+profiles.forEach(p => {
+  p.rr = (p.tp / p.sl).toFixed(2);
+  // Expectancy = WR*TP - (1-WR)*SL  (ใช้ winrate จาก data จริง)
+  p.exp = Math.round(WR * p.tp - (1-WR) * p.sl);
+});
+
+// Max exp for bar scaling
+const maxExp = Math.max(...profiles.map(p=>p.exp));
+const maxTP  = Math.max(...profiles.map(p=>p.tp));
+
+// Render cards
+const cardHTML = profiles.map(p => `
+<div class="card${p.highlight?' active':''}" onclick="selectCard(${p.id})">
+  <div class="accent" style="background:${p.accent}"></div>
+  <div class="chead">
+    <div class="crow">
+      <span class="cnum">PROFILE ${String(p.id).padStart(2,'0')}</span>
+      <span class="ctag" style="background:${p.tagColor};color:${p.tagText}">${p.tag}</span>
+    </div>
+    <div class="cname">${p.emoji} ${p.name}</div>
+    <div class="cdesc">${p.desc}</div>
+  </div>
+  <div class="params">
+    <div>
+      <div class="param-row">
+        <span class="param-key">TP Target</span>
+        <div style="text-align:right">
+          <div class="param-val" style="color:${p.color}">${p.tp} pts</div>
+        </div>
+      </div>
+      <div class="param-bar"><div class="param-fill" style="width:${p.tp/maxTP*100}%;background:${p.accent}"></div></div>
+    </div>
+    <div>
+      <div class="param-row">
+        <span class="param-key">Stop Loss</span>
+        <div style="text-align:right">
+          <div class="param-val" style="color:var(--coral)">${p.sl} pts</div>
+        </div>
+      </div>
+      <div class="param-bar"><div class="param-fill" style="width:${p.sl/maxTP*100}%;background:linear-gradient(90deg,#ff6b6b,#dc2626)"></div></div>
+    </div>
+    <div>
+      <div class="param-row">
+        <span class="param-key">Trail Start</span>
+        <span class="param-val" style="color:var(--muted2);font-size:14px">${p.trail} pts</span>
+      </div>
+    </div>
+    <div>
+      <div class="param-row">
+        <span class="param-key">Trail Step</span>
+        <span class="param-val" style="color:var(--muted2);font-size:14px">${p.trailStep} pts</span>
+      </div>
+    </div>
+  </div>
+  <div class="metrics">
+    <div class="met">
+      <div class="met-v" style="color:${p.exp>400?'var(--teal)':p.exp>200?'var(--gold)':'var(--coral)'}">${p.exp}</div>
+      <div class="met-l">Expectancy</div>
+    </div>
+    <div class="met">
+      <div class="met-v" style="color:${parseFloat(p.rr)>=4?'var(--teal)':parseFloat(p.rr)>=3?'var(--gold)':'var(--muted2)'}">${p.rr}</div>
+      <div class="met-l">RR Ratio</div>
+    </div>
+    <div class="met">
+      <div class="met-v" style="color:var(--purple)">${Math.round(p.tp*0.65)}</div>
+      <div class="met-l">Trail Lock</div>
+    </div>
+  </div>
+  <div class="bestfor">
+    ${p.bestFor.map(t=>`<span class="tag">${t}</span>`).join('')}
+  </div>
+  <div style="padding:0 20px 14px;font-size:10px;color:var(--muted);font-style:italic;line-height:1.5;">${p.note}</div>
+</div>
+`).join('');
+document.getElementById('cards').innerHTML = cardHTML;
+
+// Render comparison chart
+const colors = ['#2dd4a0','#4a9eff','#c9a84c','#a78bfa','#f87171','#4ade80'];
+const chartHTML = profiles.map((p,i) => `
+<div class="chart-row">
+  <div class="chart-label">${p.emoji} ${p.name}</div>
+  <div class="chart-bars">
+    <div class="chart-bar" style="background:${colors[i]}22;color:${colors[i]};width:${Math.max(p.exp,0)/maxExp*70}%;border:1px solid ${colors[i]}44;">
+      <span>${p.exp} pts</span>
+    </div>
+    <span style="font-size:10px;color:var(--muted);margin-left:8px;">RR ${p.rr}</span>
+  </div>
+</div>
+`).join('');
+document.getElementById('chart').innerHTML = chartHTML;
+
+function selectCard(id) {
+  document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.card')[id-1].classList.add('active');
+}
+</script>
+</body>
+</html>
