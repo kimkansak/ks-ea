@@ -3,954 +3,871 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KS ULTIMATE DATA — AI Trading System</title>
-<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&family=Space+Mono&display=swap" rel="stylesheet">
+<title>KS_DATA_PRO — ระบบคำนวณสถิติอัจฉริยะ XAUUSD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-:root {
-  --gold: #D4AF37;
-  --gold2: #FFD700;
-  --gold3: #B8860B;
-  --cyan: #00D4FF;
-  --cyan2: #00FFFF;
-  --purple: #8B5CF6;
-  --green: #00FF88;
-  --red: #FF4757;
-  --bg: #03050A;
-  --bg2: #080D17;
-  --bg3: #0D1526;
-  --text: #E8F0FF;
-  --dim: #6B7A99;
+/* ── Reset & Base ─────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:       #f0b429;
+  --gold-light: #ffd166;
+  --gold-dim:   #b8871f;
+  --bg:         #07070f;
+  --bg2:        #0d0d1a;
+  --bg3:        #12122a;
+  --glass:      rgba(255,255,255,0.04);
+  --glass-b:    rgba(255,255,255,0.08);
+  --text:       #e8e8f0;
+  --text-dim:   #8888aa;
+  --green:      #22c55e;
+  --red:        #ef4444;
+  --radius:     16px;
+  --radius-sm:  10px;
 }
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Sarabun', sans-serif;
-  overflow-x: hidden;
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+  line-height:1.6;
 }
+a{color:inherit;text-decoration:none}
 
-/* ═══ GRID BACKGROUND ═══ */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
+/* ── Scrollbar ───────────────────────────────────────────── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:3px}
+
+/* ── Animated Background ─────────────────────────────────── */
+.bg-grid{
+  position:fixed;top:0;left:0;width:100%;height:100%;
   background-image:
-    linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
-  background-size: 60px 60px;
-  pointer-events: none;
-  z-index: 0;
+    linear-gradient(rgba(240,180,41,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(240,180,41,0.03) 1px, transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none;z-index:0;
+}
+.bg-glow{
+  position:fixed;top:-30%;left:50%;transform:translateX(-50%);
+  width:800px;height:800px;
+  background:radial-gradient(ellipse, rgba(240,180,41,0.06) 0%, transparent 70%);
+  pointer-events:none;z-index:0;
+  animation:pulse-glow 8s ease-in-out infinite;
+}
+@keyframes pulse-glow{0%,100%{opacity:.6;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.1)}}
+
+/* ── Utility ─────────────────────────────────────────────── */
+.container{max-width:1100px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+.gold{color:var(--gold)}
+.gold-gradient{background:linear-gradient(135deg,var(--gold-light),var(--gold),var(--gold-dim));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(240,180,41,0.12);border:1px solid rgba(240,180,41,0.3);
+  color:var(--gold);padding:6px 16px;border-radius:50px;
+  font-size:13px;font-weight:600;letter-spacing:.5px;
+}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 32px;border-radius:50px;font-weight:700;font-size:15px;
+  cursor:pointer;border:none;transition:all .3s ease;letter-spacing:.3px;
+}
+.btn-gold{
+  background:linear-gradient(135deg,var(--gold-light),var(--gold));
+  color:#000;box-shadow:0 8px 30px rgba(240,180,41,0.35);
+}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(240,180,41,0.5)}
+.btn-outline{
+  background:transparent;color:var(--gold);
+  border:1.5px solid rgba(240,180,41,0.4);
+}
+.btn-outline:hover{background:rgba(240,180,41,0.08);border-color:var(--gold)}
+.section-tag{
+  font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold);opacity:.8;margin-bottom:12px;display:block;
+}
+.section-title{font-size:clamp(28px,4vw,44px);font-weight:800;line-height:1.2;margin-bottom:16px}
+.section-sub{font-size:17px;color:var(--text-dim);max-width:560px;line-height:1.7}
+.fade-in{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+/* ── NAV ─────────────────────────────────────────────────── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(7,7,15,0.85);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(240,180,41,0.1);
+}
+.nav-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 24px;max-width:1100px;margin:0 auto;
+}
+.nav-logo{
+  font-size:20px;font-weight:900;letter-spacing:1px;
+  background:linear-gradient(135deg,var(--gold-light),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.nav-logo span{font-weight:300;opacity:.7}
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-links a{font-size:14px;font-weight:500;color:var(--text-dim);transition:color .2s}
+.nav-links a:hover{color:var(--gold)}
+.nav-cta{padding:10px 24px;font-size:14px}
+
+/* ── HERO ─────────────────────────────────────────────────── */
+#hero{
+  min-height:100vh;display:flex;align-items:center;
+  padding:120px 0 80px;
+}
+.hero-wrap{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.hero-tag{margin-bottom:24px}
+.hero-title{
+  font-size:clamp(38px,5vw,64px);font-weight:900;line-height:1.1;
+  margin-bottom:24px;
+}
+.hero-sub{font-size:18px;color:var(--text-dim);margin-bottom:40px;line-height:1.7;max-width:480px}
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap}
+.hero-stats{
+  display:flex;gap:32px;margin-top:48px;padding-top:32px;
+  border-top:1px solid rgba(255,255,255,0.06);
+}
+.hero-stat-val{font-size:28px;font-weight:800;color:var(--gold)}
+.hero-stat-lbl{font-size:13px;color:var(--text-dim);margin-top:2px}
+.hero-card{
+  background:var(--glass);border:1px solid var(--glass-b);
+  border-radius:24px;padding:28px;backdrop-filter:blur(10px);
+  position:relative;overflow:hidden;
+}
+.hero-card::before{
+  content:'';position:absolute;top:-1px;left:20px;right:20px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.ticker-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.ticker-sym{font-size:22px;font-weight:800}
+.ticker-price{font-size:28px;font-weight:800;color:var(--gold)}
+.signal-box{
+  background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.25);
+  border-radius:var(--radius-sm);padding:16px;margin-bottom:14px;
+}
+.signal-dir{
+  font-size:13px;font-weight:700;letter-spacing:2px;
+  color:var(--green);margin-bottom:8px;
+}
+.signal-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.signal-item{font-size:12px;color:var(--text-dim)}
+.signal-item strong{display:block;font-size:14px;color:var(--text);font-weight:600}
+.confidence-bar{margin-top:14px}
+.conf-label{display:flex;justify-content:space-between;font-size:12px;color:var(--text-dim);margin-bottom:6px}
+.conf-track{height:6px;background:rgba(255,255,255,0.06);border-radius:3px}
+.conf-fill{
+  height:100%;border-radius:3px;
+  background:linear-gradient(90deg,var(--gold),var(--gold-light));
+  animation:fill-bar 2s ease forwards;
+  width:0;
+}
+@keyframes fill-bar{to{width:87%}}
+.pulse-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--green);
+  display:inline-block;margin-right:6px;
+  animation:pulse-dot 2s infinite;
+}
+@keyframes pulse-dot{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{opacity:.7;box-shadow:0 0 0 6px rgba(34,197,94,0)}}
+.live-badge{font-size:12px;color:var(--green);font-weight:600}
+
+/* ── HOW IT WORKS ────────────────────────────────────────── */
+#how{padding:120px 0;background:var(--bg2)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:64px}
+.step{
+  background:var(--glass);border:1px solid var(--glass-b);
+  border-radius:var(--radius);padding:36px 28px;
+  position:relative;transition:all .3s ease;
+}
+.step:hover{transform:translateY(-6px);border-color:rgba(240,180,41,0.25);background:rgba(240,180,41,0.04)}
+.step-num{
+  font-size:56px;font-weight:900;line-height:1;
+  color:rgba(240,180,41,0.12);position:absolute;top:20px;right:24px;
+  font-variant-numeric:tabular-nums;
+}
+.step-icon{
+  width:56px;height:56px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(240,180,41,0.15),rgba(240,180,41,0.05));
+  border:1px solid rgba(240,180,41,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;color:var(--gold);margin-bottom:20px;
+}
+.step h3{font-size:18px;font-weight:700;margin-bottom:10px}
+.step p{font-size:14px;color:var(--text-dim);line-height:1.7}
+
+/* ── FEATURES ────────────────────────────────────────────── */
+#features{padding:120px 0}
+.features-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-top:64px}
+.feat{
+  background:var(--glass);border:1px solid var(--glass-b);
+  border-radius:var(--radius);padding:32px;
+  display:flex;gap:20px;align-items:flex-start;
+  transition:all .3s ease;
+}
+.feat:hover{border-color:rgba(240,180,41,0.2);background:rgba(240,180,41,0.03)}
+.feat-icon{
+  width:48px;height:48px;min-width:48px;border-radius:12px;
+  background:linear-gradient(135deg,rgba(240,180,41,0.15),rgba(240,180,41,0.05));
+  border:1px solid rgba(240,180,41,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;color:var(--gold);
+}
+.feat h3{font-size:16px;font-weight:700;margin-bottom:6px}
+.feat p{font-size:14px;color:var(--text-dim);line-height:1.6}
+
+/* ── NUMBERS ─────────────────────────────────────────────── */
+#numbers{
+  padding:80px 0;
+  background:linear-gradient(135deg,rgba(240,180,41,0.06),rgba(240,180,41,0.02));
+  border-top:1px solid rgba(240,180,41,0.1);
+  border-bottom:1px solid rgba(240,180,41,0.1);
+}
+.numbers-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.05)}
+.num-box{
+  background:var(--bg);padding:40px 24px;text-align:center;
+}
+.num-val{font-size:44px;font-weight:900;line-height:1}
+.num-unit{font-size:22px;font-weight:900;color:var(--gold)}
+.num-lbl{font-size:14px;color:var(--text-dim);margin-top:8px}
+
+/* ── PRICING ─────────────────────────────────────────────── */
+#pricing{padding:120px 0;background:var(--bg2)}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:64px}
+.plan{
+  background:var(--glass);border:1px solid var(--glass-b);
+  border-radius:var(--radius);padding:36px 28px;
+  display:flex;flex-direction:column;
+  transition:all .3s ease;position:relative;
+}
+.plan.popular{
+  border-color:rgba(240,180,41,0.5);
+  background:rgba(240,180,41,0.04);
+  transform:scale(1.04);
+}
+.popular-tag{
+  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(135deg,var(--gold-light),var(--gold));
+  color:#000;font-size:12px;font-weight:800;letter-spacing:1px;
+  padding:6px 18px;border-radius:50px;white-space:nowrap;
+}
+.plan-name{font-size:14px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:2px;margin-bottom:20px}
+.plan-price{font-size:42px;font-weight:900;line-height:1;margin-bottom:4px}
+.plan-price span{font-size:16px;font-weight:400;color:var(--text-dim)}
+.plan-per{font-size:13px;color:var(--text-dim);margin-bottom:28px}
+.plan-save{
+  display:inline-block;background:rgba(34,197,94,0.12);
+  color:var(--green);font-size:12px;font-weight:600;
+  padding:3px 10px;border-radius:20px;margin-bottom:28px;
+}
+.plan-divider{height:1px;background:rgba(255,255,255,0.06);margin:20px 0}
+.plan-feats{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:32px;flex:1}
+.plan-feats li{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-dim)}
+.plan-feats li i{color:var(--gold);font-size:13px;min-width:16px}
+.plan-btn{width:100%;justify-content:center}
+
+/* ── SETUP ───────────────────────────────────────────────── */
+#setup{padding:120px 0}
+.setup-steps{display:flex;flex-direction:column;gap:1px;margin-top:48px;max-width:700px}
+.setup-step{
+  display:flex;gap:24px;align-items:flex-start;
+  padding:28px;background:var(--glass);
+  border:1px solid var(--glass-b);
+  transition:all .3s;
+}
+.setup-step:first-child{border-radius:var(--radius) var(--radius) 0 0}
+.setup-step:last-child{border-radius:0 0 var(--radius) var(--radius)}
+.setup-step:hover{background:rgba(240,180,41,0.03);border-color:rgba(240,180,41,0.15)}
+.setup-n{
+  min-width:40px;height:40px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--gold-dim));
+  color:#000;font-weight:800;font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 14px rgba(240,180,41,0.3);
+}
+.setup-step h3{font-size:16px;font-weight:700;margin-bottom:4px}
+.setup-step p{font-size:14px;color:var(--text-dim)}
+.code-inline{
+  font-family:monospace;font-size:13px;
+  background:rgba(240,180,41,0.1);color:var(--gold);
+  padding:2px 8px;border-radius:4px;
 }
 
-/* ═══ HERO ═══ */
-.hero {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 80px 20px 60px;
-  position: relative;
-  z-index: 1;
+/* ── FAQ ─────────────────────────────────────────────────── */
+#faq{padding:120px 0;background:var(--bg2)}
+.faq-list{max-width:720px;margin:48px auto 0;display:flex;flex-direction:column;gap:12px}
+.faq-item{
+  background:var(--glass);border:1px solid var(--glass-b);
+  border-radius:var(--radius-sm);overflow:hidden;
+}
+.faq-q{
+  padding:20px 24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;
+  font-weight:600;font-size:15px;transition:background .2s;user-select:none;
+}
+.faq-q:hover{background:rgba(240,180,41,0.04)}
+.faq-q i{color:var(--gold);transition:transform .3s;font-size:13px}
+.faq-a{
+  max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease;
+  font-size:14px;color:var(--text-dim);line-height:1.7;padding:0 24px;
+}
+.faq-item.open .faq-a{max-height:200px;padding:0 24px 20px}
+.faq-item.open .faq-q i{transform:rotate(180deg)}
+.faq-item.open .faq-q{color:var(--gold)}
+
+/* ── CTA BANNER ──────────────────────────────────────────── */
+#cta-banner{
+  padding:100px 0;
+  background:linear-gradient(135deg,rgba(240,180,41,0.08),rgba(240,180,41,0.02));
+  text-align:center;border-top:1px solid rgba(240,180,41,0.1);
+}
+#cta-banner h2{font-size:clamp(28px,4vw,48px);font-weight:900;margin-bottom:16px}
+#cta-banner p{font-size:18px;color:var(--text-dim);max-width:500px;margin:0 auto 40px}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+
+/* ── FOOTER ──────────────────────────────────────────────── */
+footer{
+  background:var(--bg2);padding:48px 0 32px;
+  border-top:1px solid rgba(255,255,255,0.05);
+}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;margin-bottom:40px}
+.footer-brand{font-size:20px;font-weight:900;margin-bottom:12px}
+.footer-desc{font-size:14px;color:var(--text-dim);line-height:1.7}
+.footer-h{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-links a{font-size:14px;color:var(--text-dim);transition:color .2s}
+.footer-links a:hover{color:var(--gold)}
+.footer-bottom{
+  display:flex;justify-content:space-between;align-items:center;
+  padding-top:24px;border-top:1px solid rgba(255,255,255,0.05);
+  font-size:13px;color:var(--text-dim);flex-wrap:wrap;gap:12px;
+}
+.footer-warning{
+  background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);
+  border-radius:8px;padding:12px 16px;font-size:12px;color:#fca5a5;
+  margin-bottom:24px;line-height:1.5;
 }
 
-/* Glow orbs */
-.orb1, .orb2, .orb3 {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  pointer-events: none;
+/* ── LINE MODAL ──────────────────────────────────────────── */
+.modal-overlay{
+  position:fixed;inset:0;z-index:999;
+  background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .3s ease;
 }
-.orb1 {
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(0,212,255,0.12), transparent 70%);
-  top: -100px; left: 50%; transform: translateX(-50%);
+.modal-overlay.show{opacity:1;pointer-events:all}
+.modal-box{
+  background:#0d0d1a;border:1px solid rgba(6,199,85,0.3);
+  border-radius:24px;padding:40px 36px;max-width:380px;width:90%;
+  text-align:center;position:relative;
+  box-shadow:0 0 60px rgba(6,199,85,0.12);
+  transform:translateY(20px);transition:transform .3s ease;
 }
-.orb2 {
-  width: 350px; height: 350px;
-  background: radial-gradient(circle, rgba(212,175,55,0.1), transparent 70%);
-  bottom: 0; left: 10%;
+.modal-overlay.show .modal-box{transform:translateY(0)}
+.modal-close{
+  position:absolute;top:16px;right:16px;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,0.06);border:none;
+  color:#aaa;font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s;
 }
-.orb3 {
-  width: 300px; height: 300px;
-  background: radial-gradient(circle, rgba(139,92,246,0.1), transparent 70%);
-  bottom: 0; right: 5%;
+.modal-close:hover{background:rgba(255,255,255,0.12);color:#fff}
+.line-logo{
+  width:64px;height:64px;border-radius:18px;
+  background:#06c755;display:flex;align-items:center;justify-content:center;
+  margin:0 auto 16px;font-size:36px;color:#fff;
+  box-shadow:0 8px 24px rgba(6,199,85,0.35);
 }
+.modal-title{font-size:22px;font-weight:800;margin-bottom:6px}
+.modal-sub{font-size:14px;color:var(--text-dim);margin-bottom:24px}
+.qr-wrap{
+  background:#fff;border-radius:16px;padding:16px;
+  display:inline-block;margin-bottom:20px;
+  box-shadow:0 4px 20px rgba(6,199,85,0.15);
+}
+.qr-wrap img{display:block;width:180px;height:180px}
+.line-id{
+  font-size:18px;font-weight:800;color:#06c755;
+  margin-bottom:20px;letter-spacing:1px;
+}
+.btn-line{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;padding:14px;border-radius:50px;
+  background:#06c755;color:#fff;font-weight:700;font-size:16px;
+  border:none;cursor:pointer;text-decoration:none;
+  transition:all .3s;box-shadow:0 6px 20px rgba(6,199,85,0.3);
+}
+.btn-line:hover{background:#05b34a;transform:translateY(-2px);box-shadow:0 10px 28px rgba(6,199,85,0.4)}
+.modal-note{font-size:12px;color:var(--text-dim);margin-top:14px;line-height:1.5}
 
-.hero-eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 32px;
-  animation: fadeUp 0.5s ease both;
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media(max-width:900px){
+  .hero-wrap,.steps,.features-grid,.pricing-grid,.footer-grid{grid-template-columns:1fr}
+  .numbers-grid{grid-template-columns:repeat(2,1fr)}
+  .plan.popular{transform:scale(1)}
+  .nav-links{display:none}
+  .hero-stats{gap:20px}
 }
-.hero-eyebrow::before, .hero-eyebrow::after {
-  content: '';
-  width: 40px; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--cyan));
-}
-.hero-eyebrow::after { background: linear-gradient(90deg, var(--cyan), transparent); }
-.hero-eyebrow span {
-  font-family: 'Space Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 4px;
-  color: var(--cyan);
-}
-
-.hero-title {
-  font-family: 'Orbitron', sans-serif;
-  font-size: clamp(36px, 8vw, 88px);
-  font-weight: 900;
-  letter-spacing: 4px;
-  line-height: 1;
-  margin-bottom: 6px;
-  animation: fadeUp 0.6s ease both;
-}
-
-.hero-title .line1 { color: var(--text); }
-.hero-title .line2 {
-  background: linear-gradient(90deg, var(--gold), var(--gold2), var(--cyan));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.hero-subtitle {
-  font-family: 'Space Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 3px;
-  color: var(--dim);
-  margin-bottom: 48px;
-  animation: fadeUp 0.7s ease both;
-}
-
-/* Stats row */
-.hero-metrics {
-  display: flex;
-  gap: 2px;
-  margin-bottom: 52px;
-  animation: fadeUp 0.8s ease both;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.metric {
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(0,212,255,0.15);
-  padding: 20px 28px;
-  position: relative;
-  min-width: 130px;
-  text-align: center;
-  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-}
-.metric::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(135deg, rgba(0,212,255,0.05), transparent);
-  pointer-events: none;
-}
-.metric .m-val {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--cyan);
-  line-height: 1;
-}
-.metric .m-val.gold { color: var(--gold); }
-.metric .m-val.green { color: var(--green); }
-.metric .m-lbl {
-  font-size: 9px;
-  letter-spacing: 2px;
-  color: var(--dim);
-  margin-top: 6px;
-  text-transform: uppercase;
-}
-
-.hero-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  background: linear-gradient(135deg, var(--gold3), var(--gold), var(--gold2));
-  color: #000;
-  font-family: 'Orbitron', sans-serif;
-  font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 3px;
-  padding: 18px 48px;
-  text-decoration: none;
-  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
-  transition: all 0.3s;
-  animation: fadeUp 0.9s ease both;
-}
-.hero-cta:hover {
-  box-shadow: 0 0 40px rgba(212,175,55,0.5), 0 0 80px rgba(212,175,55,0.2);
-  transform: translateY(-2px);
-}
-.hero-cta::after { content: '→'; font-family: monospace; font-size: 16px; }
-
-/* ═══ SECTION BASE ═══ */
-.section {
-  padding: 100px 20px;
-  max-width: 960px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
-}
-
-.section-tag {
-  font-family: 'Space Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 4px;
-  color: var(--cyan);
-  margin-bottom: 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.section-tag::before {
-  content: '';
-  width: 24px; height: 1px;
-  background: var(--cyan);
-}
-
-.section-title {
-  font-family: 'Orbitron', sans-serif;
-  font-size: clamp(28px, 5vw, 52px);
-  font-weight: 700;
-  letter-spacing: 2px;
-  line-height: 1.15;
-  margin-bottom: 14px;
-}
-
-.section-title .accent {
-  background: linear-gradient(90deg, var(--gold), var(--gold2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.section-desc {
-  color: var(--dim);
-  font-size: 15px;
-  max-width: 600px;
-  line-height: 1.9;
-  margin-bottom: 48px;
-}
-
-/* ═══ SEPARATOR ═══ */
-.sep {
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.2), rgba(212,175,55,0.2), transparent);
-  position: relative;
-  z-index: 1;
-}
-
-/* ═══ HOW IT WORKS ═══ */
-.steps-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2px;
-}
-@media(max-width:640px){.steps-grid{grid-template-columns:1fr;}}
-
-.step-card {
-  background: var(--bg2);
-  border: 1px solid rgba(255,255,255,0.05);
-  padding: 32px;
-  position: relative;
-  overflow: hidden;
-  transition: border-color 0.3s;
-}
-.step-card:hover { border-color: rgba(0,212,255,0.2); }
-.step-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--cyan), transparent);
-}
-.step-card:nth-child(2)::before { background: linear-gradient(90deg, var(--gold), transparent); }
-.step-card:nth-child(3)::before { background: linear-gradient(90deg, var(--purple), transparent); }
-.step-card:nth-child(4)::before { background: linear-gradient(90deg, var(--green), transparent); }
-
-.step-num {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 60px;
-  font-weight: 900;
-  color: rgba(255,255,255,0.04);
-  line-height: 1;
-  margin-bottom: 16px;
-}
-.step-card h3 {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 10px;
-  color: var(--text);
-}
-.step-card p { font-size: 13px; color: var(--dim); line-height: 1.9; }
-.step-pill {
-  display: inline-block;
-  margin-top: 14px;
-  font-family: 'Space Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 2px;
-  padding: 4px 12px;
-  border: 1px solid rgba(0,212,255,0.3);
-  color: var(--cyan);
-}
-.step-card:nth-child(2) .step-pill { border-color: rgba(212,175,55,0.3); color: var(--gold); }
-.step-card:nth-child(3) .step-pill { border-color: rgba(139,92,246,0.3); color: #A78BFA; }
-.step-card:nth-child(4) .step-pill { border-color: rgba(0,255,136,0.3); color: var(--green); }
-
-/* ═══ LOT TABLE ═══ */
-.table-wrap {
-  background: var(--bg2);
-  border: 1px solid rgba(0,212,255,0.1);
-  overflow: hidden;
-  margin-bottom: 28px;
-}
-.table-head {
-  background: linear-gradient(90deg, rgba(0,212,255,0.08), rgba(212,175,55,0.05));
-  padding: 20px 24px;
-  border-bottom: 1px solid rgba(0,212,255,0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.table-head h3 {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 14px;
-  letter-spacing: 2px;
-  color: var(--cyan);
-}
-.table-head span {
-  font-family: 'Space Mono', monospace;
-  font-size: 10px;
-  color: var(--dim);
-}
-
-table { width: 100%; border-collapse: collapse; }
-th {
-  padding: 12px 16px;
-  font-family: 'Space Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 2px;
-  color: var(--dim);
-  text-align: right;
-  font-weight: 400;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-}
-th:first-child { text-align: left; }
-td {
-  padding: 14px 16px;
-  font-size: 13px;
-  border-bottom: 1px solid rgba(255,255,255,0.03);
-  text-align: right;
-  font-family: 'Space Mono', monospace;
-}
-td:first-child { text-align: left; color: var(--dim); font-family: 'Sarabun', sans-serif; }
-tr:hover td { background: rgba(0,212,255,0.02); }
-tr:last-child td { border-bottom: none; }
-.tr-highlight td { background: rgba(212,175,55,0.04); }
-.tr-highlight td:first-child::after {
-  content: ' ← เริ่มต้น';
-  color: var(--gold);
-  font-size: 11px;
-  font-family: 'Sarabun', sans-serif;
-}
-.v-gold { color: var(--gold); }
-.v-green { color: var(--green); }
-.v-cyan { color: var(--cyan); }
-.v-red { color: var(--red); }
-
-/* ═══ ALERT BOX ═══ */
-.alert {
-  border: 1px solid;
-  padding: 18px 22px;
-  margin-bottom: 24px;
-  position: relative;
-  font-size: 13px;
-  line-height: 1.9;
-}
-.alert::before {
-  position: absolute;
-  top: 18px; left: 22px;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 10px;
-  letter-spacing: 2px;
-}
-.alert-gold {
-  border-color: rgba(212,175,55,0.25);
-  background: rgba(212,175,55,0.04);
-  color: var(--dim);
-  padding-left: 80px;
-}
-.alert-gold::before { content: 'TIP'; color: var(--gold); }
-.alert-green {
-  border-color: rgba(0,255,136,0.2);
-  background: rgba(0,255,136,0.03);
-  color: var(--dim);
-}
-strong.g { color: var(--gold); }
-strong.c { color: var(--cyan); }
-strong.gr { color: var(--green); }
-
-/* ═══ CALC SECTION ═══ */
-.calc-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2px;
-  margin-bottom: 2px;
-}
-@media(max-width:600px){.calc-grid{grid-template-columns:1fr;}}
-
-.calc-card {
-  background: var(--bg2);
-  border: 1px solid rgba(255,255,255,0.05);
-  padding: 24px;
-  position: relative;
-  overflow: hidden;
-}
-.calc-card::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 2px;
-  background: var(--cyan);
-}
-.calc-card.c-gold::after { background: var(--gold); }
-.calc-card.c-green::after { background: var(--green); }
-.calc-card.c-red::after { background: var(--red); }
-.calc-card.c-purple::after { background: var(--purple); }
-
-.cc-label {
-  font-family: 'Space Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 2px;
-  color: var(--dim);
-  margin-bottom: 10px;
-  text-transform: uppercase;
-}
-.cc-val {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 34px;
-  font-weight: 700;
-  line-height: 1;
-  color: var(--cyan);
-}
-.c-gold .cc-val { color: var(--gold); }
-.c-green .cc-val { color: var(--green); }
-.c-red .cc-val { color: var(--red); }
-.c-purple .cc-val { color: #A78BFA; }
-.cc-sub { font-size: 12px; color: var(--dim); margin-top: 6px; }
-
-/* ═══ BREAKDOWN TABLE ═══ */
-.breakdown {
-  background: var(--bg2);
-  border: 1px solid rgba(212,175,55,0.15);
-  margin-bottom: 24px;
-}
-.breakdown-hd {
-  background: rgba(212,175,55,0.06);
-  padding: 16px 24px;
-  border-bottom: 1px solid rgba(212,175,55,0.1);
-  font-family: 'Orbitron', sans-serif;
-  font-size: 12px;
-  letter-spacing: 2px;
-  color: var(--gold);
-}
-.brow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 24px;
-  border-bottom: 1px solid rgba(255,255,255,0.03);
-  font-size: 14px;
-}
-.brow:last-child { border-bottom: none; }
-.brow .bl { color: var(--dim); }
-.brow .br { font-weight: 600; font-family: 'Space Mono', monospace; font-size: 13px; }
-.brow.total { background: rgba(0,255,136,0.04); border-top: 1px solid rgba(0,255,136,0.1); }
-.brow.scale { background: rgba(255,255,255,0.01); }
-
-/* ═══ PRICING ═══ */
-.price-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2px;
-}
-@media(max-width:580px){.price-grid{grid-template-columns:1fr;}}
-
-.price-card {
-  background: var(--bg2);
-  border: 1px solid rgba(255,255,255,0.06);
-  padding: 36px 28px;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s;
-}
-.price-card:hover { transform: translateY(-4px); }
-
-.price-card.featured {
-  border-color: rgba(212,175,55,0.3);
-  background: linear-gradient(180deg, rgba(212,175,55,0.05), var(--bg2));
-}
-
-.featured-badge {
-  position: absolute;
-  top: 0; right: 0;
-  background: linear-gradient(135deg, var(--gold3), var(--gold));
-  color: #000;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 8px;
-  letter-spacing: 2px;
-  padding: 6px 16px;
-  clip-path: polygon(12px 0, 100% 0, 100% 100%, 0 100%);
-}
-
-.plan-name {
-  font-family: 'Space Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 4px;
-  color: var(--dim);
-  margin-bottom: 20px;
-}
-
-.plan-price {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 56px;
-  font-weight: 900;
-  color: var(--gold);
-  line-height: 1;
-  margin-bottom: 4px;
-}
-
-.plan-per { font-size: 12px; color: var(--dim); margin-bottom: 6px; }
-
-.plan-daily {
-  display: inline-block;
-  background: rgba(0,212,255,0.08);
-  border: 1px solid rgba(0,212,255,0.15);
-  font-family: 'Space Mono', monospace;
-  font-size: 10px;
-  color: var(--cyan);
-  padding: 5px 12px;
-  margin-bottom: 24px;
-}
-
-.plan-sep {
-  width: 100%; height: 1px;
-  background: rgba(255,255,255,0.05);
-  margin-bottom: 20px;
-}
-
-.feature-list { list-style: none; }
-.feature-list li {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  font-size: 13px;
-  color: var(--dim);
-  padding: 7px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.03);
-}
-.feature-list li:last-child { border-bottom: none; }
-.feature-list li::before {
-  content: '▸';
-  color: var(--cyan);
-  font-size: 10px;
-  margin-top: 3px;
-  flex-shrink: 0;
-}
-.price-card.featured .feature-list li::before { color: var(--gold); }
-
-/* ═══ FOOTER ═══ */
-.footer {
-  border-top: 1px solid rgba(0,212,255,0.1);
-  padding: 48px 20px;
-  text-align: center;
-  position: relative;
-  z-index: 1;
-}
-.footer-logo {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 18px;
-  font-weight: 900;
-  letter-spacing: 4px;
-  background: linear-gradient(90deg, var(--gold), var(--gold2), var(--cyan));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 12px;
-}
-.footer p { font-size: 12px; color: var(--dim); line-height: 1.8; }
-.footer .disclaimer { font-size: 11px; color: rgba(107,122,153,0.5); margin-top: 16px; }
-
-/* ═══ REVEAL ═══ */
-.reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
-.reveal.on { opacity: 1; transform: none; }
-.reveal-d1 { transition-delay: 0.1s; }
-.reveal-d2 { transition-delay: 0.2s; }
-.reveal-d3 { transition-delay: 0.3s; }
-
-/* ═══ SCAN LINE EFFECT ═══ */
-.scan-container { position: relative; overflow: hidden; }
-.scan-container::after {
-  content: '';
-  position: absolute;
-  top: -100%;
-  left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.4), transparent);
-  animation: scan 4s linear infinite;
-}
-@keyframes scan { to { top: 110%; } }
-
-/* ═══ ANIMATIONS ═══ */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to   { opacity: 1; transform: none; }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.4; }
-}
-
-.dot-pulse {
-  display: inline-block;
-  width: 6px; height: 6px;
-  background: var(--green);
-  border-radius: 50%;
-  animation: pulse 2s ease infinite;
-  margin-right: 6px;
-}
-
-/* ═══ NUMBER TICKER ═══ */
-.ticker {
-  font-family: 'Space Mono', monospace;
-  font-size: 11px;
-  color: var(--dim);
-  background: rgba(0,212,255,0.05);
-  border: 1px solid rgba(0,212,255,0.1);
-  padding: 8px 16px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 20px;
+@media(max-width:600px){
+  .hero-stats{flex-wrap:wrap}
+  .numbers-grid{grid-template-columns:1fr 1fr}
+  .cta-btns{flex-direction:column;align-items:center}
 }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════ HERO ═══════════════════ -->
-<div class="hero scan-container">
-  <div class="orb1"></div>
-  <div class="orb2"></div>
-  <div class="orb3"></div>
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
 
-  <div class="ticker">
-    <span class="dot-pulse"></span>
-    LIVE · XAU/USD · AI SIGNAL ACTIVE
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">KS_DATA<span>_PRO</span></div>
+    <div class="nav-links">
+      <a href="#how">วิธีทำงาน</a>
+      <a href="#features">ฟีเจอร์</a>
+      <a href="#pricing">ราคา</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a href="#pricing" onclick="openLineModal();return false;" class="btn btn-gold nav-cta">เริ่มต้นใช้งาน</a>
   </div>
+</nav>
 
-  <div class="hero-eyebrow">
-    <span>KS TRADER OFFICIAL · AUTOMATED SYSTEM</span>
-  </div>
+<!-- HERO -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-wrap">
+      <div>
+        <div class="hero-tag fade-in">
+          <span class="badge"><span class="pulse-dot"></span>Live System Active</span>
+        </div>
+        <h1 class="hero-title fade-in">
+          ระบบ<br><span class="gold-gradient">คำนวณสถิติ</span><br>อัจฉริยะ
+        </h1>
+        <p class="hero-sub fade-in">
+          ระบบวิเคราะห์ตลาด <strong style="color:var(--text)">XAUUSD</strong> แบบ Multi-Dimensional
+          คำนวณและประมวลผลสถิติเชิงลึกทุก 5 นาที
+          พร้อมส่งสัญญาณและเปิดออร์เดอร์อัตโนมัติ
+        </p>
+        <div class="hero-btns fade-in">
+          <a href="#pricing" class="btn btn-gold"><i class="fa-solid fa-bolt"></i>เริ่มต้นเลย</a>
+          <a href="#how" class="btn btn-outline"><i class="fa-solid fa-play"></i>ดูวิธีทำงาน</a>
+        </div>
+        <div class="hero-stats fade-in">
+          <div><div class="hero-stat-val">4</div><div class="hero-stat-lbl">Timeframes</div></div>
+          <div><div class="hero-stat-val">5<small style="font-size:16px"> นาที</small></div><div class="hero-stat-lbl">Update Cycle</div></div>
+          <div><div class="hero-stat-val">24/5</div><div class="hero-stat-lbl">ทำงานตลอด</div></div>
+        </div>
+      </div>
 
-  <h1 class="hero-title">
-    <div class="line1">KS ULTIMATE</div>
-    <div class="line2">DATA EA</div>
-  </h1>
+      <!-- Signal Preview Card -->
+      <div class="fade-in">
+        <div class="hero-card">
+          <div class="ticker-row">
+            <div>
+              <div class="ticker-sym">XAU<span class="gold">/USD</span></div>
+              <div style="font-size:12px;color:var(--text-dim)">Gold Spot · KS_DATA_PRO</div>
+            </div>
+            <div class="ticker-price">2,318.45</div>
+          </div>
 
-  <p class="hero-subtitle">AI-POWERED GOLD TRADING · CENT ACCOUNT · AUTO RISK MANAGEMENT</p>
+          <div style="display:flex;gap:8px;margin-bottom:16px">
+            <div style="flex:1;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:10px;text-align:center">
+              <div style="font-size:11px;color:var(--text-dim)">D1 Bias</div>
+              <div style="font-size:13px;font-weight:700;color:var(--green)">BULLISH</div>
+            </div>
+            <div style="flex:1;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:10px;text-align:center">
+              <div style="font-size:11px;color:var(--text-dim)">H1 Zone</div>
+              <div style="font-size:13px;font-weight:700;color:var(--gold)">SUPPORT</div>
+            </div>
+            <div style="flex:1;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:10px;text-align:center">
+              <div style="font-size:11px;color:var(--text-dim)">M5 Signal</div>
+              <div style="font-size:13px;font-weight:700;color:var(--green)">REJECT</div>
+            </div>
+          </div>
 
-  <div class="hero-metrics">
-    <div class="metric">
-      <div class="m-val green">10%</div>
-      <div class="m-lbl">Target / วัน</div>
-    </div>
-    <div class="metric">
-      <div class="m-val" style="color:var(--red)">5%</div>
-      <div class="m-lbl">Max Loss / วัน</div>
-    </div>
-    <div class="metric">
-      <div class="m-val gold">100$</div>
-      <div class="m-lbl">ทุนขั้นต่ำ</div>
-    </div>
-    <div class="metric">
-      <div class="m-val">24/7</div>
-      <div class="m-lbl">Auto Trade</div>
-    </div>
-    <div class="metric">
-      <div class="m-val" style="color:var(--purple)">XAU</div>
-      <div class="m-lbl">Symbol</div>
-    </div>
-  </div>
+          <div class="signal-box">
+            <div class="signal-dir">▲ &nbsp;BUY SIGNAL DETECTED</div>
+            <div class="signal-grid">
+              <div class="signal-item"><span>Entry Zone</span><strong>2,315 – 2,320</strong></div>
+              <div class="signal-item"><span>Stop Loss</span><strong style="color:#ef4444">2,305.00</strong></div>
+              <div class="signal-item"><span>Take Profit</span><strong style="color:var(--green)">2,338.00</strong></div>
+            </div>
+          </div>
 
-  <a href="#pricing" class="hero-cta">ดูแพ็กเกจทั้งหมด</a>
-</div>
+          <div class="confidence-bar">
+            <div class="conf-label">
+              <span>Statistical Confidence</span>
+              <span class="gold">87%</span>
+            </div>
+            <div class="conf-track"><div class="conf-fill"></div></div>
+          </div>
 
-<div class="sep"></div>
-
-<!-- ═══════════════════ HOW IT WORKS ═══════════════════ -->
-<div class="section">
-  <div class="section-tag reveal">SYSTEM OVERVIEW</div>
-  <h2 class="section-title reveal">ระบบทำงาน<br><span class="accent">อย่างไร?</span></h2>
-  <p class="section-desc reveal">EA วิเคราะห์ตลาด XAU/USD ด้วย Data Signal แบบ Multi-layer ส่งคำสั่งเทรดอัตโนมัติ พร้อมบริหารความเสี่ยงและแจ้งผลผ่านมือถือ Real-time</p>
-
-  <div class="steps-grid">
-    <div class="step-card reveal reveal-d1">
-      <div class="step-num">01</div>
-      <h3>วิเคราะห์ Data Signal Real-time</h3>
-      <p>ใช้ข้อมูล Supertrend + ATR + Trend Direction วิเคราะห์ทุก Tick พร้อม Multi-layer Confirmation เพื่อกรองสัญญาณผิดพลาด</p>
-      <div class="step-pill">AI-POWERED SIGNAL</div>
-    </div>
-    <div class="step-card reveal reveal-d2">
-      <div class="step-num">02</div>
-      <h3>เข้าเทรดอัตโนมัติทันที</h3>
-      <p>เมื่อสัญญาณผ่านการยืนยัน EA เปิด Order แบบ Multi-Layer พร้อม Auto SL ที่คำนวณจาก Indicator เพื่อปกป้องทุนทุกออเดอร์</p>
-      <div class="step-pill">INSTANT EXECUTION</div>
-    </div>
-    <div class="step-card reveal reveal-d1">
-      <div class="step-num">03</div>
-      <h3>Auto Risk Management ทุกวัน</h3>
-      <p>กำไรถึง 10% ต่อวัน → หยุดเทรด Lock Profit · ขาดทุน 5% ต่อวัน → หยุดทันทีปกป้องทุน ระบบ Reset ใหม่ทุกวัน</p>
-      <div class="step-pill">DAILY RISK CONTROL</div>
-    </div>
-    <div class="step-card reveal reveal-d2">
-      <div class="step-num">04</div>
-      <h3>ดูผลและสั่งการผ่านมือถือ</h3>
-      <p>Dashboard อัปเดต P&L, Cycles, Balance ทุก 5 วินาที สั่ง ON/OFF, Close All, Emergency Stop จากมือถือได้เลย ไม่ต้องอยู่หน้าคอม</p>
-      <div class="step-pill">MOBILE DASHBOARD</div>
-    </div>
-  </div>
-</div>
-
-<div class="sep"></div>
-
-<!-- ═══════════════════ LOT SIZING ═══════════════════ -->
-<div class="section">
-  <div class="section-tag reveal">LOT MANAGEMENT</div>
-  <h2 class="section-title reveal">ปรับ Lot ตามทุน<br><span class="accent">เติบโตเป็นขั้นตอน</span></h2>
-  <p class="section-desc reveal">กำไร 10%/วัน · ขาดทุนหยุด 5%/วัน — ปรับ Lot ขึ้นเมื่อพอร์ตโต ลด Lot เมื่อขาดทุน วิธีนี้ทำให้พอร์ตเติบโตแบบ Compound อย่างปลอดภัย</p>
-
-  <div class="table-wrap reveal">
-    <div class="table-head">
-      <h3>CENT ACCOUNT · LOT SIZING TABLE</h3>
-      <span>Target +10%/day · SL -5%/day</span>
-    </div>
-    <div style="overflow-x:auto">
-      <table>
-        <thead>
-          <tr>
-            <th>ทุน (เซน / USD)</th>
-            <th>Lot</th>
-            <th>กำไร +10%/วัน</th>
-            <th>Stop -5%/วัน</th>
-            <th>กำไร/เดือน*</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="tr-highlight">
-            <td>10,000¢ / 100$</td>
-            <td class="v-gold">0.01</td>
-            <td class="v-green">+1,000¢</td>
-            <td class="v-red">-500¢</td>
-            <td class="v-cyan">~200$+</td>
-          </tr>
-          <tr>
-            <td>20,000¢ / 200$</td>
-            <td class="v-gold">0.02</td>
-            <td class="v-green">+2,000¢</td>
-            <td class="v-red">-1,000¢</td>
-            <td class="v-cyan">~400$+</td>
-          </tr>
-          <tr>
-            <td>30,000¢ / 300$</td>
-            <td class="v-gold">0.03</td>
-            <td class="v-green">+3,000¢</td>
-            <td class="v-red">-1,500¢</td>
-            <td class="v-cyan">~600$+</td>
-          </tr>
-          <tr>
-            <td>50,000¢ / 500$</td>
-            <td class="v-gold">0.05</td>
-            <td class="v-green">+5,000¢</td>
-            <td class="v-red">-2,500¢</td>
-            <td class="v-cyan">~1,000$+</td>
-          </tr>
-          <tr>
-            <td>100,000¢ / 1,000$</td>
-            <td class="v-gold">0.10</td>
-            <td class="v-green">+10,000¢</td>
-            <td class="v-red">-5,000¢</td>
-            <td class="v-cyan">~2,000$+</td>
-          </tr>
-        </tbody>
-      </table>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.05)">
+            <span class="live-badge"><span class="pulse-dot"></span>System Active</span>
+            <span style="font-size:12px;color:var(--text-dim)">Updated 2 min ago</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+</section>
 
-  <div class="alert alert-gold reveal">
-    <strong class="g">กฎทอง:</strong> เมื่อพอร์ตโต 20% จากทุนเดิม → ขยับ Lot ขึ้น 1 ระดับ · ถ้าขาดทุนถึง 5% ใน 1 วัน → ระบบหยุดอัตโนมัติ ไม่ต้องทำอะไร · อย่าขยับ Lot เกินตาราง เพราะความเสี่ยงจะสูงขึ้นแบบทวีคูณ
-  </div>
-
-  <div class="alert alert-green reveal">
-    <p>* กำไร/เดือน คำนวณจากสมมติว่าทำกำไรได้ 20 วันทำการต่อเดือน ผลลัพธ์จริงขึ้นอยู่กับสภาวะตลาด</p>
-  </div>
-</div>
-
-<div class="sep"></div>
-
-<!-- ═══════════════════ PROFIT CALC ═══════════════════ -->
-<div class="section">
-  <div class="section-tag reveal">ROI CALCULATOR</div>
-  <h2 class="section-title reveal">ทุน 100$ กำไร 10%/วัน<br><span class="accent">คุ้มค่าเช่าแค่ไหน?</span></h2>
-  <p class="section-desc reveal">คำนวณจากทุนขั้นต่ำ 10,000 เซน (100 USD) · ค่าเช่า 3,500 บาท/เดือน · อัตรา 35 บาท/ดอลลาร์</p>
-
-  <div class="calc-grid reveal">
-    <div class="calc-card c-green">
-      <div class="cc-label">กำไร 10% ต่อวัน (ทุน 100$)</div>
-      <div class="cc-val">10$</div>
-      <div class="cc-sub">= 350 บาท ต่อวันที่ทำกำไรได้</div>
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="container">
+    <div style="text-align:center" class="fade-in">
+      <span class="section-tag">วิธีทำงาน</span>
+      <h2 class="section-title">ระบบสถิติ <span class="gold-gradient">3 ชั้น</span></h2>
+      <p class="section-sub" style="margin:0 auto">ระบบประมวลผลข้อมูลตลาดผ่านกระบวนการ 3 ขั้นตอน แบบ fully automated ทุก 5 นาที</p>
     </div>
-    <div class="calc-card c-red">
-      <div class="cc-label">ค่าเช่า EA ต่อเดือน</div>
-      <div class="cc-val">3,500฿</div>
-      <div class="cc-sub">= ตกวันละ ~116 บาท</div>
-    </div>
-    <div class="calc-card c-gold">
-      <div class="cc-label">วันที่ต้องกำไร เพื่อคุ้มค่าเช่า (ทุน 100$)</div>
-      <div class="cc-val">10 วัน</div>
-      <div class="cc-sub">= 10$ × 10 วัน = 100$ = 3,500฿</div>
-    </div>
-    <div class="calc-card c-purple">
-      <div class="cc-label">อีก 10 วันที่เหลือ (กำไรสุทธิ)</div>
-      <div class="cc-val">+100$</div>
-      <div class="cc-sub">= เข้ากระเป๋าล้วนๆ ~3,500฿</div>
+    <div class="steps">
+      <div class="step fade-in">
+        <div class="step-num">01</div>
+        <div class="step-icon"><i class="fa-solid fa-chart-line"></i></div>
+        <h3>สแกนตลาด Multi-Timeframe</h3>
+        <p>ระบบอ่านข้อมูลตลาดพร้อมกันทั้ง 4 กรอบเวลา (D1, H1, M15, M5) เพื่อสร้างภาพรวมสถิติที่สมบูรณ์แบบ Top-Down</p>
+      </div>
+      <div class="step fade-in">
+        <div class="step-num">02</div>
+        <div class="step-icon"><i class="fa-solid fa-microchip"></i></div>
+        <h3>ประมวลผลสถิติเชิงลึก</h3>
+        <p>ระบบคำนวณสถิติมากกว่า 1,000 ตัวแปร รวมถึง Pattern Recognition, Zone Analysis และ Probability Engine เพื่อหาจุดที่มีโอกาสสูงสุด</p>
+      </div>
+      <div class="step fade-in">
+        <div class="step-num">03</div>
+        <div class="step-icon"><i class="fa-solid fa-robot"></i></div>
+        <h3>Execute อัตโนมัติ</h3>
+        <p>EA รับสัญญาณและเปิดออร์เดอร์ตาม Entry Zone ที่คำนวณมา พร้อม SL/TP อัจฉริยะ และระบบ Self-Correction เมื่อเงื่อนไขเปลี่ยน</p>
+      </div>
     </div>
   </div>
+</section>
 
-  <div class="breakdown reveal">
-    <div class="breakdown-hd">MONTHLY BREAKDOWN — ทุน 100$ (10,000 เซน)</div>
-    <div class="brow">
-      <span class="bl">กำไรรวม 20 วันทำการ (10$/วัน)</span>
-      <span class="br v-green">+200$ (~7,000฿)</span>
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="fade-in">
+      <span class="section-tag">ฟีเจอร์</span>
+      <h2 class="section-title">ออกแบบมาเพื่อ <span class="gold-gradient">Gold Trading</span></h2>
+      <p class="section-sub">ทุกฟีเจอร์ถูกออกแบบมาเฉพาะสำหรับ XAUUSD บน Cent Account</p>
     </div>
-    <div class="brow">
-      <span class="bl">ค่าเช่า EA รายเดือน</span>
-      <span class="br v-red">-3,500฿</span>
-    </div>
-    <div class="brow total">
-      <span class="bl" style="color:var(--text);font-weight:600">กำไรสุทธิเข้ากระเป๋า</span>
-      <span class="br v-green">≈ +3,500฿ (~100$)</span>
-    </div>
-  </div>
-
-  <div class="breakdown reveal">
-    <div class="breakdown-hd">SCALE UP — ยิ่งทุนมาก ยิ่งกำไรมาก</div>
-    <div class="brow scale">
-      <span class="bl">ทุน 200$ → กำไร 20$/วัน × 20 วัน = 400$</span>
-      <span class="br v-green">สุทธิ +10,500฿/เดือน</span>
-    </div>
-    <div class="brow scale">
-      <span class="bl">ทุน 500$ → กำไร 50$/วัน × 20 วัน = 1,000$</span>
-      <span class="br v-green">สุทธิ +31,500฿/เดือน</span>
-    </div>
-    <div class="brow scale">
-      <span class="bl">ทุน 1,000$ → กำไร 100$/วัน × 20 วัน = 2,000$</span>
-      <span class="br v-green">สุทธิ +66,500฿/เดือน</span>
-    </div>
-  </div>
-
-  <div class="alert alert-gold reveal">
-    <strong class="g">สรุป:</strong> ทุน 100$ ใน 10 วันแรกคุ้มค่าเช่า · อีก 10 วันที่เหลือกำไรล้วนๆ เข้ากระเป๋า · ยิ่งทุนมาก กำไรสุทธิยิ่งห่างจากค่าเช่ามากขึ้นอย่างก้าวกระโดด · <strong class="gr">แนะนำเริ่มที่ 100$ แล้ว Compound กำไรไปเรื่อยๆ</strong>
-  </div>
-</div>
-
-<div class="sep"></div>
-
-<!-- ═══════════════════ PRICING ═══════════════════ -->
-<div class="section" id="pricing">
-  <div class="section-tag reveal">SUBSCRIPTION</div>
-  <h2 class="section-title reveal">เลือกแพ็กเกจ<br><span class="accent">ที่ใช่สำหรับคุณ</span></h2>
-  <p class="section-desc reveal">ค่าเช่ารายเดือน รวม EA + Mobile Dashboard + License Key เฉพาะบัญชีคุณ</p>
-
-  <div class="price-grid reveal">
-    <div class="price-card">
-      <div class="plan-name">STARTER PLAN</div>
-      <div class="plan-price">3,500</div>
-      <div class="plan-per">บาท / เดือน</div>
-      <div class="plan-daily">≈ 116 บาท / วัน</div>
-      <div class="plan-sep"></div>
-      <ul class="feature-list">
-        <li>EA ติดตั้งบน MT5 ของคุณ</li>
-        <li>Mobile Dashboard Real-time</li>
-        <li>License Key เฉพาะบัญชี</li>
-        <li>Auto Risk Management</li>
-        <li>Support ทาง Line</li>
-        <li>คู่มือแนะนำ Lot ตามทุน</li>
-      </ul>
-    </div>
-    <div class="price-card featured">
-      <div class="featured-badge">RECOMMENDED</div>
-      <div class="plan-name">PREMIUM PLAN</div>
-      <div class="plan-price">5,500</div>
-      <div class="plan-per">บาท / เดือน</div>
-      <div class="plan-daily">≈ 183 บาท / วัน</div>
-      <div class="plan-sep"></div>
-      <ul class="feature-list">
-        <li>ทุกอย่างใน Starter</li>
-        <li>Priority Support 24 ชม.</li>
-        <li>คำแนะนำปรับ Lot รายสัปดาห์</li>
-        <li>รายงานผลสรุปรายเดือน</li>
-        <li>อัปเดต EA ฟรีตลอดการเช่า</li>
-        <li>แจ้งเตือน Signal พิเศษ</li>
-      </ul>
+    <div class="features-grid">
+      <div class="feat fade-in">
+        <div class="feat-icon"><i class="fa-solid fa-layer-group"></i></div>
+        <div>
+          <h3>Multi-Timeframe Statistical Analysis</h3>
+          <p>วิเคราะห์สถิติ 4 กรอบเวลาพร้อมกัน ตั้งแต่ D1 ลงมาถึง M5 เพื่อหา High Probability Zone ที่โครงสร้างตลาดทุก TF สอดคล้องกัน</p>
+        </div>
+      </div>
+      <div class="feat fade-in">
+        <div class="feat-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <div>
+          <h3>Dynamic Risk Management</h3>
+          <p>คำนวณ Lot Size อัตโนมัติตาม Balance จริง ป้องกันการขาดทุนเกิน 5% ต่อวัน พร้อม Self-Correction เมื่อสถานการณ์ตลาดเปลี่ยน</p>
+        </div>
+      </div>
+      <div class="feat fade-in">
+        <div class="feat-icon"><i class="fa-solid fa-crosshairs"></i></div>
+        <div>
+          <h3>Precision Entry Zone + Buffer Logic</h3>
+          <p>ระบบกำหนด Entry Zone แบบ Range (ไม่ใช่ราคาเดียว) พร้อม Buffer เพื่อรองรับ Spread และ Slippage ของ Cent Account</p>
+        </div>
+      </div>
+      <div class="feat fade-in">
+        <div class="feat-icon"><i class="fa-solid fa-arrows-rotate"></i></div>
+        <div>
+          <h3>Adaptive Self-Correction</h3>
+          <p>หากรอบใหม่ระบบวิเคราะห์เห็นว่าแผนเปลี่ยน EA จะปรับ SL หรือปิดไม้เดิมโดยอัตโนมัติ ไม่ยึดติดกับแผนที่ผิด</p>
+        </div>
+      </div>
+      <div class="feat fade-in">
+        <div class="feat-icon"><i class="fa-solid fa-chart-column"></i></div>
+        <div>
+          <h3>Smart Partial Take Profit</h3>
+          <p>ปิดครึ่งไม้อัตโนมัติที่ TP1 แล้วขยับ SL มา Breakeven เพื่อล็อกกำไร จากนั้นปล่อยให้ครึ่งที่เหลือวิ่งต่อไปถึง TP2</p>
+        </div>
+      </div>
+      <div class="feat fade-in">
+        <div class="feat-icon"><i class="fa-solid fa-key"></i></div>
+        <div>
+          <h3>License-Based Security</h3>
+          <p>ระบบ License ผูกกับ MT5 Account Number ป้องกันการ Share ใช้งานได้เฉพาะบัญชีที่ลงทะเบียนเท่านั้น พร้อม Expiry Date</p>
+        </div>
+      </div>
     </div>
   </div>
+</section>
 
-  <div class="alert alert-gold reveal" style="margin-top:20px">
-    <strong class="g">ทุนขั้นต่ำ:</strong> <strong class="c">10,000 เซน (100 USD)</strong> · รองรับบัญชีเซน XAUUSDm/XAUUSDc · EA รันบนคอมของคุณ MT5 ต้องเปิดทิ้งไว้ · <strong class="gr">แนะนำบัญชีเซนสำหรับผู้เริ่มต้น ความเสี่ยงต่ำ ปั้นพอร์ตได้อย่างมั่นคง</strong>
+<!-- NUMBERS -->
+<section id="numbers">
+  <div class="container">
+    <div class="numbers-grid fade-in">
+      <div class="num-box">
+        <div class="num-val gold-gradient">4<span class="num-unit"> TF</span></div>
+        <div class="num-lbl">Timeframes Analyzed</div>
+      </div>
+      <div class="num-box">
+        <div class="num-val gold-gradient">5<span class="num-unit"> min</span></div>
+        <div class="num-lbl">Update Cycle</div>
+      </div>
+      <div class="num-box">
+        <div class="num-val gold-gradient">24<span class="num-unit">/5</span></div>
+        <div class="num-lbl">ทำงานตลอดชั่วโมงตลาด</div>
+      </div>
+      <div class="num-box">
+        <div class="num-val gold-gradient">3<span class="num-unit"> TP</span></div>
+        <div class="num-lbl">Take Profit Targets</div>
+      </div>
+    </div>
   </div>
-</div>
+</section>
 
-<!-- ═══════════════════ FOOTER ═══════════════════ -->
-<div class="sep"></div>
-<footer class="footer">
-  <div class="footer-logo">KS ULTIMATE DATA</div>
-  <p>KS TRADER OFFICIAL · AI Trading System · XAU/USD · 2026</p>
-  <p class="disclaimer">การเทรด Forex/Gold มีความเสี่ยงสูง ผลตอบแทนในอดีตไม่ได้รับประกันผลในอนาคต<br>ลงทุนเฉพาะส่วนที่รับความเสี่ยงได้ ตัวเลขกำไรเป็นการประมาณการเท่านั้น</p>
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container">
+    <div style="text-align:center" class="fade-in">
+      <span class="section-tag">ราคา</span>
+      <h2 class="section-title">เลือกแผนที่ <span class="gold-gradient">เหมาะกับคุณ</span></h2>
+      <p class="section-sub" style="margin:0 auto">ทุกแผนได้รับสัญญาณเต็มรูปแบบและ EA ไฟล์เดียวกัน</p>
+    </div>
+    <div class="pricing-grid">
+
+      <!-- Monthly -->
+      <div class="plan fade-in">
+        <div class="plan-name">Monthly</div>
+        <div class="plan-price">฿3,500<span>/เดือน</span></div>
+        <div class="plan-per">ชำระรายเดือน</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-feats">
+          <li><i class="fa-solid fa-check"></i>License 1 MT5 Account</li>
+          <li><i class="fa-solid fa-check"></i>Signal อัปเดตทุก 5 นาที</li>
+          <li><i class="fa-solid fa-check"></i>EA ไฟล์ + คู่มือ Setup</li>
+          <li><i class="fa-solid fa-check"></i>รองรับ Cent Account</li>
+          <li><i class="fa-solid fa-check"></i>Support ทาง LINE</li>
+        </ul>
+        <a href="#" onclick="openLineModal();return false;" class="btn btn-outline plan-btn">เลือกแผนนี้</a>
+      </div>
+
+      <!-- Quarterly (Popular) -->
+      <div class="plan popular fade-in">
+        <div class="popular-tag">⭐ ยอดนิยม</div>
+        <div class="plan-name">Quarterly</div>
+        <div class="plan-price">฿8,900<span>/3 เดือน</span></div>
+        <div class="plan-per">เฉลี่ย ฿2,967/เดือน</div>
+        <div class="plan-save">ประหยัด 15%</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-feats">
+          <li><i class="fa-solid fa-check"></i>License 1 MT5 Account</li>
+          <li><i class="fa-solid fa-check"></i>Signal อัปเดตทุก 5 นาที</li>
+          <li><i class="fa-solid fa-check"></i>EA ไฟล์ + คู่มือ Setup</li>
+          <li><i class="fa-solid fa-check"></i>รองรับ Cent Account</li>
+          <li><i class="fa-solid fa-check"></i>Support ทาง LINE</li>
+          <li><i class="fa-solid fa-check"></i>อัปเดตฟีเจอร์ใหม่ฟรี</li>
+        </ul>
+        <a href="#" onclick="openLineModal();return false;" class="btn btn-gold plan-btn">เลือกแผนนี้</a>
+      </div>
+
+      <!-- Annual -->
+      <div class="plan fade-in">
+        <div class="plan-name">Annual</div>
+        <div class="plan-price">฿29,900<span>/ปี</span></div>
+        <div class="plan-per">เฉลี่ย ฿2,492/เดือน</div>
+        <div class="plan-save">ประหยัด 29%</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-feats">
+          <li><i class="fa-solid fa-check"></i>License 1 MT5 Account</li>
+          <li><i class="fa-solid fa-check"></i>Signal อัปเดตทุก 5 นาที</li>
+          <li><i class="fa-solid fa-check"></i>EA ไฟล์ + คู่มือ Setup</li>
+          <li><i class="fa-solid fa-check"></i>รองรับ Cent Account</li>
+          <li><i class="fa-solid fa-check"></i>Priority Support</li>
+          <li><i class="fa-solid fa-check"></i>อัปเดตฟีเจอร์ใหม่ฟรี</li>
+          <li><i class="fa-solid fa-check"></i>คืน License ได้ภายใน 7 วัน</li>
+        </ul>
+        <a href="#" onclick="openLineModal();return false;" class="btn btn-outline plan-btn">เลือกแผนนี้</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SETUP STEPS -->
+<section id="setup">
+  <div class="container">
+    <div class="fade-in">
+      <span class="section-tag">ขั้นตอน</span>
+      <h2 class="section-title">เริ่มใช้งานใน <span class="gold-gradient">4 ขั้นตอน</span></h2>
+      <p class="section-sub">ติดตั้งง่าย ไม่ต้องมีความรู้ด้าน coding</p>
+    </div>
+    <div class="setup-steps">
+      <div class="setup-step fade-in">
+        <div class="setup-n">1</div>
+        <div>
+          <h3>ชำระเงิน & ส่ง MT5 Account Number</h3>
+          <p>แจ้ง Account Number ของ MT5 ที่ต้องการใช้งาน ระบบจะผูก License กับบัญชีนั้นโดยเฉพาะ</p>
+        </div>
+      </div>
+      <div class="setup-step fade-in">
+        <div class="setup-n">2</div>
+        <div>
+          <h3>รับไฟล์ EA + License Key</h3>
+          <p>คุณจะได้รับไฟล์ <span class="code-inline">AI_Trading_EA.ex5</span> และ License Key รูปแบบ <span class="code-inline">SIGE-XXXX-XXXX-XXXX</span></p>
+        </div>
+      </div>
+      <div class="setup-step fade-in">
+        <div class="setup-n">3</div>
+        <div>
+          <h3>ติดตั้ง EA ใน MetaTrader 5</h3>
+          <p>Copy ไฟล์ EA ไปวางใน <span class="code-inline">MQL5/Experts/</span> แล้ว Drag ลง Chart XAUUSDc ใส่ License Key ในช่อง Input</p>
+        </div>
+      </div>
+      <div class="setup-step fade-in">
+        <div class="setup-n">4</div>
+        <div>
+          <h3>เปิดระบบ — ทุกอย่างทำงานอัตโนมัติ</h3>
+          <p>EA จะเชื่อมต่อกับ Signal Server โดยอัตโนมัติ รับสัญญาณ และเริ่ม Execute เมื่อเงื่อนไขตรงกัน ไม่ต้องทำอะไรเพิ่ม</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div style="text-align:center" class="fade-in">
+      <span class="section-tag">FAQ</span>
+      <h2 class="section-title">คำถาม<span class="gold-gradient">ที่พบบ่อย</span></h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item fade-in">
+        <div class="faq-q">ต้องมีทักษะการเทรดก่อนไหม?<i class="fa-solid fa-chevron-down"></i></div>
+        <div class="faq-a">ไม่จำเป็น ระบบทำงานอัตโนมัติทั้งหมด ตั้งแต่วิเคราะห์ตลาดไปจนถึงเปิด/ปิดออร์เดอร์ คุณเพียงแค่เปิด MT5 ทิ้งไว้ แต่ควรเข้าใจพื้นฐานการบริหาร Balance และ Drawdown</div>
+      </div>
+      <div class="faq-item fade-in">
+        <div class="faq-q">ใช้กับ Broker ไหนได้บ้าง?<i class="fa-solid fa-chevron-down"></i></div>
+        <div class="faq-a">ใช้ได้กับทุก Broker ที่มี MT5 และเปิด XAUUSDc (Gold Cent Account) เช่น Exness, XM, FBS, IC Markets และอื่นๆ ที่มีบัญชีประเภท Cent</div>
+      </div>
+      <div class="faq-item fade-in">
+        <div class="faq-q">License 1 Key ใช้ได้กี่เครื่อง?<i class="fa-solid fa-chevron-down"></i></div>
+        <div class="faq-a">1 License Key ผูกกับ 1 MT5 Account Number เท่านั้น ใช้ได้บนเครื่องกี่เครื่องก็ได้ตราบที่ Login ด้วย Account เดียวกัน ถ้าต้องการหลาย Account ต้องซื้อ License แยก</div>
+      </div>
+      <div class="faq-item fade-in">
+        <div class="faq-q">ต้องเปิดคอมทิ้งไว้ตลอดไหม?<i class="fa-solid fa-chevron-down"></i></div>
+        <div class="faq-a">ใช่ ระบบต้องการให้ MT5 เปิดอยู่เพื่อรับสัญญาณและ Execute ออร์เดอร์ แนะนำใช้ VPS Windows เพื่อให้ระบบทำงานได้ 24/5 ต่อเนื่อง</div>
+      </div>
+      <div class="faq-item fade-in">
+        <div class="faq-q">มีการรับประกันผลตอบแทนไหม?<i class="fa-solid fa-chevron-down"></i></div>
+        <div class="faq-a">ไม่มีการรับประกันผลตอบแทน ทุกการลงทุนมีความเสี่ยง ระบบนี้เป็นเครื่องมือช่วยวิเคราะห์และ Execute เท่านั้น ผลลัพธ์ขึ้นอยู่กับสภาวะตลาดแต่ละช่วง</div>
+      </div>
+      <div class="faq-item fade-in">
+        <div class="faq-q">หาก License หมดอายุ EA จะยังทำงานไหม?<i class="fa-solid fa-chevron-down"></i></div>
+        <div class="faq-a">ไม่ ระบบจะหยุดทำงานทันที EA จะแสดง Alert แจ้งเตือน 7 วันก่อนหมดอายุ เพื่อให้มีเวลาต่ออายุล่วงหน้า</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section id="cta-banner">
+  <div class="container">
+    <div class="fade-in">
+      <h2>พร้อมให้ระบบทำงาน<span class="gold-gradient">แทนคุณ</span>แล้วหรือยัง?</h2>
+      <p>เริ่มต้นวันนี้ ตั้งค่าภายใน 15 นาที</p>
+      <div class="cta-btns">
+        <a href="#" onclick="openLineModal();return false;" class="btn btn-gold"><i class="fa-solid fa-bolt"></i>ซื้อ License ตอนนี้</a>
+        <a href="#faq" class="btn btn-outline"><i class="fa-solid fa-circle-question"></i>ดู FAQ เพิ่มเติม</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact">
+  <div class="container">
+    <div class="footer-warning">
+      ⚠️ <strong>คำเตือนความเสี่ยง:</strong> การเทรด Forex และ Gold มีความเสี่ยงสูง คุณอาจสูญเสียเงินลงทุนทั้งหมด ระบบนี้เป็นเครื่องมือช่วยวิเคราะห์เท่านั้น ไม่ใช่คำแนะนำการลงทุน ผลการดำเนินงานในอดีตไม่ได้รับประกันผลในอนาคต
+    </div>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand gold-gradient">KS_DATA_PRO</div>
+        <p class="footer-desc">ระบบคำนวณสถิติอัจฉริยะสำหรับตลาด XAUUSD<br>ออกแบบมาเฉพาะสำหรับ MT5 Cent Account</p>
+      </div>
+      <div>
+        <div class="footer-h">เมนู</div>
+        <ul class="footer-links">
+          <li><a href="#how">วิธีทำงาน</a></li>
+          <li><a href="#features">ฟีเจอร์</a></li>
+          <li><a href="#pricing">ราคา</a></li>
+          <li><a href="#setup">ขั้นตอน</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-h">ติดต่อ</div>
+        <ul class="footer-links">
+          <li><a href="https://line.me/ti/p/@kstrader" target="_blank"><i class="fa-brands fa-line" style="color:#06c755;margin-right:8px"></i>LINE: @kstrader</a></li>
+          <li><a href="mailto:ks.superpro@gmail.com"><i class="fa-solid fa-envelope" style="color:var(--gold);margin-right:8px"></i>ks.superpro@gmail.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 KS_DATA_PRO · All rights reserved</span>
+      <span>สงวนสิทธิ์ทุกประการ · ห้ามทำซ้ำหรือแจกจ่าย</span>
+    </div>
+  </div>
 </footer>
 
+<!-- LINE MODAL -->
+<div class="modal-overlay" id="lineModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeLineModal()"><i class="fa-solid fa-xmark"></i></button>
+    <div class="line-logo"><i class="fa-brands fa-line"></i></div>
+    <div class="modal-title">ติดต่อสั่งซื้อ</div>
+    <div class="modal-sub">สแกน QR Code หรือกดปุ่มด้านล่างเพื่อเพิ่มเพื่อนใน LINE</div>
+    <div class="qr-wrap">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://line.me/ti/p/~kstrader&bgcolor=ffffff&color=000000&margin=8" alt="LINE QR Code">
+    </div>
+    <div class="line-id"><i class="fa-brands fa-line"></i> @kstrader</div>
+    <a href="https://line.me/ti/p/~kstrader" target="_blank" class="btn-line">
+      <i class="fa-brands fa-line"></i> เพิ่มเพื่อนใน LINE
+    </a>
+    <div class="modal-note">แจ้ง MT5 Account Number และแผนที่ต้องการ<br>รับ License Key ภายใน 24 ชั่วโมง</div>
+  </div>
+</div>
+
 <script>
-// Intersection Observer for reveals
-var obs = new IntersectionObserver(function(entries) {
-  entries.forEach(function(e) {
-    if (e.isIntersecting) e.target.classList.add('on');
-  });
-}, { threshold: 0.08 });
-
-document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
-
-// Smooth scroll
-document.querySelector('.hero-cta').addEventListener('click', function(e) {
-  e.preventDefault();
-  document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+function openLineModal(){ document.getElementById('lineModal').classList.add('show') }
+function closeLineModal(){ document.getElementById('lineModal').classList.remove('show') }
+document.getElementById('lineModal').addEventListener('click', function(e){
+  if(e.target === this) closeLineModal();
 });
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeLineModal(); });
+
+// Scroll reveal
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible') });
+}, { threshold: 0.15 });
+document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+// FAQ accordion
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  });
+});
+
+// Animate ticker price (demo)
+const priceEl = document.querySelector('.ticker-price');
+const prices = ['2,318.45','2,319.20','2,317.85','2,320.10','2,318.45'];
+let pi = 0;
+setInterval(() => { pi = (pi+1)%prices.length; priceEl.textContent = prices[pi]; }, 3000);
 </script>
 </body>
 </html>

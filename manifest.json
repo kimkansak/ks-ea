@@ -1,0 +1,23 @@
+{
+  "name": "KS_DATA_PRO",
+  "short_name": "KS_DATA_PRO",
+  "description": "ระบบเทรด XAUUSD อัตโนมัติ",
+  "start_url": "./dashboard.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#07070f",
+  "theme_color": "#f0b429",
+  "lang": "th",
+  "categories": ["finance"],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "prefer_related_applications": false
+}

@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#f0b429">
+<meta name="background-color" content="#07070f">
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+
+<!-- iOS PWA -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="KS_DATA_PRO">
+<link rel="apple-touch-icon" href="icon.svg">
+
+<!-- Android -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="KS_DATA_PRO">
+
+<title>KS_DATA_PRO</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#f0b429;--gold-light:#ffd166;--gold-dim:#b8871f;
+  --bg:#07070f;--bg2:#0d0d1a;--bg3:#12122a;
+  --glass:rgba(255,255,255,0.04);--glass-b:rgba(255,255,255,0.08);
+  --text:#e8e8f0;--text-dim:#8888aa;
+  --green:#22c55e;--green-dim:rgba(34,197,94,0.12);
+  --red:#ef4444;--red-dim:rgba(239,68,68,0.12);
+  --yellow:#f59e0b;--blue:#3b82f6;
+  --radius:16px;--radius-sm:10px;
+}
+html,body{min-height:100vh;min-height:100dvh;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;overscroll-behavior:none}
+/* Safe area for iPhone notch / Dynamic Island */
+.app{padding-bottom:max(100px, calc(80px + env(safe-area-inset-bottom)))}
+.topbar{padding-top:max(14px, calc(14px + env(safe-area-inset-top)))}
+.bottom-nav{padding-bottom:max(0px, env(safe-area-inset-bottom))}
+
+/* Install banner */
+.install-banner{display:none;margin:0 16px 12px;border-radius:var(--radius-sm);background:linear-gradient(135deg,rgba(240,180,41,.12),rgba(240,180,41,.04));border:1px solid rgba(240,180,41,.3);padding:12px 14px;align-items:center;gap:12px}
+.install-banner.show{display:flex}
+.install-banner-icon{width:40px;height:40px;border-radius:10px;background:rgba(240,180,41,.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.install-banner-text{flex:1;min-width:0}
+.install-banner-title{font-size:13px;font-weight:700;margin-bottom:2px}
+.install-banner-sub{font-size:11px;color:var(--text-dim)}
+.install-banner-btn{font-size:12px;font-weight:700;padding:7px 14px;border-radius:8px;background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#000;border:none;cursor:pointer;flex-shrink:0}
+.install-banner-close{font-size:16px;color:var(--text-dim);cursor:pointer;padding:4px;flex-shrink:0}
+.bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(240,180,41,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(240,180,41,0.025) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;z-index:0}
+.app{max-width:420px;margin:0 auto;padding:0 0 100px;position:relative;z-index:1}
+
+/* TOP BAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:rgba(7,7,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(240,180,41,0.12);position:sticky;top:0;z-index:50}
+.topbar-logo{font-size:15px;font-weight:900;background:linear-gradient(135deg,var(--gold-light),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.topbar-acc{font-size:12px;color:var(--text-dim);display:flex;align-items:center;gap:6px}
+.online-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse-dot 2s infinite}
+.offline-dot{width:7px;height:7px;border-radius:50%;background:var(--red)}
+@keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}50%{box-shadow:0 0 0 5px rgba(34,197,94,0)}}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.icon-btn{width:32px;height:32px;border-radius:8px;background:var(--glass);border:1px solid var(--glass-b);color:var(--text-dim);font-size:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.icon-btn:hover{color:var(--gold);border-color:rgba(240,180,41,.3)}
+.icon-btn.spinning i{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* SECTIONS */
+.section{padding:20px 16px 0}
+.section-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:12px}
+
+/* SETUP SCREEN */
+.setup-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:70vh;padding:40px 24px;text-align:center}
+.setup-logo{font-size:28px;font-weight:900;background:linear-gradient(135deg,var(--gold-light),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
+.setup-sub{font-size:14px;color:var(--text-dim);margin-bottom:40px;line-height:1.6}
+.setup-form{width:100%;max-width:320px}
+.form-group{margin-bottom:16px;text-align:left}
+.form-label{font-size:12px;font-weight:600;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;display:block}
+.form-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm);padding:12px 16px;color:var(--text);font-size:14px;font-family:inherit;outline:none;transition:border-color .2s}
+.form-input:focus{border-color:rgba(240,180,41,.5);background:rgba(255,255,255,0.07)}
+.form-input::placeholder{color:var(--text-dim);opacity:.6}
+.btn-primary{width:100%;padding:14px;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--gold),var(--gold-dim));border:none;color:#000;font-size:14px;font-weight:800;letter-spacing:.5px;cursor:pointer;transition:opacity .2s;margin-top:8px}
+.btn-primary:hover{opacity:.9}
+.setup-note{font-size:11px;color:var(--text-dim);margin-top:20px;line-height:1.6}
+
+/* SKELETON LOADER */
+.skeleton{border-radius:8px;background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0.04) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
+@keyframes shimmer{to{background-position:-200% 0}}
+.skel-card{height:140px;border-radius:var(--radius);margin:0 16px 12px}
+.skel-row{height:60px;border-radius:var(--radius-sm);margin:0 16px 8px}
+
+/* BALANCE CARD */
+.balance-card{background:linear-gradient(135deg,rgba(240,180,41,.08),rgba(240,180,41,.02));border:1px solid rgba(240,180,41,.15);border-radius:var(--radius);padding:22px 20px;position:relative;overflow:hidden}
+.balance-card::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(240,180,41,.12),transparent);pointer-events:none}
+.balance-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.balance-label{font-size:11px;color:var(--text-dim);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.balance-amount{font-size:32px;font-weight:900;color:var(--text);line-height:1}
+.balance-amount span{font-size:14px;font-weight:500;color:var(--text-dim);margin-left:4px}
+.balance-usd{font-size:13px;color:var(--text-dim);margin-top:4px}
+.equity-block{text-align:right}
+.equity-val{font-size:22px;font-weight:800;color:var(--gold)}
+.equity-change{font-size:12px;font-weight:600;margin-top:2px}
+.equity-up{color:var(--green)}
+.equity-down{color:var(--red)}
+.margin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px}
+.margin-item{background:rgba(255,255,255,0.04);border-radius:8px;padding:10px;text-align:center}
+.margin-label{font-size:10px;color:var(--text-dim);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
+.margin-val{font-size:14px;font-weight:700;color:var(--text)}
+
+/* PERFORMANCE */
+.perf-card{background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--radius);padding:18px 16px}
+.perf-alert{border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.perf-alert.good{background:rgba(34,197,94,.1);color:var(--green)}
+.perf-alert.warn{background:rgba(245,158,11,.1);color:var(--yellow)}
+.perf-alert.bad{background:rgba(239,68,68,.1);color:var(--red)}
+.perf-alert.neutral{background:var(--glass);color:var(--text-dim)}
+.perf-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.perf-title{font-size:15px;font-weight:700}
+.perf-badge{font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px}
+.perf-badge.pos{background:rgba(34,197,94,.15);color:var(--green)}
+.perf-badge.neg{background:rgba(239,68,68,.15);color:var(--red)}
+.perf-badge.neu{background:var(--glass);color:var(--text-dim)}
+.progress-wrap{margin-bottom:12px}
+.progress-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}
+.progress-bar{height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden}
+.progress-fill{height:100%;border-radius:4px;transition:width .8s ease;width:0}
+.fill-gold{background:linear-gradient(90deg,var(--gold-dim),var(--gold))}
+.fill-green{background:linear-gradient(90deg,#16a34a,var(--green))}
+.fill-red{background:linear-gradient(90deg,#b91c1c,var(--red))}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.stat-box{background:rgba(255,255,255,0.03);border-radius:10px;padding:12px 8px;text-align:center}
+.stat-label{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.stat-val{font-size:18px;font-weight:800}
+.stat-val.pos{color:var(--green)}
+.stat-val.neg{color:var(--red)}
+.stat-val.gold{color:var(--gold)}
+
+/* SIGNAL CARD */
+.signal-card{background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.signal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.dir-badge{font-size:12px;font-weight:800;padding:5px 14px;border-radius:20px;letter-spacing:1px}
+.dir-buy{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+.dir-sell{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+.dir-neutral{background:var(--glass);color:var(--text-dim);border:1px solid var(--glass-b)}
+.conf-bar-wrap{margin-bottom:12px}
+.conf-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:var(--text-dim)}
+.conf-val{font-weight:700;color:var(--gold)}
+.signal-levels{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.level-item{background:rgba(255,255,255,0.03);border-radius:8px;padding:8px;text-align:center}
+.level-label{font-size:10px;color:var(--text-dim);text-transform:uppercase;margin-bottom:3px}
+.level-val{font-size:13px;font-weight:700}
+.level-sl{color:var(--red)}
+.level-tp{color:var(--green)}
+.level-entry{color:var(--gold)}
+.signal-reasoning{font-size:12px;color:var(--text-dim);line-height:1.5;padding:10px;background:rgba(255,255,255,0.02);border-radius:8px;border-left:3px solid rgba(240,180,41,.3)}
+
+/* POSITION CARD */
+.pos-card{border-radius:var(--radius);padding:16px;border:1px solid}
+.pos-buy{background:rgba(34,197,94,.04);border-color:rgba(34,197,94,.2)}
+.pos-sell{background:rgba(239,68,68,.04);border-color:rgba(239,68,68,.2)}
+.pos-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.pos-badge{font-size:11px;font-weight:800;padding:4px 12px;border-radius:20px;letter-spacing:1px}
+.pos-badge-buy{background:rgba(34,197,94,.2);color:var(--green)}
+.pos-badge-sell{background:rgba(239,68,68,.2);color:var(--red)}
+.pos-pnl{font-size:22px;font-weight:900}
+.pos-pnl.pos{color:var(--green)}
+.pos-pnl.neg{color:var(--red)}
+.pos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pos-item{}
+.pos-item-label{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.pos-item-val{font-size:13px;font-weight:700;color:var(--text)}
+.pos-item-val.sl{color:var(--red)}
+.pos-item-val.tp{color:var(--green)}
+.pos-item-val.cur{color:var(--gold)}
+.no-position{text-align:center;padding:24px;color:var(--text-dim);font-size:13px}
+.no-position i{font-size:28px;margin-bottom:8px;display:block;opacity:.3}
+
+/* TRADE HISTORY */
+.trade-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--radius-sm);margin-bottom:8px}
+.trade-badge{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0}
+.trade-win{background:rgba(34,197,94,.15);color:var(--green)}
+.trade-loss{background:rgba(239,68,68,.15);color:var(--red)}
+.trade-be{background:rgba(245,158,11,.15);color:var(--yellow)}
+.trade-info{flex:1;min-width:0}
+.trade-dir{font-size:13px;font-weight:700;margin-bottom:2px}
+.trade-zone{font-size:11px;color:var(--text-dim)}
+.trade-right{text-align:right;flex-shrink:0}
+.trade-pnl{font-size:14px;font-weight:800}
+.trade-pnl.pos{color:var(--green)}
+.trade-pnl.neg{color:var(--red)}
+.trade-time{font-size:11px;color:var(--text-dim);margin-top:2px}
+.no-trades{text-align:center;padding:24px;color:var(--text-dim);font-size:13px}
+
+/* SETTINGS PANEL */
+.settings-card{background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--radius);padding:18px 16px}
+.settings-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.settings-row:last-child{border-bottom:none;padding-bottom:0}
+.settings-row:first-child{padding-top:0}
+.settings-label{font-size:13px;font-weight:600}
+.settings-sub{font-size:11px;color:var(--text-dim);margin-top:2px}
+.settings-input{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;color:var(--text);font-size:13px;font-family:inherit;width:120px;text-align:right;outline:none}
+.settings-input:focus{border-color:rgba(240,180,41,.5)}
+.toggle{position:relative;width:44px;height:24px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:rgba(255,255,255,0.1);border-radius:12px;cursor:pointer;transition:.3s}
+.toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.3s}
+.toggle input:checked + .toggle-slider{background:var(--gold)}
+.toggle input:checked + .toggle-slider::before{transform:translateX(20px)}
+.save-btn{width:100%;padding:12px;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--gold),var(--gold-dim));border:none;color:#000;font-size:13px;font-weight:800;cursor:pointer;margin-top:16px;transition:opacity .2s}
+.save-btn:hover{opacity:.9}
+.save-btn:disabled{opacity:.4;cursor:default}
+
+/* LICENSE CARD */
+.license-card{background:linear-gradient(135deg,rgba(240,180,41,.06),rgba(240,180,41,.01));border:1px solid rgba(240,180,41,.2);border-radius:var(--radius-sm);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.lic-left{font-size:13px;font-weight:600}
+.lic-plan{font-size:11px;color:var(--text-dim);margin-top:2px}
+.lic-expiry{text-align:right;font-size:12px}
+.lic-days{font-size:18px;font-weight:800;color:var(--gold)}
+.lic-days-label{font-size:10px;color:var(--text-dim);text-transform:uppercase}
+.lic-days.warn{color:var(--yellow)}
+.lic-days.crit{color:var(--red)}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(7,7,15,0.96);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,0.06);display:flex;z-index:60;max-width:420px;margin:0 auto}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0;cursor:pointer;color:var(--text-dim);font-size:11px;font-weight:600;transition:color .2s;position:relative}
+.nav-item.active{color:var(--gold)}
+.nav-item.active::before{content:'';position:absolute;top:0;left:30%;right:30%;height:2px;background:var(--gold);border-radius:0 0 4px 4px}
+.nav-item i{font-size:18px}
+
+/* TABS */
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* UPDATE TIME */
+.update-row{text-align:center;font-size:11px;color:var(--text-dim);padding:16px;opacity:.6}
+
+/* SPINNER OVERLAY */
+.spinner-overlay{display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:80px 24px;text-align:center}
+.spinner-overlay.show{display:flex}
+.spinner{width:40px;height:40px;border:3px solid rgba(240,180,41,.2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
+.spinner-text{font-size:13px;color:var(--text-dim)}
+
+/* MARKET FORECAST CARD */
+.forecast-card{border-radius:var(--radius);padding:18px 16px;border:1px solid;position:relative;overflow:hidden}
+.forecast-card::before{content:'';position:absolute;top:-40px;right:-40px;width:130px;height:130px;border-radius:50%;pointer-events:none}
+.forecast-s5{background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(34,197,94,.02));border-color:rgba(34,197,94,.3)}
+.forecast-s5::before{background:radial-gradient(circle,rgba(34,197,94,.18),transparent)}
+.forecast-s4{background:linear-gradient(135deg,rgba(132,204,22,.1),rgba(132,204,22,.02));border-color:rgba(132,204,22,.3)}
+.forecast-s4::before{background:radial-gradient(circle,rgba(132,204,22,.15),transparent)}
+.forecast-s3{background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(245,158,11,.02));border-color:rgba(245,158,11,.3)}
+.forecast-s3::before{background:radial-gradient(circle,rgba(245,158,11,.15),transparent)}
+.forecast-s2{background:linear-gradient(135deg,rgba(249,115,22,.1),rgba(249,115,22,.02));border-color:rgba(249,115,22,.3)}
+.forecast-s2::before{background:radial-gradient(circle,rgba(249,115,22,.15),transparent)}
+.forecast-s1{background:linear-gradient(135deg,rgba(239,68,68,.08),rgba(239,68,68,.02));border-color:rgba(239,68,68,.25)}
+.forecast-s1::before{background:radial-gradient(circle,rgba(239,68,68,.12),transparent)}
+.forecast-s0{background:var(--glass);border-color:var(--glass-b)}
+.forecast-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.forecast-title{font-size:16px;font-weight:800;line-height:1.3}
+.forecast-score-badge{font-size:22px;font-weight:900;min-width:42px;text-align:right;line-height:1}
+.forecast-score-sub{font-size:10px;text-align:right;opacity:.7;margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
+.forecast-bar-wrap{margin-bottom:14px}
+.forecast-bar{height:10px;background:rgba(255,255,255,.06);border-radius:5px;overflow:hidden}
+.forecast-bar-fill{height:100%;border-radius:5px;transition:width 1s ease}
+.forecast-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.forecast-tag{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:5px}
+.tag-bull{background:rgba(34,197,94,.15);color:var(--green)}
+.tag-bear{background:rgba(239,68,68,.15);color:var(--red)}
+.tag-neu{background:rgba(255,255,255,.06);color:var(--text-dim)}
+.tag-align{background:rgba(240,180,41,.15);color:var(--gold)}
+.tag-conf{background:rgba(59,130,246,.15);color:#7dd3fc}
+.forecast-suggestion{border-radius:10px;padding:10px 14px;margin-bottom:12px}
+.forecast-suggestion-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;opacity:.7}
+.forecast-suggestion-val{font-size:14px;font-weight:800}
+.forecast-note{font-size:12px;color:var(--text-dim);line-height:1.55;padding:10px;background:rgba(255,255,255,.02);border-radius:8px;border-left:3px solid rgba(255,255,255,.1);font-style:italic}
+.forecast-set-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:12px;padding:10px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--text);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s}
+.forecast-set-btn:hover{background:rgba(240,180,41,.1);border-color:rgba(240,180,41,.3);color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<!-- APP SHELL -->
+<div class="app" id="app">
+
+  <!-- TOP BAR (hidden until logged in) -->
+  <div class="topbar" id="topbar" style="display:none">
+    <div class="topbar-logo">KS_DATA_PRO</div>
+    <div class="topbar-acc">
+      <span class="online-dot" id="onlineDot"></span>
+      <span id="topbarAcc">—</span>
+    </div>
+    <div class="topbar-right">
+      <div class="icon-btn" id="refreshBtn" onclick="refreshData()"><i class="fas fa-rotate-right"></i></div>
+    </div>
+  </div>
+
+  <!-- INSTALL BANNER (shows when PWA not installed) -->
+  <div class="install-banner" id="installBanner">
+    <div class="install-banner-icon">📲</div>
+    <div class="install-banner-text">
+      <div class="install-banner-title">ติดตั้งเป็นแอปได้เลย!</div>
+      <div class="install-banner-sub">เพิ่มไปหน้าจอหลักเพื่อเปิดเร็วขึ้น</div>
+    </div>
+    <button class="install-banner-btn" id="installBtn" onclick="triggerInstall()">ติดตั้ง</button>
+    <span class="install-banner-close" onclick="dismissInstallBanner()">✕</span>
+  </div>
+
+  <!-- SETUP SCREEN -->
+  <div class="setup-screen" id="setupScreen">
+    <div class="setup-logo">KS_DATA_PRO</div>
+    <div class="setup-sub">ระบบเทรด XAUUSD อัตโนมัติ<br>กรอกข้อมูลเพื่อเข้าสู่ Dashboard</div>
+    <div class="setup-form">
+      <div class="form-group">
+        <label class="form-label"><i class="fas fa-user" style="margin-right:6px;color:var(--gold)"></i>MT5 Account Number</label>
+        <input class="form-input" id="inputAccount" type="number" placeholder="เช่น 263306332" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label class="form-label"><i class="fas fa-key" style="margin-right:6px;color:var(--gold)"></i>License Key</label>
+        <input class="form-input" id="inputLicense" type="text" placeholder="SIGE-XXXX-XXXX-XXXX" autocomplete="off"
+               style="text-transform:uppercase;letter-spacing:1px"
+               oninput="this.value=this.value.toUpperCase()">
+      </div>
+      <div id="setupError" style="display:none;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--red);margin-bottom:12px;text-align:center"></div>
+      <button class="btn-primary" id="setupBtn" onclick="doSetup()">
+        <i class="fas fa-unlock" style="margin-right:8px"></i>เข้าสู่ Dashboard
+      </button>
+      <div class="setup-note">
+        ข้อมูลของคุณจะถูกบันทึกเฉพาะใน browser นี้<br>
+        ต้องการ License Key? ติดต่อ LINE: <a href="https://line.me/ti/p/~kstrader" style="color:var(--gold)">@kstrader</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="spinner-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <div class="spinner-text">กำลังโหลดข้อมูล...</div>
+  </div>
+
+  <!-- MAIN CONTENT (tabs) -->
+  <div id="mainContent" style="display:none">
+
+    <!-- TAB: OVERVIEW -->
+    <div class="tab-content active" id="tabOverview">
+
+      <!-- License info -->
+      <div class="section">
+        <div class="license-card" id="licenseCard" style="display:none"></div>
+      </div>
+
+      <!-- Market Forecast -->
+      <div class="section">
+        <div class="section-label">สภาวะตลาดวันนี้</div>
+        <div id="forecastCard"></div>
+      </div>
+
+      <!-- Account Overview -->
+      <div class="section">
+        <div class="section-label">Account Overview</div>
+        <div class="balance-card" id="balanceCard">
+          <div class="balance-row">
+            <div>
+              <div class="balance-label">Balance</div>
+              <div class="balance-amount" id="balanceAmt">—<span>cents</span></div>
+              <div class="balance-usd" id="balanceUsd">≈ $0.00 USD</div>
+            </div>
+            <div class="equity-block">
+              <div class="balance-label" style="text-align:right">Equity</div>
+              <div class="equity-val" id="equityVal">—</div>
+              <div class="equity-change" id="equityChange"></div>
+            </div>
+          </div>
+          <div class="margin-grid">
+            <div class="margin-item"><div class="margin-label">Open Lots</div><div class="margin-val" id="openLots">—</div></div>
+            <div class="margin-item"><div class="margin-label">Daily P&L</div><div class="margin-val" id="dailyPnlAmt">—</div></div>
+            <div class="margin-item"><div class="margin-label">Direction</div><div class="margin-val" id="openDir">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Daily Performance -->
+      <div class="section">
+        <div class="section-label">Daily Performance</div>
+        <div class="perf-card">
+          <div class="perf-alert neutral" id="perfAlert">
+            <i class="fas fa-circle-notch fa-spin"></i>
+            <span>กำลังโหลด...</span>
+          </div>
+          <div class="perf-header">
+            <div class="perf-title">Today P&L</div>
+            <div class="perf-badge neu" id="pnlBadge">—</div>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-label">
+              <span style="color:var(--text-dim)">Profit Target</span>
+              <span id="profitTargetLabel" style="color:var(--gold)">— / <span id="targetPct">3.00</span>% <i class="fas fa-flag" style="font-size:10px"></i></span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill fill-gold" id="profitBar"></div></div>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-label">
+              <span style="color:var(--text-dim)">Loss Limit Used</span>
+              <span id="lossLimitLabel" style="color:var(--text-dim)">0% / 5.00%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill fill-red" id="lossBar"></div></div>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-label">Profit</div>
+              <div class="stat-val gold" id="statProfit">—</div>
+              <div style="font-size:10px;color:var(--text-dim)">cents</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Trades</div>
+              <div class="stat-val" id="statTrades">—</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Win/Loss</div>
+              <div class="stat-val" id="statWL">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Signal -->
+      <div class="section">
+        <div class="section-label">AI Signal (Latest)</div>
+        <div class="signal-card" id="signalCard"></div>
+      </div>
+
+      <!-- Open Position -->
+      <div class="section">
+        <div class="section-label">Open Position</div>
+        <div id="positionCard"></div>
+      </div>
+
+      <div class="update-row" id="updateRow">—</div>
+    </div>
+
+    <!-- TAB: HISTORY -->
+    <div class="tab-content" id="tabHistory">
+      <div class="section">
+        <div class="section-label">Recent Trades</div>
+        <div id="tradeList"></div>
+      </div>
+    </div>
+
+    <!-- TAB: ALERTS (Settings) -->
+    <div class="tab-content" id="tabAlerts">
+      <div class="section">
+        <div class="section-label">Alert Settings</div>
+        <div class="settings-card">
+          <div class="settings-row">
+            <div><div class="settings-label">Daily Profit Target</div><div class="settings-sub">หยุดเทรดเมื่อกำไรถึง %</div></div>
+            <input type="number" class="settings-input" id="settingTarget" value="3.0" min="0.5" max="20" step="0.5">
+          </div>
+          <div class="settings-row">
+            <div><div class="settings-label">Email แจ้งเตือน</div><div class="settings-sub">รับอีเมลเมื่อถึงเป้ากำไร/ขาดทุน</div></div>
+            <input type="email" class="settings-input" id="settingEmail" placeholder="your@email.com">
+          </div>
+          <div class="settings-row">
+            <div><div class="settings-label">แจ้งเตือนเมื่อถึงเป้ากำไร</div><div class="settings-sub">ส่ง Email เมื่อ P&L ≥ Target</div></div>
+            <label class="toggle"><input type="checkbox" id="toggleProfit" checked><span class="toggle-slider"></span></label>
+          </div>
+          <div class="settings-row">
+            <div><div class="settings-label">แจ้งเตือนใกล้ขาดทุนสูงสุด</div><div class="settings-sub">ส่ง Email เมื่อ Loss ≥ 4%</div></div>
+            <label class="toggle"><input type="checkbox" id="toggleLoss" checked><span class="toggle-slider"></span></label>
+          </div>
+          <button class="save-btn" id="saveSettingsBtn" onclick="saveSettings()">
+            <i class="fas fa-save" style="margin-right:8px"></i>บันทึกการตั้งค่า
+          </button>
+          <div id="saveMsg" style="text-align:center;font-size:12px;color:var(--green);margin-top:10px;display:none">
+            <i class="fas fa-check-circle"></i> บันทึกเรียบร้อยแล้ว
+          </div>
+        </div>
+      </div>
+      <div class="section" style="margin-top:20px">
+        <div class="section-label">Account</div>
+        <div class="settings-card">
+          <div class="settings-row">
+            <div><div class="settings-label">Account Number</div><div class="settings-sub" id="settingAccLabel">—</div></div>
+            <div class="icon-btn" onclick="logout()" title="Change Account"><i class="fas fa-right-from-bracket"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: SETTINGS -->
+    <div class="tab-content" id="tabSettings">
+
+      <!-- Install as App -->
+      <div class="section">
+        <div class="section-label">ติดตั้งแอป</div>
+        <div class="settings-card">
+          <div style="text-align:center;padding:8px 0 16px">
+            <div style="font-size:48px;margin-bottom:8px">📲</div>
+            <div style="font-size:15px;font-weight:700;margin-bottom:6px">เพิ่มลงหน้าจอหลัก</div>
+            <div style="font-size:12px;color:var(--text-dim);line-height:1.6;margin-bottom:16px">
+              ติดตั้งเป็นแอปบนมือถือ<br>เปิดได้เหมือนแอปจริง ไม่มี URL bar
+            </div>
+            <button id="pwaInstallBtn" onclick="triggerInstall()"
+              style="padding:12px 32px;border-radius:12px;background:linear-gradient(135deg,var(--gold),var(--gold-dim));border:none;color:#000;font-size:14px;font-weight:800;cursor:pointer;width:100%">
+              <i class="fas fa-download" style="margin-right:8px"></i>ติดตั้งแอป
+            </button>
+          </div>
+
+          <!-- iOS Manual Guide -->
+          <div style="border-top:1px solid rgba(255,255,255,.06);padding-top:14px;margin-top:4px">
+            <div style="font-size:11px;font-weight:700;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">คู่มือติดตั้ง</div>
+            <div style="font-size:12px;color:var(--text-dim);line-height:1.8">
+              <div style="margin-bottom:6px"><span style="color:var(--gold);font-weight:700">iPhone/iPad (Safari):</span></div>
+              <div>1. กด Share <span style="color:var(--gold)">□↑</span> ด้านล่างของหน้าจอ</div>
+              <div>2. เลือก "เพิ่มลงในหน้าจอโฮม"</div>
+              <div>3. กด "เพิ่ม" มุมบนขวา</div>
+              <div style="margin-top:8px;margin-bottom:6px"><span style="color:var(--green);font-weight:700">Android (Chrome):</span></div>
+              <div>1. กดเมนู <span style="color:var(--green)">⋮</span> มุมบนขวา</div>
+              <div>2. เลือก "เพิ่มไปยังหน้าจอหลัก"</div>
+              <div>3. กด "เพิ่ม"</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- System Info -->
+      <div class="section" style="margin-top:20px">
+        <div class="section-label">System Info</div>
+        <div class="settings-card">
+          <div class="settings-row">
+            <div><div class="settings-label">System</div></div>
+            <div style="font-size:12px;color:var(--text-dim)">KS_DATA_PRO v3.0</div>
+          </div>
+          <div class="settings-row">
+            <div><div class="settings-label">Symbol</div></div>
+            <div style="font-size:12px;color:var(--gold)">XAUUSDc</div>
+          </div>
+          <div class="settings-row">
+            <div><div class="settings-label">Auto Refresh</div><div class="settings-sub">ทุก 60 วินาที</div></div>
+            <label class="toggle"><input type="checkbox" id="toggleAutoRefresh" checked onchange="toggleAutoRefreshFn()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="settings-row">
+            <div><div class="settings-label">Dashboard URL</div><div class="settings-sub">คัดลอกลิงก์ส่วนตัว</div></div>
+            <div class="icon-btn" onclick="copyLink()"><i class="fas fa-copy"></i></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav" id="bottomNav" style="display:none">
+  <div class="nav-item active" id="nav0" onclick="switchTab(0)"><i class="fas fa-chart-pie"></i>Overview</div>
+  <div class="nav-item" id="nav1" onclick="switchTab(1)"><i class="fas fa-clock-rotate-left"></i>History</div>
+  <div class="nav-item" id="nav2" onclick="switchTab(2)"><i class="fas fa-bell"></i>Alerts</div>
+  <div class="nav-item" id="nav3" onclick="switchTab(3)"><i class="fas fa-gear"></i>Settings</div>
+</div>
+
+<script>
+// ── Configuration ─────────────────────────────────────────────
+// ⚠️ เจ้าของระบบ: ใส่ Apps Script URL ของคุณที่นี่ (แก้ครั้งเดียว)
+var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwcXBS6tWZvBwUsYH_Sw_Au3H3mziz_K0mbLw6h4tQC4b55yUBakSNFs5c7cpKEdGFu/exec';
+
+var CONFIG_KEY    = 'ks_dashboard_config';
+var g_account     = '';
+var g_licenseKey  = '';
+var g_url         = APPS_SCRIPT_URL;
+var g_data        = null;
+var g_timer       = null;
+var g_autoRefresh = true;
+
+// ── Init ──────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', function() {
+  // Try localStorage
+  try {
+    var saved = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
+    g_account    = saved.account     || '';
+    g_licenseKey = saved.license_key || '';
+  } catch(e) {}
+
+  if (g_account && g_licenseKey) {
+    // Auto-login: pre-fill and load
+    loadDashboard();
+  } else {
+    document.getElementById('setupScreen').style.display = 'flex';
+  }
+});
+
+// ── Setup ─────────────────────────────────────────────────────
+function doSetup() {
+  var acc = document.getElementById('inputAccount').value.trim();
+  var lic = document.getElementById('inputLicense').value.trim().toUpperCase();
+  var errEl = document.getElementById('setupError');
+  var btn   = document.getElementById('setupBtn');
+
+  errEl.style.display = 'none';
+
+  if (!acc) { showSetupError('กรุณากรอก MT5 Account Number'); return; }
+  if (!lic || lic.length < 10) { showSetupError('กรุณากรอก License Key ให้ครบ'); return; }
+
+  // Validate license against Apps Script
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin" style="margin-right:8px"></i>กำลังตรวจสอบ License...';
+
+  var url = APPS_SCRIPT_URL + '?action=check_license&key=' + encodeURIComponent(lic) + '&account=' + encodeURIComponent(acc);
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.timeout = 15000;
+  xhr.onload = function() {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-unlock" style="margin-right:8px"></i>เข้าสู่ Dashboard';
+    try {
+      var res = JSON.parse(xhr.responseText);
+      if (res.valid === 'true') {
+        // License OK
+        g_account    = acc;
+        g_licenseKey = lic;
+        g_url        = APPS_SCRIPT_URL;
+        try { localStorage.setItem(CONFIG_KEY, JSON.stringify({ account: acc, license_key: lic })); } catch(e) {}
+        document.getElementById('setupScreen').style.display = 'none';
+        loadDashboard();
+      } else {
+        var reason = res.reason || 'UNKNOWN';
+        var msg = 'License Key ไม่ถูกต้อง';
+        if (reason === 'LICENSE_EXPIRED')   msg = '⏰ License หมดอายุแล้ว กรุณาต่ออายุ';
+        else if (reason === 'KEY_NOT_FOUND') msg = '🔍 ไม่พบ License Key นี้ในระบบ';
+        else if (reason === 'LICENSE_BANNED') msg = '🚫 License นี้ถูกระงับการใช้งาน';
+        else if (reason === 'LICENSE_INACTIVE') msg = '⚠️ License ยังไม่ได้เปิดใช้งาน';
+        showSetupError(msg);
+      }
+    } catch(e) { showSetupError('เกิดข้อผิดพลาด กรุณาลองอีกครั้ง'); }
+  };
+  xhr.onerror = xhr.ontimeout = function() {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-unlock" style="margin-right:8px"></i>เข้าสู่ Dashboard';
+    showSetupError('ไม่สามารถเชื่อมต่อได้ กรุณาตรวจสอบอินเทอร์เน็ต');
+  };
+  xhr.send();
+}
+
+function showSetupError(msg) {
+  var el = document.getElementById('setupError');
+  el.innerHTML = '<i class="fas fa-circle-exclamation" style="margin-right:6px"></i>' + msg;
+  el.style.display = 'block';
+}
+
+// ── Tab switching ─────────────────────────────────────────────
+var tabIds = ['tabOverview','tabHistory','tabAlerts','tabSettings'];
+var activeTab = 0;
+
+function switchTab(idx) {
+  tabIds.forEach(function(id,i) {
+    document.getElementById(id).classList.toggle('active', i === idx);
+    document.getElementById('nav'+i).classList.toggle('active', i === idx);
+  });
+  activeTab = idx;
+}
+
+// ── Data loading ──────────────────────────────────────────────
+function loadDashboard() {
+  document.getElementById('setupScreen').style.display   = 'none';
+  document.getElementById('loadingOverlay').classList.add('show');
+
+  fetchData(function(data) {
+    document.getElementById('loadingOverlay').classList.remove('show');
+    if (!data) {
+      alert('ไม่สามารถดึงข้อมูลได้ กรุณาตรวจสอบ URL และ Account Number');
+      document.getElementById('setupScreen').style.display = 'flex';
+      return;
+    }
+    g_data = data;
+    showDashboard(data);
+    startAutoRefresh();
+  });
+}
+
+function fetchData(cb) {
+  var url = g_url + '?action=get_dashboard&account=' + encodeURIComponent(g_account);
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.timeout = 15000;
+  xhr.onload = function() {
+    try {
+      var d = JSON.parse(xhr.responseText);
+      cb(d);
+    } catch(e) { cb(null); }
+  };
+  xhr.onerror = xhr.ontimeout = function() { cb(null); };
+  xhr.send();
+}
+
+function refreshData() {
+  var btn = document.getElementById('refreshBtn');
+  btn.classList.add('spinning');
+  fetchData(function(data) {
+    btn.classList.remove('spinning');
+    if (data) { g_data = data; renderAll(data); }
+  });
+}
+
+function startAutoRefresh() {
+  if (g_timer) clearInterval(g_timer);
+  if (g_autoRefresh) {
+    g_timer = setInterval(function() {
+      fetchData(function(data) { if (data) { g_data = data; renderAll(data); } });
+    }, 60000);
+  }
+}
+
+function toggleAutoRefreshFn() {
+  g_autoRefresh = document.getElementById('toggleAutoRefresh').checked;
+  if (g_autoRefresh) startAutoRefresh();
+  else if (g_timer) { clearInterval(g_timer); g_timer = null; }
+}
+
+// ── Render ─────────────────────────────────────────────────────
+function showDashboard(data) {
+  document.getElementById('topbar').style.display      = 'flex';
+  document.getElementById('mainContent').style.display = 'block';
+  document.getElementById('bottomNav').style.display   = 'flex';
+
+  renderAll(data);
+
+  // Pre-fill settings
+  var prefs = data.prefs || {};
+  document.getElementById('settingTarget').value = prefs.profit_target || 3.0;
+  document.getElementById('settingEmail').value  = prefs.email         || '';
+  document.getElementById('toggleProfit').checked = prefs.alert_on_profit !== false;
+  document.getElementById('toggleLoss').checked   = prefs.alert_on_loss   !== false;
+  document.getElementById('settingAccLabel').textContent = g_account;
+
+  // Update target display
+  document.getElementById('targetPct').textContent = (prefs.profit_target || 3.0).toFixed(2);
+}
+
+function renderAll(data) {
+  renderTopbar(data);
+  renderLicense(data.license);
+  renderForecast(data.signal);
+  renderBalance(data.status, data.daily);
+  renderPerformance(data.status, data.daily, data.prefs);
+  renderSignal(data.signal);
+  renderPosition(data.status);
+  renderTrades(data.trades);
+  renderUpdateTime(data.server_time);
+}
+
+// ── Market Forecast ───────────────────────────────────────────
+function calcMarketScore(sig) {
+  if (!sig || !sig.direction || sig.direction === 'NEUTRAL' || sig.signal_status === 'NONE' || sig.trigger_type === 'WAIT')
+    return 0;
+  var conf = Number(sig.confidence) || 0;
+  var score = conf * 3.0; // max 3 pts from confidence
+
+  // Bias alignment bonus
+  var d1 = sig.bias_d1 || 'NEUTRAL';
+  var h1 = sig.bias_h1 || 'NEUTRAL';
+  if (d1 !== 'NEUTRAL' && h1 !== 'NEUTRAL') {
+    if (d1 === h1) score += 1.5;   // both align → +1.5
+    else           score -= 0.5;   // conflict  → -0.5
+  }
+
+  // Price action bonus
+  var pa = sig.price_action || 'NONE';
+  if (pa === 'ENGULFING' || pa === 'PINBAR') score += 0.5;
+  else if (pa === 'REJECTION')               score += 0.3;
+
+  return Math.min(5, Math.max(0, score));
+}
+
+function renderForecast(sig) {
+  var el = document.getElementById('forecastCard');
+  var score = calcMarketScore(sig);
+  var scoreInt = Math.round(score);
+
+  // Labels & colors per score tier
+  var tiers = [
+    { cls:'forecast-s0', color:'var(--text-dim)', barCls:'background:rgba(255,255,255,.2)',
+      label:'⏸ รอสัญญาณ...', sub:'ยังไม่มีข้อมูลเพียงพอ' },
+    { cls:'forecast-s1', color:'var(--red)', barCls:'background:linear-gradient(90deg,#7f1d1d,var(--red))',
+      label:'🚨 ตลาดอันตราย ไม่แนะนำเทรด', sub:'สัญญาณขัดแย้ง / ความเชื่อมั่นต่ำมาก' },
+    { cls:'forecast-s2', color:'#f97316', barCls:'background:linear-gradient(90deg,#7c2d12,#f97316)',
+      label:'⚠️ ตลาดมีความเสี่ยง ควรระวัง', sub:'สัญญาณไม่ชัดเจน ควรลดขนาดการเทรด' },
+    { cls:'forecast-s3', color:'var(--yellow)', barCls:'background:linear-gradient(90deg,#713f12,var(--yellow))',
+      label:'📊 ตลาดปานกลาง เล่นได้แต่ระวัง', sub:'สัญญาณพอใช้ได้ ควรตั้ง SL รัดกุม' },
+    { cls:'forecast-s4', color:'#84cc16', barCls:'background:linear-gradient(90deg,#365314,#84cc16)',
+      label:'✅ ตลาดดี เหมาะสำหรับเทรด', sub:'สัญญาณชัดเจน แนวโน้มสอดคล้องกัน' },
+    { cls:'forecast-s5', color:'var(--green)', barCls:'background:linear-gradient(90deg,#14532d,var(--green))',
+      label:'🏆 ตลาดดีเยี่ยม เหมาะเทรดสูง', sub:'แนวโน้มทุก TF สอดคล้อง ความเชื่อมั่นสูง' },
+  ];
+
+  var t   = tiers[scoreInt] || tiers[0];
+  var pct = (score / 5 * 100).toFixed(0);
+
+  // Bias tags
+  var tags = '';
+  if (sig && sig.bias_d1) {
+    var d1cls = sig.bias_d1 === 'BULLISH' ? 'tag-bull' : sig.bias_d1 === 'BEARISH' ? 'tag-bear' : 'tag-neu';
+    var h1cls = sig.bias_h1 === 'BULLISH' ? 'tag-bull' : sig.bias_h1 === 'BEARISH' ? 'tag-bear' : 'tag-neu';
+    tags += '<span class="forecast-tag '+d1cls+'"><i class="fas fa-calendar-day"></i> D1 '+escHtml(sig.bias_d1)+'</span>';
+    tags += '<span class="forecast-tag '+h1cls+'"><i class="fas fa-clock"></i> H1 '+escHtml(sig.bias_h1)+'</span>';
+    if (sig.bias_d1 !== 'NEUTRAL' && sig.bias_h1 !== 'NEUTRAL' && sig.bias_d1 === sig.bias_h1)
+      tags += '<span class="forecast-tag tag-align"><i class="fas fa-check-double"></i> TF สอดคล้อง</span>';
+    if (sig.confidence)
+      tags += '<span class="forecast-tag tag-conf"><i class="fas fa-brain"></i> Conf '+Math.round(sig.confidence*100)+'%</span>';
+  }
+
+  var suggestBtn = '';
+
+  // Reasoning snippet
+  var noteHtml = '';
+  if (sig && sig.reasoning && sig.reasoning.length > 5 && sig.direction !== 'NEUTRAL') {
+    var r = escHtml(sig.reasoning).substring(0, 120) + (sig.reasoning.length > 120 ? '...' : '');
+    noteHtml = '<div class="forecast-note">' + r + '</div>';
+  }
+
+  el.innerHTML = '<div class="forecast-card '+t.cls+'">'
+    + '<div class="forecast-header">'
+    + '<div>'
+    + '<div class="forecast-title" style="color:'+t.color+'">'+t.label+'</div>'
+    + '<div style="font-size:11px;color:var(--text-dim);margin-top:3px">'+t.sub+'</div>'
+    + '</div>'
+    + '<div><div class="forecast-score-badge" style="color:'+t.color+'">'+score.toFixed(1)+'</div>'
+    + '<div class="forecast-score-sub" style="color:'+t.color+'">/ 5.0</div></div>'
+    + '</div>'
+    + '<div class="forecast-bar-wrap">'
+    + '<div class="forecast-bar"><div class="forecast-bar-fill" style="'+t.barCls+';width:'+pct+'%"></div></div>'
+    + '</div>'
+    + (tags ? '<div class="forecast-tags">'+tags+'</div>' : '')
+    + noteHtml
+    + suggestBtn
+    + '</div>';
+}
+
+function applyForecastTarget(val) {
+  // Jump to alerts tab and pre-fill profit target
+  document.getElementById('settingTarget').value = val;
+  switchTab(2);
+  // Flash to show it was set
+  var inp = document.getElementById('settingTarget');
+  inp.style.transition = 'border-color .3s';
+  inp.style.borderColor = 'var(--gold)';
+  setTimeout(function() { inp.style.borderColor = ''; }, 1500);
+}
+
+function renderTopbar(data) {
+  document.getElementById('topbarAcc').textContent = g_account;
+  var dot = document.getElementById('onlineDot');
+  var status = data.status || {};
+  if (status.updated) {
+    var updated = new Date(status.updated);
+    var now = new Date();
+    var stale = (now - updated) > 120000; // 2 min
+    dot.className = stale ? 'offline-dot' : 'online-dot';
+  }
+}
+
+function renderLicense(lic) {
+  var card = document.getElementById('licenseCard');
+  if (!lic || !lic.customer) { card.style.display = 'none'; return; }
+  card.style.display = 'flex';
+  var daysClass = lic.days_left > 14 ? '' : lic.days_left > 7 ? 'warn' : 'crit';
+  card.innerHTML = '<div class="lic-left"><div class="settings-label">'+escHtml(lic.customer)+'</div><div class="lic-plan">'+escHtml(lic.plan || '')+'</div></div>'
+    + '<div class="lic-expiry"><div class="lic-days '+daysClass+'">'+lic.days_left+'</div><div class="lic-days-label">Days Left</div></div>';
+}
+
+function renderBalance(status, daily) {
+  status = status || {};
+  daily  = daily  || {};
+  var bal  = status.balance  || 0;
+  var eq   = status.equity   || 0;
+  var diff = eq - bal;
+
+  document.getElementById('balanceAmt').innerHTML = fmtNum(bal) + '<span>cents</span>';
+  document.getElementById('balanceUsd').textContent = '≈ $' + (bal/100).toFixed(2) + ' USD';
+  document.getElementById('equityVal').textContent = fmtNum(eq);
+  var chEl = document.getElementById('equityChange');
+  if (diff !== 0) {
+    chEl.textContent = (diff >= 0 ? '▲ +' : '▼ ') + fmtNum(diff);
+    chEl.className = 'equity-change ' + (diff >= 0 ? 'equity-up' : 'equity-down');
+  } else { chEl.textContent = ''; }
+
+  var dir = status.open_direction || 'NONE';
+  document.getElementById('openLots').textContent = (status.open_lots || 0).toFixed(2);
+  document.getElementById('dailyPnlAmt').innerHTML = '<span style="color:'+(daily.total_profit>=0?'var(--green)':'var(--red)') + '">' + (daily.total_profit >= 0 ? '+' : '') + fmtNum(daily.total_profit||0) + '</span>';
+  document.getElementById('openDir').innerHTML = dir === 'NONE' ? '<span style="color:var(--text-dim)">—</span>'
+    : '<span style="color:'+(dir==='BUY'?'var(--green)':'var(--red)')+'">'+dir+'</span>';
+}
+
+function renderPerformance(status, daily, prefs) {
+  status = status || {};
+  daily  = daily  || {};
+  prefs  = prefs  || {};
+
+  var pct       = status.daily_pct    || 0;
+  var target    = prefs.profit_target || 3.0;
+  var profitPct = Math.max(0, pct);
+  var lossPct   = Math.max(0, -pct);
+
+  // Alert message
+  var alertEl  = document.getElementById('perfAlert');
+  var alertMsg = '', alertCls = 'neutral';
+  if (pct >= target) {
+    alertMsg = '🏆 ถึงเป้ากำไรรายวัน ' + pct.toFixed(2) + '% แล้ว! ระบบหยุดเทรดแล้ว';
+    alertCls = 'good';
+  } else if (pct >= target * 0.7) {
+    alertMsg = '✅ กำไรวันนี้ดีมาก! ใกล้ถึงเป้า ' + pct.toFixed(2) + '% / ' + target + '%';
+    alertCls = 'good';
+  } else if (pct <= -4.0) {
+    alertMsg = '🚨 ใกล้ถึง Loss Limit! ' + pct.toFixed(2) + '% ระวังอย่าให้ถึง -5%';
+    alertCls = 'bad';
+  } else if (pct < 0) {
+    alertMsg = '⚠️ P&L ติดลบ ' + pct.toFixed(2) + '% วันนี้ ระบบยังทำงานอยู่';
+    alertCls = 'warn';
+  } else if (pct === 0) {
+    alertMsg = '⏳ รอสัญญาณเทรด... ระบบพร้อมทำงาน';
+    alertCls = 'neutral';
+  } else {
+    alertMsg = '📈 กำลังทำกำไร ' + pct.toFixed(2) + '% / ' + target + '%';
+    alertCls = 'good';
+  }
+  alertEl.className = 'perf-alert ' + alertCls;
+  alertEl.innerHTML = alertMsg;
+
+  // Badge
+  var badge = document.getElementById('pnlBadge');
+  badge.textContent = (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%';
+  badge.className   = 'perf-badge ' + (pct > 0 ? 'pos' : pct < 0 ? 'neg' : 'neu');
+
+  // Bars
+  document.getElementById('profitTargetLabel').innerHTML =
+    pct.toFixed(2) + '% / <span id="targetPct">' + target.toFixed(2) + '</span>% <i class="fas fa-flag" style="font-size:10px"></i>';
+  document.getElementById('profitBar').style.width = Math.min(100, profitPct/target*100) + '%';
+
+  document.getElementById('lossLimitLabel').textContent = lossPct.toFixed(2) + '% / 5.00%';
+  document.getElementById('lossBar').style.width = Math.min(100, lossPct/5*100) + '%';
+
+  // Stats
+  document.getElementById('statProfit').innerHTML = '<span style="color:'+(daily.total_profit>=0?'var(--green)':'var(--red)')+'">'+
+    (daily.total_profit>=0?'+':'')+fmtNum(daily.total_profit||0)+'</span>';
+  document.getElementById('statTrades').textContent = daily.trade_count || 0;
+  document.getElementById('statWL').innerHTML = '<span style="color:var(--green)">'+(daily.wins||0)+'W</span>'
+    + ' / <span style="color:var(--red)">'+(daily.losses||0)+'L</span>';
+}
+
+function renderSignal(sig) {
+  var el = document.getElementById('signalCard');
+  if (!sig || sig.direction === 'NEUTRAL' || sig.signal_status === 'NONE') {
+    el.innerHTML = '<div class="no-position"><i class="fas fa-robot"></i>ยังไม่มีสัญญาณ AI ใหม่</div>';
+    return;
+  }
+  var isBuy  = sig.direction === 'BUY';
+  var isSell = sig.direction === 'SELL';
+  var dirCls = isBuy ? 'dir-buy' : isSell ? 'dir-sell' : 'dir-neutral';
+  var confPct = ((sig.confidence||0)*100).toFixed(0);
+  var ts = sig.timestamp ? sig.timestamp.substring(11,16) : '';
+
+  el.innerHTML = '<div class="signal-header">'
+    + '<span class="dir-badge '+dirCls+'">'+sig.direction+'</span>'
+    + '<span style="font-size:12px;color:var(--text-dim)">'+ts+' · '+escHtml(sig.trigger_type||'')+'</span>'
+    + '</div>'
+    + '<div class="conf-bar-wrap"><div class="conf-label"><span>Confidence</span><span class="conf-val">'+confPct+'%</span></div>'
+    + '<div class="progress-bar"><div class="progress-fill fill-gold" style="width:'+confPct+'%"></div></div></div>'
+    + '<div class="signal-levels">'
+    + '<div class="level-item"><div class="level-label">Entry Low</div><div class="level-val level-entry">'+(sig.entry_zone_low||0).toFixed(2)+'</div></div>'
+    + '<div class="level-item"><div class="level-label">Entry High</div><div class="level-val level-entry">'+(sig.entry_zone_high||0).toFixed(2)+'</div></div>'
+    + '<div class="level-item"><div class="level-label">Lot Size</div><div class="level-val">'+(sig.lot_size||0).toFixed(2)+'</div></div>'
+    + '<div class="level-item"><div class="level-label">SL</div><div class="level-val level-sl">'+(sig.sl||0).toFixed(2)+'</div></div>'
+    + '<div class="level-item"><div class="level-label">TP1</div><div class="level-val level-tp">'+(sig.tp1||0).toFixed(2)+'</div></div>'
+    + '<div class="level-item"><div class="level-label">TP2</div><div class="level-val level-tp">'+(sig.tp2||0).toFixed(2)+'</div></div>'
+    + '</div>'
+    + (sig.reasoning ? '<div class="signal-reasoning">'+escHtml(sig.reasoning)+'</div>' : '');
+}
+
+function renderPosition(status) {
+  var el  = document.getElementById('positionCard');
+  status  = status || {};
+  var dir = status.open_direction || 'NONE';
+  if (!dir || dir === 'NONE' || (status.open_lots || 0) <= 0) {
+    el.innerHTML = '<div class="no-position"><i class="fas fa-pause-circle"></i>ไม่มีออเดอร์เปิดอยู่</div>';
+    return;
+  }
+  var isBuy = dir === 'BUY';
+  var pnl   = status.daily_pnl || 0;
+  el.innerHTML = '<div class="pos-card '+(isBuy?'pos-buy':'pos-sell')+'">'
+    + '<div class="pos-header">'
+    + '<span class="pos-badge '+(isBuy?'pos-badge-buy':'pos-badge-sell')+'">'+dir+' XAUUSDc</span>'
+    + '<span class="pos-pnl '+(pnl>=0?'pos':'neg')+'">'+(pnl>=0?'+':'')+fmtNum(pnl)+' cts</span>'
+    + '</div>'
+    + '<div class="pos-grid">'
+    + '<div class="pos-item"><div class="pos-item-label">Lots</div><div class="pos-item-val">'+(status.open_lots||0).toFixed(2)+'</div></div>'
+    + '<div class="pos-item"><div class="pos-item-label">Daily P&L</div><div class="pos-item-val '+(pnl>=0?'cur':'sl')+'">'+(pnl>=0?'+':'')+pnl.toFixed(2)+'%</div></div>'
+    + '<div class="pos-item"><div class="pos-item-label">Updated</div><div class="pos-item-val" style="font-size:11px">'+(status.updated||'—').substring(11,16)+'</div></div>'
+    + '</div></div>';
+}
+
+function renderTrades(trades) {
+  var el = document.getElementById('tradeList');
+  if (!trades || !trades.length) {
+    el.innerHTML = '<div class="no-trades"><i class="fas fa-inbox" style="font-size:28px;display:block;margin-bottom:8px;opacity:.3"></i>ยังไม่มีประวัติการเทรด</div>';
+    return;
+  }
+  el.innerHTML = trades.map(function(t) {
+    var isWin  = t.outcome === 'WIN';
+    var isLoss = t.outcome === 'LOSS';
+    var isBe   = t.outcome === 'BREAKEVEN';
+    var badgeCls = isWin ? 'trade-win' : isLoss ? 'trade-loss' : 'trade-be';
+    var badgeLbl = isWin ? 'W' : isLoss ? 'L' : 'B';
+    var pnlCls   = t.profit >= 0 ? 'pos' : 'neg';
+    var pnlTxt   = (t.profit >= 0 ? '+' : '') + fmtNum(t.profit) + ' cts';
+    var timeStr  = t.close_time ? t.close_time.substring(11,16) : '';
+    var zone     = (t.entry_low||0).toFixed(2) + ' → ' + (t.entry_high||0).toFixed(2);
+    return '<div class="trade-item">'
+      + '<div class="trade-badge '+badgeCls+'">'+badgeLbl+'</div>'
+      + '<div class="trade-info">'
+      + '<div class="trade-dir">'+escHtml(t.direction||'')+'  XAUUSDc</div>'
+      + '<div class="trade-zone">'+zone+'</div></div>'
+      + '<div class="trade-right"><div class="trade-pnl '+pnlCls+'">'+pnlTxt+'</div><div class="trade-time">'+timeStr+'</div></div>'
+      + '</div>';
+  }).join('');
+}
+
+function renderUpdateTime(ts) {
+  if (!ts) return;
+  var d = new Date(ts);
+  var str = d.toLocaleTimeString('th-TH', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+  document.getElementById('updateRow').textContent = 'Last updated: ' + str + ' · Auto refresh every 60s';
+}
+
+// ── Settings save ─────────────────────────────────────────────
+function saveSettings() {
+  var target      = parseFloat(document.getElementById('settingTarget').value) || 3.0;
+  var email       = document.getElementById('settingEmail').value.trim();
+  var alertProfit = document.getElementById('toggleProfit').checked;
+  var alertLoss   = document.getElementById('toggleLoss').checked;
+
+  var btn = document.getElementById('saveSettingsBtn');
+  btn.disabled = true;
+  btn.textContent = 'กำลังบันทึก...';
+
+  var payload = JSON.stringify({
+    action: 'set_profit_target',
+    account: g_account,
+    target: target,
+    email: email,
+    alert_on_profit: alertProfit,
+    alert_on_loss:   alertLoss,
+  });
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', g_url, true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.timeout = 15000;
+  xhr.onload = function() {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-save" style="margin-right:8px"></i>บันทึกการตั้งค่า';
+    var msg = document.getElementById('saveMsg');
+    msg.style.display = 'block';
+    setTimeout(function() { msg.style.display = 'none'; }, 3000);
+    // Update target display
+    document.getElementById('targetPct').textContent = target.toFixed(2);
+    if (g_data && g_data.prefs) { g_data.prefs.profit_target = target; g_data.prefs.email = email; }
+  };
+  xhr.onerror = xhr.ontimeout = function() {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-save" style="margin-right:8px"></i>บันทึกการตั้งค่า';
+    alert('บันทึกไม่สำเร็จ กรุณาลองอีกครั้ง');
+  };
+  xhr.send(payload);
+}
+
+// ── Utilities ─────────────────────────────────────────────────
+function logout() {
+  if (!confirm('ออกจากระบบและเปลี่ยน Account?')) return;
+  try { localStorage.removeItem(CONFIG_KEY); } catch(e) {}
+  if (g_timer) clearInterval(g_timer);
+  document.getElementById('topbar').style.display      = 'none';
+  document.getElementById('mainContent').style.display = 'none';
+  document.getElementById('bottomNav').style.display   = 'none';
+  document.getElementById('setupError').style.display  = 'none';
+  document.getElementById('inputAccount').value        = '';
+  document.getElementById('inputLicense').value        = '';
+  document.getElementById('setupScreen').style.display = 'flex';
+  g_account = ''; g_licenseKey = '';
+  switchTab(0);
+}
+
+function copyLink() {
+  // Dashboard URL ไม่ฝัง account/license ในลิงก์ เพื่อความปลอดภัย
+  var url = window.location.origin + window.location.pathname;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(function() {
+      alert('คัดลอก Dashboard URL เรียบร้อยแล้ว\nลูกค้าจะต้องกรอก Account + License Key เองเมื่อเปิดครั้งแรก');
+    });
+  } else {
+    prompt('Dashboard URL:', url);
+  }
+}
+
+function fmtNum(n) {
+  var num = Number(n) || 0;
+  return num.toLocaleString('en-US', { maximumFractionDigits: 0 });
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── PWA: Service Worker registration ─────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./sw.js').then(function(reg) {
+      console.log('SW registered:', reg.scope);
+    }).catch(function(err) {
+      console.log('SW failed:', err);
+    });
+  });
+}
+
+// ── PWA: Install prompt ───────────────────────────────────────
+var g_installPrompt = null;
+
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  g_installPrompt = e;
+  // Show install banner only if not already installed & not dismissed
+  if (!localStorage.getItem('pwa_dismissed')) {
+    document.getElementById('installBanner').classList.add('show');
+  }
+});
+
+window.addEventListener('appinstalled', function() {
+  document.getElementById('installBanner').classList.remove('show');
+  g_installPrompt = null;
+  // Update settings button
+  var btn = document.getElementById('pwaInstallBtn');
+  if (btn) btn.textContent = '✅ ติดตั้งแล้ว';
+});
+
+function triggerInstall() {
+  if (g_installPrompt) {
+    g_installPrompt.prompt();
+    g_installPrompt.userChoice.then(function(result) {
+      if (result.outcome === 'accepted') {
+        document.getElementById('installBanner').classList.remove('show');
+      }
+      g_installPrompt = null;
+    });
+  } else {
+    // iOS — แสดงคำแนะนำ
+    showiOSInstallGuide();
+  }
+}
+
+function dismissInstallBanner() {
+  document.getElementById('installBanner').classList.remove('show');
+  try { localStorage.setItem('pwa_dismissed', '1'); } catch(e) {}
+}
+
+function showiOSInstallGuide() {
+  var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if (isIOS) {
+    alert('วิธีติดตั้งบน iPhone / iPad:\n\n1. กดปุ่ม Share (□↑) ด้านล่างของ Safari\n2. เลือก "เพิ่มลงในหน้าจอโฮม"\n3. กด "เพิ่ม" มุมบนขวา\n\nแอปจะปรากฏบน Home Screen ได้เลยครับ!');
+  } else {
+    alert('วิธีติดตั้งบน Android:\n\n1. กดเมนู ⋮ มุมบนขวาของ Chrome\n2. เลือก "เพิ่มไปยังหน้าจอหลัก"\n3. กด "เพิ่ม"\n\nแอปจะปรากฏบน Home Screen ครับ!');
+  }
+}
+
+// ── Check if already running as installed PWA ─────────────────
+function isInstalledPWA() {
+  return window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone === true;
+}
+</script>
+</body>
+</html>
