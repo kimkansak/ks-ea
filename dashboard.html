@@ -1039,19 +1039,17 @@ function saveSettings() {
   btn.disabled = true;
   btn.textContent = 'กำลังบันทึก...';
 
-  var payload = JSON.stringify({
-    action: 'set_profit_target',
-    account: g_account,
-    target: target,
-    email: email,
-    alert_on_profit: alertProfit,
-    alert_on_loss:   alertLoss,
-  });
+  // Use GET instead of POST — avoids CORS preflight with Apps Script
+  var getUrl = g_url
+    + '?action=set_profit_target'
+    + '&account='        + encodeURIComponent(g_account)
+    + '&target='         + encodeURIComponent(target)
+    + '&email='          + encodeURIComponent(email)
+    + '&alert_on_profit='+ (alertProfit ? 'true' : 'false')
+    + '&alert_on_loss='  + (alertLoss   ? 'true' : 'false');
 
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', g_url, true);
-  // Do NOT set Content-Type: application/json — triggers CORS preflight
-  // Apps Script reads raw body via e.postData.contents regardless
+  xhr.open('GET', getUrl, true);
   xhr.timeout = 15000;
   xhr.onload = function() {
     btn.disabled = false;
@@ -1059,7 +1057,6 @@ function saveSettings() {
     var msg = document.getElementById('saveMsg');
     msg.style.display = 'block';
     setTimeout(function() { msg.style.display = 'none'; }, 3000);
-    // Update target display
     document.getElementById('targetPct').textContent = target.toFixed(2);
     if (g_data && g_data.prefs) { g_data.prefs.profit_target = target; g_data.prefs.email = email; }
   };
@@ -1068,7 +1065,7 @@ function saveSettings() {
     btn.innerHTML = '<i class="fas fa-save" style="margin-right:8px"></i>บันทึกการตั้งค่า';
     alert('บันทึกไม่สำเร็จ กรุณาลองอีกครั้ง');
   };
-  xhr.send(payload);
+  xhr.send();
 }
 
 // ── Utilities ─────────────────────────────────────────────────
