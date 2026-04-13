@@ -665,7 +665,15 @@ function loadDashboard() {
   fetchData(function(data) {
     document.getElementById('loadingOverlay').classList.remove('show');
     if (!data) {
+      // ถ้าเคย login แล้ว (g_data มีอยู่) → แค่ silently retry อย่าโชว์หน้า login
+      if (g_data) {
+        console.warn('Refresh failed — keeping existing data');
+        return;
+      }
       alert('ไม่สามารถดึงข้อมูลได้ กรุณาตรวจสอบ URL และ Account Number');
+      document.getElementById('topbar').style.display      = 'none';
+      document.getElementById('mainContent').style.display = 'none';
+      document.getElementById('bottomNav').style.display   = 'none';
       document.getElementById('setupScreen').style.display = 'flex';
       return;
     }
