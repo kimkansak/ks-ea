@@ -3,7 +3,7 @@
 //  Cache shell files for offline / faster load
 // ============================================================
 
-var CACHE_NAME = 'ks-dashboard-v1';
+var CACHE_NAME = 'ks-dashboard-v3';
 var SHELL = [
   './dashboard.html',
   './manifest.json',
