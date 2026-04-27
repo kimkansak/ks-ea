@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S/R Strategy EA v2.1 — หลักการทำงาน</title>
+<style>
+  :root {
+    --gold: #f5c842;
+    --gold2: #e8a800;
+    --green: #00d084;
+    --red: #ff4d6d;
+    --blue: #4dabf7;
+    --cyan: #22d3ee;
+    --purple: #a78bfa;
+    --orange: #fb923c;
+    --bg: #0a0e1a;
+    --bg2: #0f1628;
+    --bg3: #162040;
+    --bg4: #1c2a50;
+    --border: rgba(255,255,255,0.07);
+    --text: #e2e8f0;
+    --muted: #64748b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', 'Noto Sans Thai', sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── HERO ─────────────────────────────────────── */
+  .hero {
+    background: linear-gradient(135deg, #0a0e1a 0%, #0d1b3e 50%, #0a0e1a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 24px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(245,200,66,0.08) 0%, transparent 70%);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(245,200,66,0.12);
+    border: 1px solid rgba(245,200,66,0.3);
+    color: var(--gold);
+    padding: 4px 16px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff 30%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 12px;
+  }
+  .hero p {
+    color: var(--muted);
+    font-size: 16px;
+    max-width: 560px;
+    margin: 0 auto 32px;
+  }
+  .tf-pills {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .tf-pill {
+    padding: 8px 24px;
+    border-radius: 100px;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 1px;
+  }
+  .tf-pill.m5  { background: rgba(74,171,247,0.15); border: 1px solid rgba(74,171,247,0.4); color: var(--blue); }
+  .tf-pill.m15 { background: rgba(0,208,132,0.15);  border: 1px solid rgba(0,208,132,0.4);  color: var(--green); }
+
+  /* ── LAYOUT ───────────────────────────────────── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+  section { padding: 60px 0; }
+  section + section { border-top: 1px solid var(--border); }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+  .section-sub {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 600px;
+    margin-bottom: 40px;
+  }
+
+  /* ── GRID ─────────────────────────────────────── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+  @media(max-width:768px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  /* ── CARDS ────────────────────────────────────── */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    transition: border-color .2s, transform .2s;
+  }
+  .card:hover { border-color: rgba(255,255,255,0.15); transform: translateY(-2px); }
+
+  .card-icon {
+    font-size: 28px;
+    margin-bottom: 14px;
+    display: block;
+  }
+  .card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .card p { font-size: 14px; color: var(--muted); }
+
+  .card.gold  { border-color: rgba(245,200,66,0.2);  background: linear-gradient(135deg, var(--bg2), rgba(245,200,66,0.03)); }
+  .card.green { border-color: rgba(0,208,132,0.2);   background: linear-gradient(135deg, var(--bg2), rgba(0,208,132,0.03)); }
+  .card.blue  { border-color: rgba(74,171,247,0.2);  background: linear-gradient(135deg, var(--bg2), rgba(74,171,247,0.03)); }
+  .card.red   { border-color: rgba(255,77,109,0.2);  background: linear-gradient(135deg, var(--bg2), rgba(255,77,109,0.03)); }
+  .card.purple{ border-color: rgba(167,139,250,0.2); background: linear-gradient(135deg, var(--bg2), rgba(167,139,250,0.03)); }
+  .card.orange{ border-color: rgba(251,146,60,0.2);  background: linear-gradient(135deg, var(--bg2), rgba(251,146,60,0.03)); }
+
+  /* ── TF COMPARE TABLE ─────────────────────────── */
+  .tf-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  @media(max-width:600px) { .tf-compare { grid-template-columns: 1fr; } }
+
+  .tf-card {
+    border-radius: 20px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .tf-card.m5 {
+    background: linear-gradient(135deg, #0d1f3c, #0f2a4a);
+    border: 1px solid rgba(74,171,247,0.3);
+  }
+  .tf-card.m15 {
+    background: linear-gradient(135deg, #0a2818, #0d3320);
+    border: 1px solid rgba(0,208,132,0.3);
+  }
+  .tf-card-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .tf-card.m5  .tf-card-label { color: var(--blue); }
+  .tf-card.m15 .tf-card-label { color: var(--green); }
+  .tf-card h2 { font-size: 42px; font-weight: 900; color: #fff; margin-bottom: 4px; }
+  .tf-card .tf-desc { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+
+  .tf-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .tf-stat {
+    background: rgba(255,255,255,0.04);
+    border-radius: 10px;
+    padding: 12px;
+  }
+  .tf-stat-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .tf-stat-value { font-size: 16px; font-weight: 700; color: #fff; }
+  .tf-card.m5  .tf-stat-value { color: var(--blue); }
+  .tf-card.m15 .tf-stat-value { color: var(--green); }
+
+  /* ── FLOW CHART ───────────────────────────────── */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .flow-step {
+    display: flex;
+    gap: 16px;
+    position: relative;
+  }
+  .flow-step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 44px;
+    bottom: -16px;
+    width: 2px;
+    background: linear-gradient(to bottom, rgba(245,200,66,0.3), transparent);
+  }
+  .flow-num {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(245,200,66,0.1);
+    border: 1px solid rgba(245,200,66,0.3);
+    color: var(--gold);
+    font-weight: 800;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .flow-content {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    flex: 1;
+  }
+  .flow-content h4 { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .flow-content p  { font-size: 13px; color: var(--muted); }
+  .flow-content .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .tag {
+    padding: 2px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .tag.green  { background: rgba(0,208,132,0.1);  color: var(--green);  border: 1px solid rgba(0,208,132,0.2); }
+  .tag.blue   { background: rgba(74,171,247,0.1); color: var(--blue);   border: 1px solid rgba(74,171,247,0.2); }
+  .tag.gold   { background: rgba(245,200,66,0.1); color: var(--gold);   border: 1px solid rgba(245,200,66,0.2); }
+  .tag.red    { background: rgba(255,77,109,0.1); color: var(--red);    border: 1px solid rgba(255,77,109,0.2); }
+  .tag.purple { background: rgba(167,139,250,0.1);color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
+  .tag.orange { background: rgba(251,146,60,0.1); color: var(--orange); border: 1px solid rgba(251,146,60,0.2); }
+
+  /* ── STRATEGY CARDS ───────────────────────────── */
+  .strategy-card {
+    background: var(--bg2);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .strategy-header {
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .strategy-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .strategy-icon.buy  { background: rgba(0,208,132,0.15); }
+  .strategy-icon.sell { background: rgba(255,77,109,0.15); }
+  .strategy-card h3   { font-size: 18px; font-weight: 800; color: #fff; }
+  .strategy-card .sub { font-size: 13px; color: var(--muted); }
+
+  .conditions {
+    padding: 0 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .condition {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    background: var(--bg3);
+    border-radius: 10px;
+  }
+  .cond-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .cond-text { font-size: 13px; color: var(--text); }
+  .cond-text strong { color: #fff; }
+  .cond-note { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .arrow-down {
+    text-align: center;
+    color: var(--gold);
+    font-size: 18px;
+    padding: 4px 0;
+  }
+
+  .result-box {
+    margin: 0 24px 24px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .result-box.buy  { background: rgba(0,208,132,0.08);  border: 1px solid rgba(0,208,132,0.2); }
+  .result-box.sell { background: rgba(255,77,109,0.08); border: 1px solid rgba(255,77,109,0.2); }
+  .result-box span { font-size: 13px; color: var(--text); }
+  .result-box strong { color: #fff; }
+
+  /* ── PARAMS TABLE ─────────────────────────────── */
+  .params-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media(max-width:700px) { .params-wrap { grid-template-columns: 1fr; } }
+
+  .params-card {
+    background: var(--bg2);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .params-head {
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .params-head.m5  { background: rgba(74,171,247,0.05); }
+  .params-head.m15 { background: rgba(0,208,132,0.05); }
+  .params-head .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+  .params-head.m5  .dot { background: var(--blue); }
+  .params-head.m15 .dot { background: var(--green); }
+  .params-head span { font-size: 15px; font-weight: 700; color: #fff; }
+
+  .params-table { width: 100%; border-collapse: collapse; }
+  .params-table tr:not(:last-child) td { border-bottom: 1px solid var(--border); }
+  .params-table td { padding: 11px 20px; font-size: 13px; }
+  .params-table td:first-child { color: var(--muted); width: 55%; }
+  .params-table td:last-child  { color: #fff; font-weight: 600; font-family: 'Consolas', monospace; }
+  .params-table .val-m5  { color: var(--blue); }
+  .params-table .val-m15 { color: var(--green); }
+
+  /* ── PROTECTION GRID ──────────────────────────── */
+  .prot-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+    gap: 16px;
+  }
+  .prot-item {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+  }
+  .prot-item .prot-icon { font-size: 28px; margin-bottom: 10px; }
+  .prot-item h4 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+  .prot-item p  { font-size: 12px; color: var(--muted); }
+
+  /* ── LEVEL1 BAND ──────────────────────────────── */
+  .level1-band {
+    background: linear-gradient(135deg, rgba(245,200,66,0.05), rgba(245,200,66,0.02));
+    border: 1px solid rgba(245,200,66,0.15);
+    border-radius: 20px;
+    padding: 32px;
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .level1-icon { font-size: 48px; flex-shrink: 0; }
+  .level1-body { flex: 1; min-width: 220px; }
+  .level1-body h3 { font-size: 20px; font-weight: 800; color: var(--gold); margin-bottom: 8px; }
+  .level1-body p  { font-size: 14px; color: var(--muted); line-height: 1.7; }
+  .level1-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  /* ── ATR VIS ──────────────────────────────────── */
+  .atr-visual {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+  }
+  .atr-visual h4 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 16px; }
+  .atr-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .atr-label { font-size: 12px; color: var(--muted); width: 90px; flex-shrink: 0; }
+  .atr-bar-wrap { flex: 1; background: var(--bg3); border-radius: 100px; height: 8px; overflow: hidden; }
+  .atr-bar { height: 100%; border-radius: 100px; }
+  .atr-val { font-size: 12px; font-weight: 700; width: 60px; text-align: right; flex-shrink: 0; }
+
+  /* ── FOOTER ───────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 24px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  footer strong { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<!-- ───── HERO ───── -->
+<div class="hero">
+  <div class="hero-badge">S/R Strategy EA v2.1</div>
+  <h1>หลักการทำงานของระบบ</h1>
+  <p>Support & Resistance Trading Strategy พร้อม ATR Dynamic SL และ Multi-Timeframe Filter</p>
+  <div class="tf-pills">
+    <div class="tf-pill m5">M5</div>
+    <div class="tf-pill m15">M15</div>
+    <div class="tf-pill" style="background:rgba(245,200,66,0.1);border:1px solid rgba(245,200,66,0.3);color:var(--gold);">XAUUSD</div>
+  </div>
+</div>
+
+<!-- ───── TF OVERVIEW ───── -->
+<section>
+  <div class="container">
+    <div class="section-label">Timeframe</div>
+    <div class="section-title">M5 vs M15 ต่างกันยังไง?</div>
+    <p class="section-sub">EA ตัวเดียวกัน ปรับค่าต่างกัน ผลลัพธ์ต่างกัน</p>
+
+    <div class="tf-compare">
+      <div class="tf-card m5">
+        <div class="tf-card-label">Timeframe</div>
+        <h2>M5</h2>
+        <div class="tf-desc">5 นาทีต่อแท่ง — เทรดเยอะ ตอบสนองเร็ว</div>
+        <div class="tf-stats">
+          <div class="tf-stat">
+            <div class="tf-stat-label">สัญญาณ/วัน</div>
+            <div class="tf-stat-value">10–20</div>
+          </div>
+          <div class="tf-stat">
+            <div class="tf-stat-label">ATR H1 ≈</div>
+            <div class="tf-stat-value">$2–5</div>
+          </div>
+          <div class="tf-stat">
+            <div class="tf-stat-label">SL (ATR×1.5)</div>
+            <div class="tf-stat-value">$3–8</div>
+          </div>
+          <div class="tf-stat">
+            <div class="tf-stat-label">ความยาก</div>
+            <div class="tf-stat-value">⭐⭐⭐</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tf-card m15">
+        <div class="tf-card-label">Timeframe</div>
+        <h2>M15</h2>
+        <div class="tf-desc">15 นาทีต่อแท่ง — สมดุลดี ไม่ต้องเฝ้าตลอด</div>
+        <div class="tf-stats">
+          <div class="tf-stat">
+            <div class="tf-stat-label">สัญญาณ/วัน</div>
+            <div class="tf-stat-value">5–15</div>
+          </div>
+          <div class="tf-stat">
+            <div class="tf-stat-label">ATR H1 ≈</div>
+            <div class="tf-stat-value">$5–12</div>
+          </div>
+          <div class="tf-stat">
+            <div class="tf-stat-label">SL (ATR×1.5)</div>
+            <div class="tf-stat-value">$8–18</div>
+          </div>
+          <div class="tf-stat">
+            <div class="tf-stat-label">ความยาก</div>
+            <div class="tf-stat-value">⭐⭐</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── FLOW ───── -->
+<section>
+  <div class="container">
+    <div class="section-label">Logic Flow</div>
+    <div class="section-title">EA ทำงานยังไงในแต่ละ Tick?</div>
+    <p class="section-sub">ลำดับการตัดสินใจทุกครั้งที่ราคาขยับ</p>
+
+    <div class="grid-2">
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-content">
+            <h4>🔐 เช็ค License</h4>
+            <p>ตรวจสอบ Account Number + วันหมดอายุ ถ้าไม่ผ่านหยุดทันที</p>
+            <div class="tags">
+              <span class="tag red">ไม่ผ่าน → หยุด</span>
+              <span class="tag green">ผ่าน → ทำงานต่อ</span>
+            </div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-content">
+            <h4>📈 Trailing Stop (ทุก Tick)</h4>
+            <p>เลื่อน SL ตามราคาเมื่อกำไรถึงจุดที่กำหนด ล็อคกำไรอัตโนมัติ</p>
+            <div class="tags">
+              <span class="tag gold">ทำงานทุก Tick</span>
+              <span class="tag blue">ไม่ต้องรอแท่งใหม่</span>
+            </div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-content">
+            <h4>💰 เช็ค Daily P&L (ทุก Tick)</h4>
+            <p>ถ้ากำไร ≥ 3% หรือขาดทุน ≥ 2% จาก Balance วันนั้น → ปิดทุกออเดอร์ หยุดเทรด</p>
+            <div class="tags">
+              <span class="tag green">กำไร ≥ 3% → ปิด</span>
+              <span class="tag red">ขาดทุน ≥ 2% → ปิด</span>
+            </div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">4</div>
+          <div class="flow-content">
+            <h4>🕐 เช็คเวลา Bangkok</h4>
+            <p>ตี 2–4 BKK (GMT+7) ห้ามเปิดออเดอร์ใหม่ ป้องกันช่วงตลาดเงียบ</p>
+            <div class="tags">
+              <span class="tag red">ตี 2–4 → หยุด</span>
+              <span class="tag green">เวลาอื่น → เทรดได้</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-num">5</div>
+          <div class="flow-content">
+            <h4>📊 อัปเดต ATR (แท่งใหม่)</h4>
+            <p>คำนวณ ATR(14) ล่าสุด ใช้คำนวณ SL/TP แบบ Dynamic ตาม Volatility จริง</p>
+            <div class="tags">
+              <span class="tag gold">ATR × 1.5 = SL</span>
+              <span class="tag gold">ATR × 3.0 = TP</span>
+            </div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">6</div>
+          <div class="flow-content">
+            <h4>🧭 อัปเดต Multi-TF S/R</h4>
+            <p>ดึงแนวรับ/ต้านจาก H4 และ D1 มาเปรียบกับราคาปัจจุบัน กำหนด Bias</p>
+            <div class="tags">
+              <span class="tag blue">H4 S/R</span>
+              <span class="tag purple">D1 S/R</span>
+              <span class="tag green">Bullish/Bearish Bias</span>
+            </div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">7</div>
+          <div class="flow-content">
+            <h4>📏 หา S/R Current TF</h4>
+            <p>ใช้ Swing High/Low ย้อนหลัง 50–150 แท่งหาแนวรับ/ต้านหลัก</p>
+            <div class="tags">
+              <span class="tag orange">M5: Lookback 150</span>
+              <span class="tag orange">M15: Lookback 100</span>
+            </div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">8</div>
+          <div class="flow-content">
+            <h4>🎯 หาสัญญาณเทรด</h4>
+            <p>เช็ค Reversal และ Breakout ถ้าเงื่อนไขครบ → เปิดออเดอร์</p>
+            <div class="tags">
+              <span class="tag green">Reversal</span>
+              <span class="tag blue">Breakout</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── STRATEGIES ───── -->
+<section>
+  <div class="container">
+    <div class="section-label">Trading Strategy</div>
+    <div class="section-title">2 กลยุทธ์หลัก</div>
+    <p class="section-sub">EA ใช้ทั้ง 2 กลยุทธ์พร้อมกัน เปิด/ปิดได้แยกกัน</p>
+
+    <div class="grid-2" style="margin-bottom:40px">
+
+      <!-- Reversal -->
+      <div class="strategy-card">
+        <div class="strategy-header">
+          <div class="strategy-icon buy">🔄</div>
+          <div>
+            <h3>Reversal Strategy</h3>
+            <div class="sub">กลับตัวที่แนวรับ/ต้าน</div>
+          </div>
+        </div>
+        <div class="conditions">
+          <div class="condition">
+            <span class="cond-icon">📏</span>
+            <div>
+              <div class="cond-text"><strong>ราคาแตะ Zone</strong></div>
+              <div class="cond-note">แท่งก่อนหน้า Low ≤ Support + Buffer และ ≥ Support - Buffer</div>
+            </div>
+          </div>
+          <div class="condition">
+            <span class="cond-icon">📉</span>
+            <div>
+              <div class="cond-text"><strong>RSI &lt; 30</strong> (Oversold)</div>
+              <div class="cond-note">ตลาดขายมากเกินไป มีโอกาสดีดกลับ</div>
+            </div>
+          </div>
+          <div class="condition">
+            <span class="cond-icon">🕯️</span>
+            <div>
+              <div class="cond-text"><strong>Bullish Pattern</strong></div>
+              <div class="cond-note">Pin Bar หรือ Bullish Engulfing บนแนวรับ</div>
+            </div>
+          </div>
+          <div class="condition">
+            <span class="cond-icon">🧭</span>
+            <div>
+              <div class="cond-text"><strong>MTF Bias</strong> (optional)</div>
+              <div class="cond-note">H4/D1 แนวรับอยู่ใกล้ = สัญญาณแข็งแกร่งขึ้น</div>
+            </div>
+          </div>
+        </div>
+        <div class="arrow-down">↓</div>
+        <div class="result-box buy">
+          <span>🟢</span>
+          <span><strong>เปิด BUY</strong> | SL = ATR×1.5 ใต้ Entry | TP = ATR×3.0</span>
+        </div>
+      </div>
+
+      <!-- Breakout -->
+      <div class="strategy-card">
+        <div class="strategy-header">
+          <div class="strategy-icon sell">💥</div>
+          <div>
+            <h3>Breakout Strategy</h3>
+            <div class="sub">ทะลุแนวพร้อม Retest</div>
+          </div>
+        </div>
+        <div class="conditions">
+          <div class="condition">
+            <span class="cond-icon">📈</span>
+            <div>
+              <div class="cond-text"><strong>ราคาปิดทะลุ Resistance</strong></div>
+              <div class="cond-note">แท่งก่อนปิดเหนือ Resistance Level</div>
+            </div>
+          </div>
+          <div class="condition">
+            <span class="cond-icon">📏</span>
+            <div>
+              <div class="cond-text"><strong>แท่ง Breakout ต้องใหญ่พอ</strong></div>
+              <div class="cond-note">ขนาดแท่ง ≥ ATR × 0.5 กรอง Fake Breakout</div>
+            </div>
+          </div>
+          <div class="condition">
+            <span class="cond-icon">⏳</span>
+            <div>
+              <div class="cond-text"><strong>รอ Retest</strong> (หรือเข้าทันที)</div>
+              <div class="cond-note">ราคากลับมาทดสอบแนวเดิม ภายใน 5 แท่ง</div>
+            </div>
+          </div>
+          <div class="condition">
+            <span class="cond-icon">🕯️</span>
+            <div>
+              <div class="cond-text"><strong>ยืนยัน Retest</strong></div>
+              <div class="cond-note">มี Bullish Pattern หรือแท่งปิดแข็งแกร่ง</div>
+            </div>
+          </div>
+        </div>
+        <div class="arrow-down">↓</div>
+        <div class="result-box buy">
+          <span>🟢</span>
+          <span><strong>เปิด BUY</strong> | SL = ATR×1.5 ใต้ Low Retest | TP = ATR×3.0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── LEVEL 1 ───── -->
+<section>
+  <div class="container">
+    <div class="section-label">Level 1 Features</div>
+    <div class="section-title">3 ระบบใหม่ที่เพิ่งเพิ่ม</div>
+    <p class="section-sub">ทำให้ EA ฉลาดขึ้น ปรับตัวตามตลาดได้ดีขึ้น</p>
+
+    <div class="grid-3" style="margin-bottom:32px">
+      <div class="card gold">
+        <span class="card-icon">📐</span>
+        <h3>ATR Dynamic SL</h3>
+        <p>SL ไม่ตายตัวอีกต่อไป คำนวณจาก ATR(14) × 1.5 ปรับตาม Volatility จริงของตลาด ตลาดวิ่งแรง SL กว้าง ตลาดเงียบ SL แคบ</p>
+      </div>
+      <div class="card blue">
+        <span class="card-icon">🧭</span>
+        <h3>Multi-TF S/R</h3>
+        <p>ดึงแนวรับ/ต้านจาก H4 และ D1 มาแสดงบนชาร์ต เมื่อ M5/M15 S/R ตรงกับ H4/D1 สัญญาณนั้นแข็งแกร่งกว่ามาก</p>
+      </div>
+      <div class="card purple">
+        <span class="card-icon">🔍</span>
+        <h3>ATR Breakout Filter</h3>
+        <p>กรอง Fake Breakout แท่งที่ทะลุต้องมีขนาด ≥ 0.5×ATR ถ้าแท่งเล็ก = Fake ไม่เข้า ลด Loss จาก False Signal</p>
+      </div>
+    </div>
+
+    <!-- ATR Visual -->
+    <div class="atr-visual">
+      <h4>📊 ตัวอย่าง ATR XAUUSD — SL/TP ที่ได้จริง</h4>
+      <div class="atr-row">
+        <div class="atr-label">M5 ATR</div>
+        <div class="atr-bar-wrap"><div class="atr-bar" style="width:20%;background:var(--blue)"></div></div>
+        <div class="atr-val" style="color:var(--blue)">$2–4</div>
+      </div>
+      <div class="atr-row">
+        <div class="atr-label">M5 SL (×1.5)</div>
+        <div class="atr-bar-wrap"><div class="atr-bar" style="width:30%;background:var(--red)"></div></div>
+        <div class="atr-val" style="color:var(--red)">$3–6</div>
+      </div>
+      <div class="atr-row">
+        <div class="atr-label">M5 TP (×3.0)</div>
+        <div class="atr-bar-wrap"><div class="atr-bar" style="width:45%;background:var(--green)"></div></div>
+        <div class="atr-val" style="color:var(--green)">$6–12</div>
+      </div>
+      <div style="height:16px"></div>
+      <div class="atr-row">
+        <div class="atr-label">M15 ATR</div>
+        <div class="atr-bar-wrap"><div class="atr-bar" style="width:40%;background:var(--blue)"></div></div>
+        <div class="atr-val" style="color:var(--blue)">$5–12</div>
+      </div>
+      <div class="atr-row">
+        <div class="atr-label">M15 SL (×1.5)</div>
+        <div class="atr-bar-wrap"><div class="atr-bar" style="width:55%;background:var(--red)"></div></div>
+        <div class="atr-val" style="color:var(--red)">$8–18</div>
+      </div>
+      <div class="atr-row">
+        <div class="atr-label">M15 TP (×3.0)</div>
+        <div class="atr-bar-wrap"><div class="atr-bar" style="width:80%;background:var(--green)"></div></div>
+        <div class="atr-val" style="color:var(--green)">$15–36</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── PARAMS ───── -->
+<section>
+  <div class="container">
+    <div class="section-label">Parameters</div>
+    <div class="section-title">ค่าที่แนะนำแต่ละ TF</div>
+    <p class="section-sub">XAUUSD — ค่า default สำหรับ M5 และ M15</p>
+
+    <div class="params-wrap">
+      <div class="params-card">
+        <div class="params-head m5">
+          <div class="dot"></div>
+          <span>M5 — XAUUSD</span>
+        </div>
+        <table class="params-table">
+          <tr><td>S/R Lookback</td><td class="val-m5">150</td></tr>
+          <tr><td>Zone Buffer</td><td class="val-m5">5 pip</td></tr>
+          <tr><td>Swing Bars</td><td class="val-m5">8</td></tr>
+          <tr><td>ATR Period</td><td class="val-m5">14</td></tr>
+          <tr><td>ATR × SL</td><td class="val-m5">1.5</td></tr>
+          <tr><td>ATR × TP</td><td class="val-m5">3.0</td></tr>
+          <tr><td>Min Breakout</td><td class="val-m5">0.8 × ATR</td></tr>
+          <tr><td>MTF Zone Buffer</td><td class="val-m5">5 pip</td></tr>
+          <tr><td>Trailing Start</td><td class="val-m5">100 pip</td></tr>
+          <tr><td>Trailing Stop</td><td class="val-m5">70 pip</td></tr>
+          <tr><td>Risk/Trade</td><td class="val-m5">1%</td></tr>
+          <tr><td>Daily Profit</td><td class="val-m5">3%</td></tr>
+          <tr><td>Daily Loss</td><td class="val-m5">2%</td></tr>
+        </table>
+      </div>
+
+      <div class="params-card">
+        <div class="params-head m15">
+          <div class="dot"></div>
+          <span>M15 — XAUUSD</span>
+        </div>
+        <table class="params-table">
+          <tr><td>S/R Lookback</td><td class="val-m15">100</td></tr>
+          <tr><td>Zone Buffer</td><td class="val-m15">8 pip</td></tr>
+          <tr><td>Swing Bars</td><td class="val-m15">5</td></tr>
+          <tr><td>ATR Period</td><td class="val-m15">14</td></tr>
+          <tr><td>ATR × SL</td><td class="val-m15">1.5</td></tr>
+          <tr><td>ATR × TP</td><td class="val-m15">3.0</td></tr>
+          <tr><td>Min Breakout</td><td class="val-m15">0.5 × ATR</td></tr>
+          <tr><td>MTF Zone Buffer</td><td class="val-m15">8 pip</td></tr>
+          <tr><td>Trailing Start</td><td class="val-m15">150 pip</td></tr>
+          <tr><td>Trailing Stop</td><td class="val-m15">100 pip</td></tr>
+          <tr><td>Risk/Trade</td><td class="val-m15">1%</td></tr>
+          <tr><td>Daily Profit</td><td class="val-m15">3%</td></tr>
+          <tr><td>Daily Loss</td><td class="val-m15">2%</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── PROTECTION ───── -->
+<section>
+  <div class="container">
+    <div class="section-label">Risk Management</div>
+    <div class="section-title">ระบบป้องกัน 6 ชั้น</div>
+    <p class="section-sub">ทำงานอัตโนมัติ ไม่ต้องดูแลตลอดเวลา</p>
+
+    <div class="prot-grid">
+      <div class="prot-item">
+        <div class="prot-icon">🔐</div>
+        <h4>License System</h4>
+        <p>ผูก Account Number + วันหมดอายุ ลูกค้าแต่ละคน Key ต่างกัน</p>
+      </div>
+      <div class="prot-item">
+        <div class="prot-icon">📈</div>
+        <h4>Daily Profit Lock</h4>
+        <p>กำไรถึง 3% ต่อวัน → ปิดทุกออเดอร์ หยุดเทรดวันนั้น</p>
+      </div>
+      <div class="prot-item">
+        <div class="prot-icon">🛡️</div>
+        <h4>Daily Loss Limit</h4>
+        <p>ขาดทุนเกิน 2% ต่อวัน → ปิดทุกออเดอร์ หยุดเทรดวันนั้น</p>
+      </div>
+      <div class="prot-item">
+        <div class="prot-icon">🕐</div>
+        <h4>Time Filter</h4>
+        <p>ห้ามเทรดตี 2–4 BKK ช่วงตลาดเงียบ Spread บาน</p>
+      </div>
+      <div class="prot-item">
+        <div class="prot-icon">📐</div>
+        <h4>ATR Dynamic SL</h4>
+        <p>SL ปรับตาม Volatility ไม่แน่นเกิน ไม่กว้างเกิน</p>
+      </div>
+      <div class="prot-item">
+        <div class="prot-icon">🔄</div>
+        <h4>Trailing Stop</h4>
+        <p>ล็อคกำไรอัตโนมัติ เลื่อน SL ตามราคาทุก Tick</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── FOOTER ───── -->
+<footer>
+  <strong>S/R Strategy EA v2.1</strong> · Level 1: ATR SL + Multi-TF S/R + ATR Breakout Filter<br>
+  <span style="font-size:11px;margin-top:6px;display:block">XAUUSD · M5 / M15 · MetaTrader 5</span>
+</footer>
+
+</body>
+</html>
